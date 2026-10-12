@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>El Zurrón de las Letras</title>
+<meta name="description" content="Juegos interactivos de El Zurrón de las Letras.">
+<style>
+:root{
+  --ink:#17324d;
+  --muted:#61768a;
+  --paper:#fffdf8;
+  --line:#d8e4ed;
+  --m:#2f80ed;
+  --s:#df4b53;
+  --l:#35a35f;
+  --shadow:0 14px 36px rgba(30,70,105,.12);
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--ink);
+  background:#eef5f9;
+}
+body{
+  overflow:hidden;
+  background:linear-gradient(145deg,#eef7fb,#f9fbfc);
+}
+a{text-decoration:none;color:inherit}
+
+.page{
+  width:100%;
+  height:100dvh;
+  padding:clamp(5px,1vw,12px);
+}
+.shell{
+  width:100%;
+  height:100%;
+  min-height:0;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:clamp(15px,2vw,24px);
+  box-shadow:var(--shadow);
+  padding:clamp(10px,1.6vw,22px);
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  gap:clamp(8px,1.2vh,14px);
+  overflow:hidden;
+}
+
+/* Cabecera */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:clamp(9px,1vw,14px);
+  min-height:0;
+}
+.logo{
+  width:clamp(42px,4.5vw,60px);
+  height:clamp(42px,4.5vw,60px);
+  flex:0 0 auto;
+  border-radius:clamp(13px,1.4vw,18px);
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#64b8f0,#2f80ed);
+  color:white;
+  font-size:clamp(25px,2.8vw,34px);
+  font-weight:950;
+}
+.kicker{
+  font-size:clamp(10px,.85vw,13px);
+  font-weight:900;
+  letter-spacing:.08em;
+  color:var(--muted);
+}
+h1{
+  margin:2px 0 0;
+  font-size:clamp(25px,3.2vw,46px);
+  line-height:1;
+}
+
+/* La portada ocupa automáticamente el espacio disponible */
+.hero{
+  min-width:0;
+  min-height:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  border-radius:clamp(14px,1.8vw,22px);
+  border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(30,70,105,.11);
+  background:#dcecf7;
+}
+.hero img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center center;
+}
+
+/* Zona inferior */
+.homeBottom{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:clamp(10px,1.4vw,18px);
+  align-items:stretch;
+  min-height:0;
+}
+.sub{
+  margin:0;
+  width:clamp(150px,17vw,235px);
+  display:flex;
+  align-items:center;
+  color:var(--muted);
+  font-size:clamp(13px,1.15vw,17px);
+  line-height:1.28;
+}
+.grid.letters{
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(8px,1vw,14px);
+}
+.card{
+  min-width:0;
+  min-height:92px;
+  border:3px solid var(--line);
+  border-radius:clamp(14px,1.6vw,20px);
+  background:#fff;
+  padding:clamp(9px,1vw,15px);
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:clamp(9px,1vw,14px);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(30,60,90,.10);
+}
+.card.m{border-color:#86c1eb}
+.card.s{border-color:#ef9ca2}
+.card.l{border-color:#91d4a9}
+.mark{
+  width:clamp(46px,4.8vw,66px);
+  height:clamp(46px,4.8vw,66px);
+  border-radius:clamp(13px,1.5vw,19px);
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:clamp(29px,3vw,42px);
+  font-weight:950;
+}
+.m .mark{background:var(--m)}
+.s .mark{background:var(--s)}
+.l .mark{background:var(--l)}
+.cardCopy{min-width:0}
+.card h2{
+  font-size:clamp(18px,1.8vw,28px);
+  margin:0 0 3px;
+  line-height:1.05;
+}
+.card p{
+  color:var(--muted);
+  font-size:clamp(11px,.95vw,14px);
+  line-height:1.28;
+  margin:0;
+}
+.open{
+  min-width:clamp(92px,9vw,132px);
+  min-height:clamp(40px,4.2vw,52px);
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  padding:7px 10px;
+  color:white;
+  font-size:clamp(11px,.95vw,14px);
+  font-weight:950;
+  text-align:center;
+}
+.m .open{background:var(--m)}
+.s .open{background:var(--s)}
+.l .open{background:var(--l)}
+
+/* Pantallas muy panorámicas: conservar el centro visual de la ilustración */
+@media (min-aspect-ratio: 16/9) and (min-width:761px){
+  .hero img{object-position:center center}
+}
+
+/* Portátiles/PDI con poca altura */
+@media (max-height:720px) and (min-width:761px){
+  .page{padding:4px}
+  .shell{padding:7px 10px;gap:7px}
+  .logo{width:39px;height:39px;font-size:24px}
+  h1{font-size:27px}
+  .kicker{font-size:9px}
+  .homeBottom{gap:8px}
+  .sub{width:130px;font-size:12px}
+  .card{min-height:76px;padding:7px 9px}
+  .mark{width:42px;height:42px;font-size:27px}
+  .card h2{font-size:18px}
+  .card p{font-size:10px}
+  .open{min-width:82px;min-height:36px;font-size:10px}
+}
+
+/* Móvil / tablet vertical: se conserva mejor la imagen completa y se permite flujo vertical */
+@media (max-width:760px), (orientation:portrait) and (max-width:1000px){
+  html,body{height:auto;min-height:100%}
+  body{overflow:auto}
+  .page{height:auto;min-height:100dvh;padding:7px}
+  .shell{
+    height:auto;
+    min-height:calc(100dvh - 14px);
+    display:flex;
+    flex-direction:column;
+    overflow:visible;
+    padding:12px;
+  }
+  .hero{
+    width:100%;
+    height:auto;
+    aspect-ratio:3 / 2;
+    flex:0 0 auto;
+  }
+  .hero img{
+    object-fit:cover;
+    object-position:center center;
+  }
+  .homeBottom{
+    display:flex;
+    flex-direction:column;
+  }
+  .sub{
+    width:auto;
+    display:block;
+    font-size:15px;
+  }
+  .grid.letters{
+    grid-template-columns:1fr;
+  }
+  .card{
+    min-height:105px;
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  .open{
+    grid-column:1 / -1;
+    width:100%;
+    min-height:44px;
+  }
+}
+
+
+
+
+/* La pantalla completa la controla EXCLUSIVAMENTE la consola superior. */
+#fullscreenBtn,
+[data-page-fullscreen],
+.s-page-fullscreen,
+.cuento-fullscreen{
+  display:none!important;
+}
+html,body{
+  max-width:100%;
+}
+
+
+/* ==========================================================
+   ZURRÓN · AJUSTE GLOBAL RESPONSIVE v3
+   La altura útil se calcula con JS y corresponde al viewport
+   REAL de cada pantalla interna.
+   ========================================================== */
+:root{
+  --zurron-view-h:100dvh;
+  --zurron-view-w:100vw;
+}
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+body{
+  overflow:hidden!important;
+}
+
+/* Contenedores principales: nunca deben sobrepasar el viewport */
+.page,
+.app{
+  width:100%!important;
+  height:var(--zurron-view-h)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:var(--zurron-view-h)!important;
+}
+.shell{
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Cualquier imagen funcional debe entrar COMPLETA en su contenedor */
+img{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Pictogramas de las misiones */
+.picture{
+  width:min(40vw,46vh,420px)!important;
+  height:min(40vw,46vh,420px)!important;
+  max-width:88vw!important;
+  max-height:46vh!important;
+  object-fit:contain!important;
+}
+.picture.small{
+  width:min(28vw,30vh,285px)!important;
+  height:min(28vw,30vh,285px)!important;
+  max-width:72vw!important;
+  max-height:30vh!important;
+  object-fit:contain!important;
+}
+
+/* Portada: siempre se ve la ilustración completa */
+.hero{
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Cuento: página completa dentro del área disponible */
+.storyImageWrap{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Ilustraciones de las canciones */
+.audioIllu{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:min(42vh,390px)!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Canvas/ruletas: nunca salen de pantalla */
+canvas{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* SVG y vídeo, por seguridad */
+svg,video{
+  max-width:100%;
+  max-height:100%;
+}
+
+/* Evitar que grids/flex fuerzen anchuras superiores al viewport */
+.stage,
+.storyStage,
+.storyLayout,
+.audioGrid,
+.quizWrap,
+.quizCard,
+.question-card,
+.activity,
+.activity-body,
+.activity-panel,
+.main,
+.content,
+.cardsWrap,
+.grid,
+.levels,
+.players-layout,
+.roulette-stage{
+  min-width:0!important;
+  min-height:0!important;
+}
+
+/* Ordenador/PDI: todo debe caber, sin scroll */
+@media (min-width:761px){
+  html,body{
+    overflow:hidden!important;
+  }
+  .page,.app{
+    overflow:hidden!important;
+  }
+}
+
+/* Pantallas de poca altura: reducir automáticamente elementos visuales */
+@media (max-height:760px) and (min-width:761px){
+  .picture{
+    width:min(34vw,40vh,340px)!important;
+    height:min(34vw,40vh,340px)!important;
+    max-height:40vh!important;
+  }
+  .picture.small{
+    width:min(23vw,25vh,230px)!important;
+    height:min(23vw,25vh,230px)!important;
+    max-height:25vh!important;
+  }
+  .audioIllu{
+    max-height:32vh!important;
+  }
+}
+
+/* Pantalla especialmente baja */
+@media (max-height:620px) and (min-width:761px){
+  .picture{
+    width:min(29vw,34vh,290px)!important;
+    height:min(29vw,34vh,290px)!important;
+    max-height:34vh!important;
+  }
+  .picture.small{
+    width:min(20vw,21vh,190px)!important;
+    height:min(20vw,21vh,190px)!important;
+    max-height:21vh!important;
+  }
+  .audioIllu{
+    max-height:26vh!important;
+  }
+}
+
+/* Móvil/tablet vertical: se prioriza legibilidad y se permite flujo vertical */
+@media (max-width:760px){
+  html,body{
+    height:auto!important;
+    min-height:100%!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .page,.app{
+    height:auto!important;
+    min-height:var(--zurron-view-h)!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .picture{
+    width:min(86vw,390px)!important;
+    height:min(86vw,390px)!important;
+    max-height:none!important;
+  }
+  .picture.small{
+    width:min(70vw,270px)!important;
+    height:min(70vw,270px)!important;
+    max-height:none!important;
+  }
+  .audioIllu{
+    max-height:340px!important;
+  }
+}
+
+
+/* === ZURRÓN · LIMPIEZA VISUAL v5 === */
+.card,.tile,.letter-card{box-shadow:none!important}
+.hero h1,.title,h1{letter-spacing:0!important}
+
+</style>
+</head>
+<body>
+<main class="page">
+<section class="shell">
+  <div class="brand">
+    <div class="logo">Z</div>
+    <div>
+      <div class="kicker">PROYECTO DE LECTOESCRITURA</div>
+      <h1>El Zurrón de las Letras</h1>
+    </div>
+  </div>
+
+  <div class="hero">
+    <img src="/assets/portada_zurron.jpg" alt="El Zurrón de las Letras con Olegario, niños y letras en un paisaje canario">
+  </div>
+
+  <div class="homeBottom">
+    <p class="sub">Elige una letra para abrir sus actividades.</p>
+
+    <div class="grid letters">
+      <a class="card m" href="/m/">
+        <div class="mark">M</div>
+        <div class="cardCopy">
+          <h2>Letra M</h2>
+          <p>Lectura progresiva y conciencia fonológica.</p>
+        </div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+      <a class="card s" href="/s/">
+        <div class="mark">S</div>
+        <div class="cardCopy">
+          <h2>Letra S</h2>
+          <p>Lectura progresiva y conciencia fonológica.</p>
+        </div>
+        <div class="open">ENTRAR</div>
+      </a>
+      <a class="card l" href="/l/">
+        <div class="mark">L</div>
+        <div class="cardCopy">
+          <h2>Letra L</h2>
+          <p>Lectura progresiva y conciencia fonológica.</p>
+        </div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+</main>
+
+<audio id="homeMusic" preload="auto" autoplay playsinline>
+  <source src="/assets/el_zurron_misterioso.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(() => {
+  const audio = document.getElementById('homeMusic');
+  if (!audio) return;
+
+  audio.loop = false;
+  audio.volume = 0.82;
+
+  let hasStarted = false;
+  let interactionArmed = false;
+
+  const cleanupInteractionListeners = () => {
+    if (!interactionArmed) return;
+    interactionArmed = false;
+    window.removeEventListener('pointerdown', startFromInteraction, true);
+    window.removeEventListener('touchstart', startFromInteraction, true);
+    window.removeEventListener('keydown', startFromInteraction, true);
+  };
+
+  const markStarted = () => {
+    hasStarted = true;
+    cleanupInteractionListeners();
+  };
+
+  const tryAutoplay = async () => {
+    if (hasStarted || !audio.paused) return;
+    try {
+      if (audio.currentTime === 0) audio.currentTime = 0;
+      await audio.play();
+      markStarted();
+    } catch (err) {
+      armFirstInteraction();
+    }
+  };
+
+  function startFromInteraction() {
+    if (hasStarted || !audio.paused) {
+      markStarted();
+      return;
+    }
+    try {
+      const p = audio.play();
+      if (p && typeof p.then === 'function') {
+        p.then(markStarted).catch(() => {});
+      } else {
+        markStarted();
+      }
+    } catch (e) {}
+  }
+
+  function armFirstInteraction() {
+    if (interactionArmed || hasStarted) return;
+    interactionArmed = true;
+
+    // La primera interacción en CUALQUIER parte de la portada
+    // habilita la reproducción si el navegador bloqueó el autoplay.
+    window.addEventListener('pointerdown', startFromInteraction, {capture:true, once:true});
+    window.addEventListener('touchstart', startFromInteraction, {capture:true, once:true, passive:true});
+    window.addEventListener('keydown', startFromInteraction, {capture:true, once:true});
+  }
+
+  audio.addEventListener('play', markStarted, {once:true});
+  audio.addEventListener('ended', cleanupInteractionListeners, {once:true});
+
+  document.addEventListener('DOMContentLoaded', tryAutoplay, {once:true});
+  window.addEventListener('load', tryAutoplay, {once:true});
+  window.addEventListener('pageshow', tryAutoplay);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !hasStarted && audio.paused) tryAutoplay();
+  });
+})();
+</script>
+
+
+<script id="zurron-local-nav">
+(() => {
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+
+  function normalizeInternal(href) {
+    if (!href) return null;
+    href = String(href).trim();
+
+    // Solo rutas internas absolutas del proyecto.
+    if (!href.startsWith('/')) return null;
+
+    let path = href.split('?')[0].split('#')[0];
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+
+    return ROUTES.has(path) ? path : null;
+  }
+
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[href]');
+    if (!a) return;
+
+    const path = normalizeInternal(a.getAttribute('href'));
+    if (!path) return;
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'zurron:navigate', path}, '*');
+    }
+  }, true);
+})();
+</script>
+
+
+<script id="zurron-responsive-viewport">
+(() => {
+  const applyViewport = () => {
+    const h = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight)
+    );
+    const w = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.width : window.innerWidth)
+    );
+    document.documentElement.style.setProperty('--zurron-view-h', h + 'px');
+    document.documentElement.style.setProperty('--zurron-view-w', w + 'px');
+  };
+  applyViewport();
+  window.addEventListener('resize', applyViewport, {passive:true});
+  window.addEventListener('orientationchange', applyViewport, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', applyViewport, {passive:true});
+  }
+})();
+</script>
+
+</body>
+</html>

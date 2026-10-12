@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Misión M · El Zurrón de las Letras</title>
+<meta name="description" content="Juego interactivo de conciencia fonológica de la letra M para 1.º de Primaria.">
+<meta name="theme-color" content="#eef5f9">
+<meta name="color-scheme" content="light">
+
+<style>
+:root{
+  --ink:#17324d; --muted:#667788; --paper:#fffdf8; --panel:#f5f9fc;
+  --line:#d7e2ea; --accent:#2c63c7; --green:#2f9d57;
+  --red:#ef2b35; --pink:#f0a3dc; --orange:#f4a000; --blue:#315ec8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef5f9}
+body{overflow:hidden}
+button{font:inherit}
+.app{
+  width:100%;
+  height:100vh;
+  max-width:none;
+  margin:0;
+  padding:10px 14px;
+  display:flex;
+  flex-direction:column;
+}
+.shell{
+  width:100%;
+  height:100%;
+  min-height:0;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:12px 16px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.hidden{display:none!important}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.kicker{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.04em}
+h1,h2,p{margin-top:0}
+h1{font-size:clamp(24px,3vw,38px);margin-bottom:4px}
+h2{font-size:clamp(19px,2.2vw,28px);margin-bottom:0}
+.sub{color:var(--muted);line-height:1.35}
+
+.btn{
+  min-height:64px;
+  min-width:64px;
+  border:3px solid var(--line);
+  border-radius:18px;
+  padding:12px 22px;
+  background:white;
+  color:var(--ink);
+  font-weight:900;
+  cursor:pointer;
+  font-size:clamp(18px,1.5vw,22px);
+  touch-action:manipulation;
+}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:5px solid rgba(44,99,199,.22);outline-offset:2px}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}
+.btn.good{border-color:var(--green);background:#e8f7ed}
+.btn.bad{border-color:#c93838;background:#fff0f0}
+.btn.text{
+  min-height:46px;
+  min-width:auto;
+  border:0;
+  background:transparent;
+  padding:6px 4px;
+  text-decoration:underline;
+  font-size:15px
+}
+.full{width:100%}
+
+.levels{
+  flex:1;
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+  margin-top:10px;
+}
+.level{
+  min-width:0;
+  min-height:0;
+  text-align:left;
+  background:white;
+  border:5px solid var(--line);
+  border-radius:20px;
+  padding:16px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  touch-action:manipulation;
+}
+.level strong{display:block;font-size:clamp(18px,1.7vw,24px);margin-bottom:8px}
+.level span{display:block;color:var(--muted);font-size:clamp(14px,1.15vw,18px);line-height:1.25}
+.level[data-level="1"]{border-color:var(--red)}
+.level[data-level="2"]{border-color:var(--pink)}
+.level[data-level="3"]{border-color:var(--orange)}
+.level[data-level="5"]{border-color:var(--blue)}
+
+.headerline{
+  flex:0 0 auto;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  min-height:52px;
+}
+.progress{display:flex;gap:9px;align-items:center;justify-content:flex-end}
+.pdot{width:18px;height:18px;border-radius:50%;background:#d4dde5}
+.pdot.current{background:var(--accent);transform:scale(1.12)}
+.pdot.done{background:var(--green)}
+
+.stage{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:4px 8px;
+  overflow:hidden;
+}
+.stepLabel{
+  flex:0 0 auto;
+  font-size:13px;
+  font-weight:900;
+  color:var(--muted);
+  letter-spacing:.05em;
+  margin-bottom:4px
+}
+.question{
+  flex:0 0 auto;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:950;
+  line-height:1;
+  margin-bottom:10px
+}
+
+.picture{
+  flex:0 1 auto;
+  width:min(410px,42vw);
+  height:min(410px,42vw);
+  max-height:48vh;
+  object-fit:contain;
+  background:#fff;
+  border-radius:18px;
+  margin:0 auto 8px;
+}
+.picture.small{
+  width:min(285px,30vw);
+  height:min(285px,30vw);
+  max-height:31vh
+}
+
+.word{
+  flex:0 0 auto;
+  font-size:clamp(34px,5vw,58px);
+  font-weight:950;
+  letter-spacing:.04em;
+  min-height:54px;
+  margin:2px 0 10px
+}
+.actions{
+  flex:0 0 auto;
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  width:100%
+}
+
+.counts{
+  width:min(760px,92vw);
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  justify-content:center
+}
+.counts .btn{
+  font-size:clamp(26px,3vw,38px);
+  min-height:82px;
+  padding:8px
+}
+
+.syllables{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin:4px 0 10px;
+  max-width:95vw
+}
+.syll{
+  position:relative;
+  min-width:120px;
+  min-height:84px;
+  border:4px solid var(--line);
+  border-radius:18px;
+  background:white;
+  font-weight:950;
+  font-size:clamp(26px,3.5vw,42px);
+  padding:12px 20px;
+  touch-action:manipulation
+}
+.syll.hit{border-color:var(--green);background:#e9f8ed}
+.cap{
+  position:absolute;
+  right:9px;
+  top:9px;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  background:#2857ae;
+  border:3px solid white;
+  box-shadow:0 0 0 2px #2857ae
+}
+
+.feedback{
+  flex:0 0 auto;
+  min-height:24px;
+  font-weight:800;
+  font-size:clamp(17px,1.5vw,21px);
+  margin:4px 0 8px;
+  color:var(--ink)
+}
+.tag{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:999px;
+  border:3px solid;
+  font-weight:900;
+  font-size:14px
+}
+.successCard{
+  width:min(720px,94vw);
+  background:var(--panel);
+  border:2px solid var(--line);
+  border-radius:22px;
+  padding:20px
+}
+.successWord{
+  font-size:clamp(38px,6vw,68px);
+  font-weight:950;
+  letter-spacing:.05em;
+  margin:8px 0
+}
+
+.footerline{
+  flex:0 0 auto;
+  border-top:1px solid var(--line);
+  padding-top:7px;
+  margin-top:5px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  min-height:44px
+}
+.status{font-weight:800;color:var(--muted);font-size:14px}
+.teacher{display:flex;gap:12px;flex-wrap:wrap}
+.clapPulse{animation:pulse .36s ease}
+@keyframes pulse{50%{transform:scale(1.13);border-color:var(--accent)}}
+@media(prefers-reduced-motion:reduce){.clapPulse{animation:none}}
+
+/* Typical classroom laptop / PDI: keep everything in one screen */
+@media (max-height:800px) and (min-width:760px){
+  .app{padding:6px 10px}
+  .shell{padding:8px 12px;border-radius:16px}
+  .headerline{min-height:44px}
+  h2{font-size:22px}
+  .question{font-size:34px;margin-bottom:7px}
+  .picture{width:min(330px,36vw);height:min(330px,36vw);max-height:42vh;margin-bottom:5px}
+  .picture.small{width:min(220px,25vw);height:min(220px,25vw);max-height:26vh}
+  .word{font-size:40px;min-height:46px;margin:2px 0 7px}
+  .btn{min-height:56px;font-size:18px;padding:9px 18px}
+  .counts .btn{min-height:68px;font-size:30px}
+  .syll{min-width:105px;min-height:70px;font-size:30px;padding:9px 16px}
+  .feedback{font-size:17px;margin:3px 0 5px}
+  .footerline{min-height:38px;padding-top:4px}
+}
+
+/* Tablets/mobile: allow vertical flow rather than clipping */
+@media(max-width:759px){
+  body{overflow:auto}
+  .app{height:auto;min-height:100vh;padding:8px}
+  .shell{height:auto;min-height:calc(100vh - 16px);overflow:visible}
+  .levels{grid-template-columns:1fr}
+  .stage{min-height:0;padding:18px 4px;overflow:visible}
+  .picture{width:min(390px,86vw);height:min(390px,86vw);max-height:none}
+  .picture.small{width:min(270px,70vw);height:min(270px,70vw);max-height:none}
+  .counts{grid-template-columns:repeat(3,1fr)}
+  .counts .btn{min-height:72px}
+  .syll{min-width:98px}
+}
+
+/* PASO 4C · MODO CENTRO */
+.centerBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:2px solid #b9d4ee;
+  background:#edf6ff;
+  border-radius:999px;
+  padding:6px 11px;
+  font-size:13px;
+  font-weight:900;
+  color:#214f7c;
+}
+.centerControls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.centerAction{
+  min-height:52px;
+  border:3px solid #315ec8;
+  background:#fff;
+  color:#214a8b;
+  border-radius:16px;
+  padding:9px 17px;
+  font-weight:950;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.centerAction.primary{
+  background:#315ec8;
+  color:#fff;
+}
+.centerAction.change{
+  border-color:#d7e2ea;
+  color:var(--ink);
+}
+.centerStartCard{
+  width:min(760px,94vw);
+  background:var(--panel);
+  border:2px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  text-align:center;
+}
+.centerStartTitle{
+  font-size:clamp(30px,5vw,56px);
+  font-weight:950;
+  line-height:1;
+  margin-bottom:12px;
+}
+.centerStartLevel{
+  font-size:clamp(20px,2.2vw,30px);
+  font-weight:900;
+  margin-bottom:8px;
+}
+.centerStartHint{
+  color:var(--muted);
+  font-size:clamp(16px,1.5vw,20px);
+  margin-bottom:18px;
+}
+.centerStartBtn{
+  width:min(520px,90%);
+  min-height:82px;
+  font-size:clamp(24px,3vw,36px);
+  border-radius:22px;
+}
+@media (max-height:800px) and (min-width:760px){
+  .centerStartCard{padding:18px}
+  .centerStartBtn{min-height:68px}
+}
+
+
+/* PASO 4D · ACABADO FINAL */
+:root{
+  --level:#2c63c7;
+  --level-soft:#edf4ff;
+  --warm:#fff7e8;
+}
+body{
+  background:
+    radial-gradient(circle at 8% 12%, rgba(255,255,255,.95) 0 8%, transparent 9%),
+    linear-gradient(145deg,#edf6fb,#f8fbfd);
+}
+.shell{
+  box-shadow:0 14px 38px rgba(40,72,104,.10);
+}
+.brandRow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.brandM{
+  width:48px;height:48px;
+  flex:0 0 48px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  background:var(--level);
+  color:white;
+  font-size:30px;
+  line-height:1;
+  font-weight:950;
+  box-shadow:0 5px 14px rgba(36,64,94,.14);
+}
+#gameScreen{
+  border-top:7px solid var(--level);
+}
+#levelTitle{
+  color:var(--ink);
+}
+.centerBadge{
+  border-color:color-mix(in srgb,var(--level) 35%, white);
+  background:var(--level-soft);
+  color:var(--ink);
+}
+.centerAction{
+  border-color:var(--level);
+  color:var(--level);
+}
+.centerAction.primary,
+.btn.primary{
+  background:var(--level);
+  border-color:var(--level);
+}
+.btn:hover{
+  border-color:var(--level);
+}
+.pdot.current{
+  background:var(--level);
+  box-shadow:0 0 0 5px var(--level-soft);
+}
+.picture{
+  border:3px solid #eef2f5;
+  box-shadow:0 9px 22px rgba(29,62,90,.08);
+}
+.word,.successWord{
+  color:var(--ink);
+}
+.stage:not(.hidden){
+  animation:stageIn .24s ease-out both;
+}
+@keyframes stageIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.feedback{
+  border-radius:12px;
+  padding:4px 10px;
+}
+.feedback.ok{
+  background:#eaf8ef;
+  color:#236f41;
+}
+.feedback.try{
+  background:#fff6df;
+  color:#755512;
+}
+.btn.bad{
+  border-color:#e8b442;
+  background:#fff8e5;
+}
+.syll.hit{
+  box-shadow:0 0 0 4px rgba(47,157,87,.12);
+}
+.cap{
+  background:var(--level);
+  box-shadow:0 0 0 2px var(--level);
+}
+.stepTrack{
+  flex:0 0 auto;
+  width:min(760px,94vw);
+  margin:4px auto 2px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+}
+.stepPill{
+  min-height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:999px;
+  background:#eef2f5;
+  color:#6b7b89;
+  font-size:13px;
+  font-weight:900;
+  border:2px solid transparent;
+  white-space:nowrap;
+}
+.stepPill.done{
+  background:#eaf7ef;
+  color:#267044;
+}
+.stepPill.active{
+  background:var(--level-soft);
+  color:var(--ink);
+  border-color:var(--level);
+}
+.stepNum{
+  width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;
+  background:white;
+  font-weight:950;
+}
+.successCard{
+  box-shadow:0 10px 30px rgba(32,64,96,.08);
+}
+.successLead{
+  font-size:clamp(28px,4.2vw,48px);
+  font-weight:950;
+  margin-bottom:4px;
+  color:var(--level);
+}
+.successCopy{
+  font-size:clamp(17px,1.5vw,21px);
+  line-height:1.4;
+  color:var(--muted);
+  margin:12px auto 18px;
+  max-width:580px;
+}
+.finalMarks{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:16px 0 18px;
+}
+.finalMark{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--level);
+  position:relative;
+  animation:markIn .35s ease-out both;
+}
+.finalMark::after{
+  content:"";
+  position:absolute;
+  left:10px;top:7px;
+  width:9px;height:15px;
+  border-right:4px solid white;
+  border-bottom:4px solid white;
+  transform:rotate(45deg);
+}
+.finalMark:nth-child(2){animation-delay:.05s}
+.finalMark:nth-child(3){animation-delay:.10s}
+.finalMark:nth-child(4){animation-delay:.15s}
+.finalMark:nth-child(5){animation-delay:.20s}
+@keyframes markIn{
+  from{opacity:0;transform:scale(.6)}
+  to{opacity:1;transform:scale(1)}
+}
+.finalTitle{
+  font-size:clamp(34px,5vw,60px);
+  line-height:1.03;
+  font-weight:950;
+  margin:0 0 8px;
+  color:var(--ink);
+}
+.finalScore{
+  display:inline-block;
+  padding:8px 16px;
+  border-radius:14px;
+  background:var(--level-soft);
+  border:2px solid color-mix(in srgb,var(--level) 45%, white);
+  font-weight:950;
+  font-size:24px;
+  margin-bottom:16px;
+}
+.level:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(30,60,90,.08);
+}
+.level{
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+@media(prefers-reduced-motion:reduce){
+  .stage:not(.hidden),.finalMark,.level{animation:none;transition:none}
+}
+@media(max-width:760px){
+  .stepTrack{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-height:720px) and (min-width:760px){
+  .stepTrack{margin:0 auto}
+  .stepPill{min-height:29px;font-size:12px}
+  .stepNum{width:19px;height:19px}
+  .brandM{width:40px;height:40px;flex-basis:40px;font-size:25px}
+}
+
+
+/* AJUSTE EXTRA · QUE TODO EL JUEGO QUEPA EN PANTALLA */
+.stage{
+  padding:4px 8px;
+}
+.stageFit{
+  width:100%;
+  height:100%;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.stageContent{
+  width:min(980px,100%);
+  max-width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  transform-origin:center center;
+  will-change:transform;
+}
+.stageContent > *{
+  flex:0 0 auto;
+}
+.successCard,
+.centerStartCard{
+  max-width:100%;
+}
+@media (max-height:800px) and (min-width:760px){
+  .headerline{gap:10px}
+  .centerControls{gap:8px}
+  .centerAction{min-height:48px;padding:8px 14px}
+  .question{margin-bottom:6px}
+  .stepLabel{margin-bottom:2px}
+  .picture{margin-bottom:4px}
+  .word{margin:2px 0 6px}
+  .actions{gap:10px}
+}
+
+
+/* Navegación de la consola general */
+.zurron-back-letter{
+  position:fixed;
+  left:8px;
+  bottom:8px;
+  z-index:99999;
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 11px;
+  border:2px solid rgba(23,50,77,.18);
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  color:#17324d;
+  text-decoration:none;
+  font:900 12px/1 Arial,Helvetica,sans-serif;
+  box-shadow:0 5px 14px rgba(23,50,77,.12);
+  backdrop-filter:blur(5px)
+}
+.zurron-back-letter:hover{border-color:#2f80ed}
+@media(max-height:650px){
+  .zurron-back-letter{min-height:31px;padding:4px 9px;font-size:11px;bottom:5px;left:5px}
+}
+
+
+/* La pantalla completa la controla EXCLUSIVAMENTE la consola superior. */
+#fullscreenBtn,
+[data-page-fullscreen],
+.s-page-fullscreen,
+.cuento-fullscreen{
+  display:none!important;
+}
+html,body{
+  max-width:100%;
+}
+
+
+/* ==========================================================
+   ZURRÓN · AJUSTE GLOBAL RESPONSIVE v3
+   La altura útil se calcula con JS y corresponde al viewport
+   REAL de cada pantalla interna.
+   ========================================================== */
+:root{
+  --zurron-view-h:100dvh;
+  --zurron-view-w:100vw;
+}
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+body{
+  overflow:hidden!important;
+}
+
+/* Contenedores principales: nunca deben sobrepasar el viewport */
+.page,
+.app{
+  width:100%!important;
+  height:var(--zurron-view-h)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:var(--zurron-view-h)!important;
+}
+.shell{
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Cualquier imagen funcional debe entrar COMPLETA en su contenedor */
+img{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Pictogramas de las misiones */
+.picture{
+  width:min(40vw,46vh,420px)!important;
+  height:min(40vw,46vh,420px)!important;
+  max-width:88vw!important;
+  max-height:46vh!important;
+  object-fit:contain!important;
+}
+.picture.small{
+  width:min(28vw,30vh,285px)!important;
+  height:min(28vw,30vh,285px)!important;
+  max-width:72vw!important;
+  max-height:30vh!important;
+  object-fit:contain!important;
+}
+
+/* Portada: siempre se ve la ilustración completa */
+.hero{
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Cuento: página completa dentro del área disponible */
+.storyImageWrap{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Ilustraciones de las canciones */
+.audioIllu{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:min(42vh,390px)!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Canvas/ruletas: nunca salen de pantalla */
+canvas{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* SVG y vídeo, por seguridad */
+svg,video{
+  max-width:100%;
+  max-height:100%;
+}
+
+/* Evitar que grids/flex fuerzen anchuras superiores al viewport */
+.stage,
+.storyStage,
+.storyLayout,
+.audioGrid,
+.quizWrap,
+.quizCard,
+.question-card,
+.activity,
+.activity-body,
+.activity-panel,
+.main,
+.content,
+.cardsWrap,
+.grid,
+.levels,
+.players-layout,
+.roulette-stage{
+  min-width:0!important;
+  min-height:0!important;
+}
+
+/* Ordenador/PDI: todo debe caber, sin scroll */
+@media (min-width:761px){
+  html,body{
+    overflow:hidden!important;
+  }
+  .page,.app{
+    overflow:hidden!important;
+  }
+}
+
+/* Pantallas de poca altura: reducir automáticamente elementos visuales */
+@media (max-height:760px) and (min-width:761px){
+  .picture{
+    width:min(34vw,40vh,340px)!important;
+    height:min(34vw,40vh,340px)!important;
+    max-height:40vh!important;
+  }
+  .picture.small{
+    width:min(23vw,25vh,230px)!important;
+    height:min(23vw,25vh,230px)!important;
+    max-height:25vh!important;
+  }
+  .audioIllu{
+    max-height:32vh!important;
+  }
+}
+
+/* Pantalla especialmente baja */
+@media (max-height:620px) and (min-width:761px){
+  .picture{
+    width:min(29vw,34vh,290px)!important;
+    height:min(29vw,34vh,290px)!important;
+    max-height:34vh!important;
+  }
+  .picture.small{
+    width:min(20vw,21vh,190px)!important;
+    height:min(20vw,21vh,190px)!important;
+    max-height:21vh!important;
+  }
+  .audioIllu{
+    max-height:26vh!important;
+  }
+}
+
+/* Móvil/tablet vertical: se prioriza legibilidad y se permite flujo vertical */
+@media (max-width:760px){
+  html,body{
+    height:auto!important;
+    min-height:100%!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .page,.app{
+    height:auto!important;
+    min-height:var(--zurron-view-h)!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .picture{
+    width:min(86vw,390px)!important;
+    height:min(86vw,390px)!important;
+    max-height:none!important;
+  }
+  .picture.small{
+    width:min(70vw,270px)!important;
+    height:min(70vw,270px)!important;
+    max-height:none!important;
+  }
+  .audioIllu{
+    max-height:340px!important;
+  }
+}
+
+
+/* === ZURRÓN · LIMPIEZA VISUAL v5 === */
+html,body{background:#f4f7fa!important}
+:root{--line:#d7e1eb!important;--muted:#6e8294!important;--paper:#fffdfb!important}
+.shell,.level,.audioCard,.quizCard{box-shadow:none!important}
+.topbar{margin-bottom:4px!important}.kicker{display:none!important}
+h1{font-size:clamp(22px,2.7vw,32px)!important;margin-bottom:2px!important}
+.sub{font-size:16px!important;color:#6a8094!important;line-height:1.3!important}
+.btn{border-width:2px!important;border-radius:14px!important;box-shadow:none!important}
+.levels{gap:10px!important;margin-top:8px!important}
+.level{border-width:2px!important;padding:14px!important;background:#fff!important}
+.level strong{font-size:clamp(18px,1.8vw,22px)!important;margin-bottom:5px!important}
+.level span{font-size:clamp(14px,1.1vw,16px)!important;line-height:1.25!important}
+.headerline{min-height:42px!important}.progress{gap:7px!important}.pdot{width:12px!important;height:12px!important}
+.stepTrack,.footerline,.status{box-shadow:none!important}
+.stepLabel{font-size:12px!important;color:#7c91a4!important;margin-bottom:4px!important}
+.question{font-size:clamp(34px,4.6vw,56px)!important;line-height:1.05!important;margin-bottom:8px!important}
+.word{font-size:clamp(52px,8vw,96px)!important;line-height:1!important;color:#17324d!important;min-height:0!important;margin:0 0 8px!important}
+.picture{width:min(320px,34vw)!important;height:min(320px,34vw)!important;max-height:36vh!important;background:transparent!important;box-shadow:none!important;margin-bottom:6px!important}
+.picture.small{width:min(220px,24vw)!important;height:min(220px,24vw)!important;max-height:24vh!important}
+.stage{padding:4px 10px!important;justify-content:center!important;gap:2px!important}
+.counts,.syllables,.actions{width:min(1000px,100%)!important;margin-left:auto!important;margin-right:auto!important}
+.counts .btn,.syllables .btn,.actions .btn{min-height:72px!important;font-size:clamp(22px,2.8vw,34px)!important}
+.feedback{font-size:18px!important;min-height:24px!important;margin:4px 0 6px!important}
+.successCard,.centerStartCard{box-shadow:none!important;border-width:2px!important}
+.finalTitle,.centerStartTitle{font-size:clamp(28px,3.4vw,42px)!important}
+.centerStartHint,.successCopy{font-size:16px!important;color:#657a8d!important}
+@media(max-height:760px) and (min-width:761px){
+  .btn{min-height:50px!important;font-size:18px!important;padding:10px 18px!important}
+  .question{font-size:clamp(30px,4vw,46px)!important}
+  .word{font-size:clamp(42px,6.5vw,74px)!important}
+  .picture{width:min(250px,30vw)!important;height:min(250px,30vw)!important;max-height:30vh!important}
+  .picture.small{width:min(180px,20vw)!important;height:min(180px,20vw)!important;max-height:20vh!important}
+  .counts .btn,.syllables .btn,.actions .btn{min-height:58px!important;font-size:clamp(18px,2.4vw,28px)!important}
+}
+
+</style>
+
+</head>
+<body>
+<a class="zurron-back-letter" href="/m/" aria-label="Volver a la letra M">← LETRA M</a>
+<main class="app">
+  <section id="levelScreen" class="shell">
+    <div class="brandRow">
+      <div class="brandM" aria-hidden="true">M</div>
+      <div>
+        <div class="kicker">EL ZURRÓN DE LAS LETRAS · LETRA M</div>
+        <h1>Jugamos con los sonidos y las palabras</h1>
+      </div>
+    </div>
+    <p class="sub">Elige un nivel. En cada palabra verás una sola tarea cada vez.</p>
+    <div class="levels">
+      <button class="level" data-level="1" type="button"><strong>Nivel 1 · M al principio</strong><span>Sílabas directas y posición inicial.</span></button>
+      <button class="level" data-level="2" type="button"><strong>Nivel 2 · M al final</strong><span>La M aparece en la última sílaba.</span></button>
+      <button class="level" data-level="3" type="button"><strong>Nivel 3 · M en medio</strong><span>La M está dentro de la palabra.</span></button>
+      <button class="level" data-level="4" type="button"><strong>Nivel 4 · Detective M</strong><span>Se mezclan las tres posiciones.</span></button>
+      <button class="level" data-level="5" type="button"><strong>Nivel 5 · Super M</strong><span>Inversas, mixtas y complejas.</span></button>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="shell hidden">
+    <div class="headerline">
+      <div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <span class="centerBadge">MODO CENTRO</span>
+          <button id="fullscreenBtn" class="btn text" type="button">Pantalla completa</button>
+        </div>
+        <h2 id="levelTitle"></h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:flex-end">
+        <div>
+          <div id="progressDots" class="progress" aria-label="Progreso"></div>
+          <div id="roundText" class="status" style="margin-top:6px;text-align:right"></div>
+        </div>
+        <div class="centerControls">
+          <button id="quickNewPlayer" class="centerAction primary" type="button">NUEVO JUGADOR</button>
+          <button id="quickChangeLevel" class="centerAction change" type="button">CAMBIAR NIVEL</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="stepTrack" class="stepTrack" aria-label="Pasos de la actividad">
+      <div class="stepPill" data-step="1"><span class="stepNum">1</span>Identifica</div>
+      <div class="stepPill" data-step="2"><span class="stepNum">2</span>Sílabas</div>
+      <div class="stepPill" data-step="3"><span class="stepNum">3</span>Sonido M</div>
+      <div class="stepPill" data-step="4"><span class="stepNum">4</span>Oración</div>
+    </div>
+
+    <!-- MODO CENTRO · PANTALLA DE CAMBIO DE JUGADOR -->
+    <section id="screenCenterReady" class="stage hidden">
+      <div class="centerStartCard">
+        <div class="centerBadge" style="margin-bottom:14px">LISTO PARA EL SIGUIENTE JUGADOR</div>
+        <div class="centerStartTitle">Tu turno</div>
+        <div id="centerReadyLevel" class="centerStartLevel"></div>
+        <div class="centerStartHint">Toca el botón cuando estés preparado. Empezarás con 5 palabras nuevas.</div>
+        <button id="centerStartBtn" class="btn primary centerStartBtn" type="button">EMPEZAR</button>
+      </div>
+    </section>
+
+    <!-- PASO 1 -->
+    <section id="screenIdentify" class="stage">
+      <div class="stepLabel">PASO 1</div>
+      <div class="question">¿Qué es?</div>
+      <img id="identifyImg" class="picture" alt="">
+      <div id="identifyWord" class="word"></div>
+      <div class="actions">
+        <button id="revealBtn" class="btn primary" type="button">VER PALABRA</button>
+        <button id="toCountBtn" class="btn hidden" type="button">CONTINUAR</button>
+      </div>
+    </section>
+
+    <!-- PASO 2 -->
+    <section id="screenCount" class="stage hidden">
+      <div class="stepLabel">PASO 2</div>
+      <div class="question">¿Cuántas sílabas tiene?</div>
+      <img id="countImg" class="picture small" alt="">
+      <div id="countWord" class="word"></div>
+      <div id="countButtons" class="counts"></div>
+      <div id="countFeedback" class="feedback" aria-live="polite"></div>
+      <div class="actions">
+        <button id="toSoundBtn" class="btn hidden" type="button">CONTINUAR</button>
+      </div>
+    </section>
+
+    <!-- PASO 3 -->
+    <section id="screenSound" class="stage hidden">
+      <div class="stepLabel">PASO 3</div>
+      <div class="question">¿Dónde suena la M?</div>
+      <div id="soundWord" class="word"></div>
+      <div id="soundSyllables" class="syllables"></div>
+      <div id="soundFeedback" class="feedback" aria-live="polite"></div>
+      <div class="actions">
+        <button id="clapBtn" class="btn" type="button">PALMEAR SÍLABAS</button>
+        <button id="toSentenceBtn" class="btn hidden" type="button">CONTINUAR A ORACIÓN</button>
+      </div>
+    </section>
+
+    <!-- PASO 4 -->
+    <section id="screenSentence" class="stage hidden">
+      <div class="stepLabel">PASO 4</div>
+      <div class="question">Di una oración</div>
+      <img id="sentenceImg" class="picture small" alt="">
+      <div id="sentenceWord" class="word"></div>
+      <p class="sub" style="font-size:20px">Inventa una frase que contenga esta palabra.</p>
+      <div class="actions">
+        <button id="sentenceDoneBtn" class="btn primary" type="button">YA LA HE DICHO</button>
+      </div>
+    </section>
+
+    <!-- PALABRA COMPLETADA -->
+    <section id="screenSuccess" class="stage hidden">
+      <div class="successCard">
+        <div class="stepLabel">PALABRA CONSEGUIDA</div>
+        <div id="successLead" class="successLead">Mmmmm… ¡Muy bien!</div>
+        <div id="successWord" class="successWord"></div>
+        <div id="categoryTag"></div>
+        <p id="successCopy" class="successCopy">Has escuchado, separado y encontrado el sonido M.</p>
+        <button id="nextWordBtn" class="btn primary full" type="button">SIGUIENTE PALABRA</button>
+      </div>
+    </section>
+
+    <div class="footerline">
+      <div id="pointsText" class="status">Puntos: 0</div>
+      <div class="teacher">
+        <button id="restartLevel" class="btn text" type="button">Reiniciar estas 5 palabras</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="finishScreen" class="shell hidden">
+    <div class="stage">
+      <div class="successCard">
+        <div class="stepLabel">MISIÓN COMPLETADA</div>
+        <div class="finalTitle">¡Misión M completada!</div>
+        <div class="finalMarks" aria-label="Cinco palabras completadas">
+          <span class="finalMark"></span><span class="finalMark"></span><span class="finalMark"></span><span class="finalMark"></span><span class="finalMark"></span>
+        </div>
+        <div id="finishLevel" class="sub" style="font-size:18px;margin-bottom:10px"></div>
+        <div id="finishPoints" class="finalScore"></div>
+        <p class="successCopy">Has completado las 5 palabras de esta ronda.</p>
+        <div class="actions">
+          <button id="finishNewPlayer" class="btn primary" type="button">NUEVO JUGADOR</button>
+          <button id="playAgain" class="btn" type="button">OTRAS 5 · MISMO JUGADOR</button>
+          <button id="chooseLevel" class="btn" type="button">CAMBIAR NIVEL</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const DATA=[{"page": 7, "word": "marrón", "syll": ["ma", "rrón"], "m": [0], "cat": "initial", "label": "marrón", "img": "assets/07_marron.png"}, {"page": 8, "word": "manopla", "syll": ["ma", "no", "pla"], "m": [0], "cat": "initial", "label": "manopla", "img": "assets/08_manopla.png"}, {"page": 9, "word": "macarrones", "syll": ["ma", "ca", "rro", "nes"], "m": [0], "cat": "initial", "label": "macarrones", "img": "assets/09_macarrones.png"}, {"page": 10, "word": "meta", "syll": ["me", "ta"], "m": [0], "cat": "initial", "label": "meta", "img": "assets/10_meta.png"}, {"page": 11, "word": "monedero", "syll": ["mo", "ne", "de", "ro"], "m": [0], "cat": "initial", "label": "monedero", "img": "assets/11_monedero.png"}, {"page": 12, "word": "migas", "syll": ["mi", "gas"], "m": [0], "cat": "initial", "label": "migas", "img": "assets/12_migas.png"}, {"page": 13, "word": "mechero", "syll": ["me", "che", "ro"], "m": [0], "cat": "initial", "label": "mechero", "img": "assets/13_mechero.png"}, {"page": 14, "word": "medalla", "syll": ["me", "da", "lla"], "m": [0], "cat": "initial", "label": "medalla", "img": "assets/14_medalla.png"}, {"page": 15, "word": "mayonesa", "syll": ["ma", "yo", "ne", "sa"], "m": [0], "cat": "initial", "label": "mayonesa", "img": "assets/15_mayonesa.png"}, {"page": 16, "word": "marinero", "syll": ["ma", "ri", "ne", "ro"], "m": [0], "cat": "initial", "label": "marinero", "img": "assets/16_marinero.png"}, {"page": 17, "word": "maestra", "syll": ["ma", "es", "tra"], "m": [0], "cat": "initial", "label": "maestra", "img": "assets/17_maestra.png"}, {"page": 18, "word": "melón", "syll": ["me", "lón"], "m": [0], "cat": "initial", "label": "melón", "img": "assets/18_melon.png"}, {"page": 19, "word": "meñique", "syll": ["me", "ñi", "que"], "m": [0], "cat": "initial", "label": "meñique", "img": "assets/19_menique.png"}, {"page": 20, "word": "megáfono", "syll": ["me", "gá", "fo", "no"], "m": [0], "cat": "initial", "label": "megáfono", "img": "assets/20_megafono.png"}, {"page": 21, "word": "microondas", "syll": ["mi", "cro", "on", "das"], "m": [0], "cat": "initial", "label": "microondas", "img": "assets/21_microondas.png"}, {"page": 22, "word": "microscopio", "syll": ["mi", "cros", "co", "pio"], "m": [0], "cat": "initial", "label": "microscopio", "img": "assets/22_microscopio.png"}, {"page": 23, "word": "morado", "syll": ["mo", "ra", "do"], "m": [0], "cat": "initial", "label": "morado", "img": "assets/23_morado.png"}, {"page": 24, "word": "mofeta", "syll": ["mo", "fe", "ta"], "m": [0], "cat": "initial", "label": "mofeta", "img": "assets/24_mofeta.png"}, {"page": 25, "word": "museo", "syll": ["mu", "se", "o"], "m": [0], "cat": "initial", "label": "museo", "img": "assets/25_museo.png"}, {"page": 26, "word": "suma", "syll": ["su", "ma"], "m": [1], "cat": "final", "label": "suma", "img": "assets/26_suma.png"}, {"page": 27, "word": "yema", "syll": ["ye", "ma"], "m": [1], "cat": "final", "label": "yema del huevo", "img": "assets/27_yema_del_huevo.png"}, {"page": 28, "word": "yema", "syll": ["ye", "ma"], "m": [1], "cat": "final", "label": "yema del dedo", "img": "assets/28_yema_del_dedo.png"}, {"page": 29, "word": "pluma", "syll": ["plu", "ma"], "m": [1], "cat": "final", "label": "pluma de pájaro", "img": "assets/29_pluma_de_pajaro.png"}, {"page": 30, "word": "pluma", "syll": ["plu", "ma"], "m": [1], "cat": "final", "label": "pluma estilográfica", "img": "assets/30_pluma_estilografica.png"}, {"page": 31, "word": "lágrima", "syll": ["lá", "gri", "ma"], "m": [2], "cat": "final", "label": "lágrima", "img": "assets/31_lagrima.png"}, {"page": 32, "word": "céntimo", "syll": ["cén", "ti", "mo"], "m": [2], "cat": "final", "label": "céntimo", "img": "assets/32_centimo.png"}, {"page": 33, "word": "pomo", "syll": ["po", "mo"], "m": [1], "cat": "final", "label": "pomo", "img": "assets/33_pomo.png"}, {"page": 34, "word": "astrónomo", "syll": ["as", "tró", "no", "mo"], "m": [3], "cat": "final", "label": "astrónomo", "img": "assets/34_astronomo.png"}, {"page": 35, "word": "farmacia", "syll": ["far", "ma", "cia"], "m": [1], "cat": "middle", "label": "farmacia", "img": "assets/35_farmacia.png"}, {"page": 36, "word": "palmera", "syll": ["pal", "me", "ra"], "m": [1], "cat": "middle", "label": "palmera", "img": "assets/36_palmera.png"}, {"page": 37, "word": "submarino", "syll": ["sub", "ma", "ri", "no"], "m": [1], "cat": "middle", "label": "submarino", "img": "assets/37_submarino.png"}, {"page": 38, "word": "vomitar", "syll": ["vo", "mi", "tar"], "m": [1], "cat": "middle", "label": "vomitar", "img": "assets/38_vomitar.png"}, {"page": 39, "word": "exprimidor", "syll": ["ex", "pri", "mi", "dor"], "m": [2], "cat": "middle", "label": "exprimidor", "img": "assets/39_exprimidor.png"}, {"page": 40, "word": "chimenea", "syll": ["chi", "me", "ne", "a"], "m": [1], "cat": "middle", "label": "chimenea", "img": "assets/40_chimenea.png"}, {"page": 41, "word": "almohada", "syll": ["al", "mo", "ha", "da"], "m": [1], "cat": "middle", "label": "almohada", "img": "assets/41_almohada.png"}, {"page": 42, "word": "cometa", "syll": ["co", "me", "ta"], "m": [1], "cat": "middle", "label": "cometa", "img": "assets/42_cometa.png"}, {"page": 43, "word": "amarillo", "syll": ["a", "ma", "ri", "llo"], "m": [1], "cat": "middle", "label": "amarillo", "img": "assets/43_amarillo.png"}, {"page": 44, "word": "cremallera", "syll": ["cre", "ma", "lle", "ra"], "m": [1], "cat": "middle", "label": "cremallera", "img": "assets/44_cremallera.png"}, {"page": 45, "word": "caramelo", "syll": ["ca", "ra", "me", "lo"], "m": [2], "cat": "middle", "label": "caramelo", "img": "assets/45_caramelo.png"}, {"page": 46, "word": "cronómetro", "syll": ["cro", "nó", "me", "tro"], "m": [2], "cat": "middle", "label": "cronómetro", "img": "assets/46_cronometro.png"}, {"page": 47, "word": "colmena", "syll": ["col", "me", "na"], "m": [1], "cat": "middle", "label": "colmena", "img": "assets/47_colmena.png"}, {"page": 48, "word": "palmera", "syll": ["pal", "me", "ra"], "m": [1], "cat": "middle", "label": "palmera de chocolate", "img": "assets/48_palmera_de_chocolate.png"}, {"page": 49, "word": "pamela", "syll": ["pa", "me", "la"], "m": [1], "cat": "middle", "label": "pamela", "img": "assets/49_pamela.png"}, {"page": 50, "word": "termómetro", "syll": ["ter", "mó", "me", "tro"], "m": [1, 2], "cat": "middle", "label": "termómetro", "img": "assets/50_termometro.png"}, {"page": 51, "word": "pirámide", "syll": ["pi", "rá", "mi", "de"], "m": [2], "cat": "middle", "label": "pirámide", "img": "assets/51_piramide.png"}, {"page": 52, "word": "hormigonera", "syll": ["hor", "mi", "go", "ne", "ra"], "m": [1], "cat": "middle", "label": "hormigonera", "img": "assets/52_hormigonera.png"}, {"page": 53, "word": "abdominales", "syll": ["ab", "do", "mi", "na", "les"], "m": [2], "cat": "middle", "label": "abdominales", "img": "assets/53_abdominales.png"}, {"page": 54, "word": "vitrocerámica", "syll": ["vi", "tro", "ce", "rá", "mi", "ca"], "m": [4], "cat": "middle", "label": "vitrocerámica", "img": "assets/54_vitroceramica.png"}, {"page": 55, "word": "pulmones", "syll": ["pul", "mo", "nes"], "m": [1], "cat": "middle", "label": "pulmones", "img": "assets/55_pulmones.png"}, {"page": 56, "word": "hamburguesa", "syll": ["ham", "bur", "gue", "sa"], "m": [0], "cat": "inverse", "label": "hamburguesa", "img": "assets/56_hamburguesa.png"}, {"page": 57, "word": "ambulancia", "syll": ["am", "bu", "lan", "cia"], "m": [0], "cat": "inverse", "label": "ambulancia", "img": "assets/57_ambulancia.png"}, {"page": 58, "word": "embarazada", "syll": ["em", "ba", "ra", "za", "da"], "m": [0], "cat": "inverse", "label": "embarazada", "img": "assets/58_embarazada.png"}, {"page": 59, "word": "empujar", "syll": ["em", "pu", "jar"], "m": [0], "cat": "inverse", "label": "empujar", "img": "assets/59_empujar.png"}, {"page": 60, "word": "impresora", "syll": ["im", "pre", "so", "ra"], "m": [0], "cat": "inverse", "label": "impresora", "img": "assets/60_impresora.png"}, {"page": 61, "word": "hombro", "syll": ["hom", "bro"], "m": [0], "cat": "inverse", "label": "hombro", "img": "assets/61_hombro.png"}, {"page": 62, "word": "ombligo", "syll": ["om", "bli", "go"], "m": [0], "cat": "inverse", "label": "ombligo", "img": "assets/62_ombligo.png"}, {"page": 63, "word": "imperdible", "syll": ["im", "per", "di", "ble"], "m": [0], "cat": "inverse", "label": "imperdible", "img": "assets/63_imperdible.png"}, {"page": 64, "word": "mascarilla", "syll": ["mas", "ca", "ri", "lla"], "m": [0], "cat": "mixed", "label": "mascarilla", "img": "assets/64_mascarilla.png"}, {"page": 65, "word": "mostaza", "syll": ["mos", "ta", "za"], "m": [0], "cat": "mixed", "label": "mostaza", "img": "assets/65_mostaza.png"}, {"page": 66, "word": "margarita", "syll": ["mar", "ga", "ri", "ta"], "m": [0], "cat": "mixed", "label": "margarita", "img": "assets/66_margarita.png"}, {"page": 67, "word": "morder", "syll": ["mor", "der"], "m": [0], "cat": "mixed", "label": "morder", "img": "assets/67_morder.png"}, {"page": 68, "word": "monja", "syll": ["mon", "ja"], "m": [0], "cat": "mixed", "label": "monja", "img": "assets/68_monja.png"}, {"page": 69, "word": "mantequilla", "syll": ["man", "te", "qui", "lla"], "m": [0], "cat": "mixed", "label": "mantequilla", "img": "assets/69_mantequilla.png"}, {"page": 70, "word": "manguitos", "syll": ["man", "gui", "tos"], "m": [0], "cat": "mixed", "label": "manguitos", "img": "assets/70_manguitos.png"}, {"page": 71, "word": "mando", "syll": ["man", "do"], "m": [0], "cat": "mixed", "label": "mando", "img": "assets/71_mando.png"}, {"page": 72, "word": "mantel", "syll": ["man", "tel"], "m": [0], "cat": "mixed", "label": "mantel", "img": "assets/72_mantel.png"}, {"page": 73, "word": "quitaesmalte", "syll": ["qui", "ta", "es", "mal", "te"], "m": [3], "cat": "mixedmiddle", "label": "quitaesmalte", "img": "assets/73_quitaesmalte.png"}, {"page": 74, "word": "pegamento", "syll": ["pe", "ga", "men", "to"], "m": [2], "cat": "mixedmiddle", "label": "pegamento", "img": "assets/74_pegamento.png"}, {"page": 75, "word": "cementerio", "syll": ["ce", "men", "te", "rio"], "m": [1], "cat": "mixedmiddle", "label": "cementerio", "img": "assets/75_cementerio.png"}, {"page": 76, "word": "campamento", "syll": ["cam", "pa", "men", "to"], "m": [0, 2], "cat": "mixedmiddle", "label": "campamento", "img": "assets/76_campamento.png"}, {"page": 77, "word": "cemento", "syll": ["ce", "men", "to"], "m": [1], "cat": "mixedmiddle", "label": "cemento", "img": "assets/77_cemento.png"}, {"page": 78, "word": "trompa", "syll": ["trom", "pa"], "m": [0], "cat": "complex", "label": "trompa", "img": "assets/78_trompa.png"}, {"page": 79, "word": "trompo", "syll": ["trom", "po"], "m": [0], "cat": "complex", "label": "trompo", "img": "assets/79_trompo.png"}, {"page": 80, "word": "trampa", "syll": ["tram", "pa"], "m": [0], "cat": "complex", "label": "trampa", "img": "assets/80_trampa.png"}, {"page": 81, "word": "trampolín", "syll": ["tram", "po", "lín"], "m": [0], "cat": "complex", "label": "trampolín", "img": "assets/81_trampolin.png"}, {"page": 82, "word": "frambuesas", "syll": ["fram", "bue", "sas"], "m": [0], "cat": "complex", "label": "frambuesas", "img": "assets/82_frambuesas.png"}];
+const BANKS={
+  1:DATA.filter(x=>x.cat==='initial'),
+  2:DATA.filter(x=>x.cat==='final'),
+  3:DATA.filter(x=>x.cat==='middle'),
+  4:DATA.filter(x=>['initial','final','middle'].includes(x.cat)),
+  5:DATA.filter(x=>['inverse','mixed','mixedmiddle','complex'].includes(x.cat))
+};
+const NAMES={
+  1:'Nivel 1 · M al principio',
+  2:'Nivel 2 · M al final',
+  3:'Nivel 3 · M en medio',
+  4:'Nivel 4 · Detective M',
+  5:'Nivel 5 · Super M'
+};
+const TAGS={
+  initial:['M inicial','#ef2b35'],
+  final:['M final','#f0a3dc'],
+  middle:['M media','#f4a000'],
+  inverse:['Sílaba inversa','#33a653'],
+  mixed:['Sílaba mixta','#315ec8'],
+  mixedmiddle:['Sílaba mixta · M media','#2e9fd1'],
+  complex:['Sílaba compleja','#f4a000']
+};
+const LEVEL_THEME={
+  1:['#ef2b35','#fff0f1'],
+  2:['#d85abb','#fff0fb'],
+  3:['#e59600','#fff7df'],
+  4:['#268b8f','#eaf8f8'],
+  5:['#315ec8','#edf2ff']
+};
+const POSITIVE=[
+  'Mmmmm… ¡Muy bien!',
+  '¡Lo has conseguido!',
+  '¡Buen trabajo con la M!',
+  '¡Palabra superada!'
+];
+
+function applyLevelTheme(){
+  const [main,soft]=LEVEL_THEME[level] || LEVEL_THEME[4];
+  document.documentElement.style.setProperty('--level',main);
+  document.documentElement.style.setProperty('--level-soft',soft);
+}
+
+function setStep(step){
+  $$('#stepTrack .stepPill').forEach(el=>{
+    const n=Number(el.dataset.step);
+    el.classList.toggle('active',n===step);
+    el.classList.toggle('done',n<step);
+  });
+}
+
+function clearStepTrack(){
+  $$('#stepTrack .stepPill').forEach(el=>el.classList.remove('active','done'));
+}
+
+
+
+function wrapStageContent(){
+  document.querySelectorAll('.stage').forEach(stage=>{
+    if(stage.querySelector('.stageFit')) return;
+    const fit=document.createElement('div');
+    fit.className='stageFit';
+    const content=document.createElement('div');
+    content.className='stageContent';
+    while(stage.firstChild){
+      content.appendChild(stage.firstChild);
+    }
+    fit.appendChild(content);
+    stage.appendChild(fit);
+  });
+  document.querySelectorAll('.picture').forEach(img=>{
+    img.addEventListener('load',()=>refitStage(),{once:false});
+  });
+}
+function fitActiveStage(){
+  const active=[...document.querySelectorAll('.stage')].find(s=>!s.classList.contains('hidden'));
+  if(!active) return;
+  const fit=active.querySelector('.stageFit');
+  const content=active.querySelector('.stageContent');
+  if(!fit || !content) return;
+
+  content.style.transform='scale(1)';
+  content.style.maxWidth='100%';
+
+  // On small screens, keep the natural flow.
+  if(window.innerWidth < 760){
+    return;
+  }
+
+  const availW=Math.max(100, fit.clientWidth - 8);
+  const availH=Math.max(100, fit.clientHeight - 8);
+
+  // Measure the content at natural size.
+  const neededW=Math.max(content.scrollWidth, content.getBoundingClientRect().width || 0);
+  const neededH=Math.max(content.scrollHeight, content.getBoundingClientRect().height || 0);
+
+  const scale=Math.min(1, availW / neededW, availH / neededH);
+
+  content.style.transform='scale('+scale+')';
+}
+function refitStage(){
+  requestAnimationFrame(fitActiveStage);
+  setTimeout(fitActiveStage, 60);
+  setTimeout(fitActiveStage, 160);
+}
+
+let level=1, deck=[], index=0, score=0, countTries=0, soundTries=0, found=new Set();
+
+const $=q=>document.querySelector(q);
+const $$=q=>[...document.querySelectorAll(q)];
+
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [b[i],b[j]]=[b[j],b[i]];
+  }
+  return b;
+}
+function current(){return deck[index]}
+function hide(q){$(q).classList.add('hidden')}
+function show(q){$(q).classList.remove('hidden')}
+function pointsFor(tries){return tries===1?3:tries===2?2:1}
+function addPoints(n){score+=n;$('#pointsText').textContent='Puntos: '+score}
+
+function showOnly(id){
+  ['#screenCenterReady','#screenIdentify','#screenCount','#screenSound','#screenSentence','#screenSuccess'].forEach(hide);
+  show(id);
+  const stepMap={
+    '#screenIdentify':1,
+    '#screenCount':2,
+    '#screenSound':3,
+    '#screenSentence':4
+  };
+  if(stepMap[id]) setStep(stepMap[id]);
+  else clearStepTrack();
+  refitStage();
+}
+
+function renderProgress(){
+  $('#progressDots').innerHTML='';
+  deck.forEach((_,i)=>{
+    const d=document.createElement('span');
+    d.className='pdot '+(i<index?'done':i===index?'current':'');
+    $('#progressDots').appendChild(d);
+  });
+  $('#roundText').textContent=`Palabra ${index+1} de ${deck.length}`;
+}
+
+function setImages(){
+  const c=current();
+  [
+    ['#identifyImg',c.img],
+    ['#countImg',c.img],
+    ['#sentenceImg',c.img]
+  ].forEach(([sel,src])=>{
+    $(sel).src=src;
+    $(sel).alt='Pictograma de '+c.label;
+  });
+}
+
+function buildCountButtons(){
+  $('#countButtons').innerHTML='';
+  for(let n=1;n<=6;n++){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='btn';
+    b.textContent=n;
+    b.addEventListener('click',()=>checkCount(b,n));
+    $('#countButtons').appendChild(b);
+  }
+}
+
+function buildSoundSyllables(){
+  $('#soundSyllables').innerHTML='';
+  current().syll.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='syll';
+    b.textContent=s.toUpperCase();
+    b.addEventListener('click',()=>checkSound(b,i));
+    $('#soundSyllables').appendChild(b);
+  });
+}
+
+function resetWord(){
+  countTries=0; soundTries=0; found=new Set();
+  renderProgress(); setImages(); buildCountButtons(); buildSoundSyllables();
+
+  $('#identifyWord').textContent='';
+  $('#countWord').textContent=current().label.toUpperCase();
+  $('#soundWord').textContent=current().label.toUpperCase();
+  $('#sentenceWord').textContent=current().label.toUpperCase();
+  $('#successWord').textContent=current().label.toUpperCase();
+
+  $('#countFeedback').className='feedback';
+  $('#soundFeedback').className='feedback';
+  $('#countFeedback').textContent='';
+  $('#soundFeedback').textContent='';
+  $('#revealBtn').disabled=false;
+  show('#revealBtn'); hide('#toCountBtn');
+  hide('#toSoundBtn'); hide('#toSentenceBtn');
+
+  const [tagText,tagColor]=TAGS[current().cat];
+  $('#categoryTag').innerHTML=`<span class="tag" style="border-color:${tagColor};background:${tagColor}18">${tagText}</span>`;
+
+  showOnly('#screenIdentify');
+}
+
+function startLevel(n){
+  level=Number(n);
+  deck=shuffle(BANKS[level]).slice(0,5);
+  index=0; score=0;
+  $('#pointsText').textContent='Puntos: 0';
+  $('#levelTitle').textContent=NAMES[level];
+  applyLevelTheme();
+  hide('#levelScreen'); hide('#finishScreen'); show('#gameScreen');
+  resetWord();
+}
+
+function prepareNewPlayer(){
+  deck=shuffle(BANKS[level]).slice(0,5);
+  index=0;
+  score=0;
+  $('#pointsText').textContent='Puntos: 0';
+  applyLevelTheme();
+  $('#centerReadyLevel').textContent=NAMES[level];
+  hide('#finishScreen');
+  hide('#levelScreen');
+  show('#gameScreen');
+  renderProgress();
+  showOnly('#screenCenterReady');
+}
+
+function samePlayerAnotherFive(){
+  deck=shuffle(BANKS[level]).slice(0,5);
+  index=0;
+  // score is intentionally preserved for the same child
+  hide('#finishScreen');
+  hide('#levelScreen');
+  show('#gameScreen');
+  resetWord();
+}
+
+function changeLevel(){
+  hide('#gameScreen');
+  hide('#finishScreen');
+  clearStepTrack();
+  show('#levelScreen');
+  refitStage();
+}
+
+
+function checkCount(button,n){
+  countTries++;
+  const correct=current().syll.length;
+  if(n===correct){
+    button.classList.add('good');
+    $$('#countButtons .btn').forEach(b=>b.disabled=true);
+    $('#countFeedback').className='feedback ok';
+    $('#countFeedback').textContent=`Muy bien. Tiene ${correct} ${correct===1?'sílaba':'sílabas'}.`;
+    addPoints(pointsFor(countTries));
+    show('#toSoundBtn');
+    refitStage();
+  } else {
+    button.classList.add('bad');
+    $('#countFeedback').className='feedback try';
+    $('#countFeedback').textContent='Casi. Dilo despacio y vuelve a contar.';
+    setTimeout(()=>button.classList.remove('bad'),550);
+  }
+}
+
+function getSoundTargets(){
+  const c=current();
+  const targets=Array.isArray(c.m) ? c.m : [];
+  return [...new Set(targets)].filter(i=>Number.isInteger(i) && i>=0 && i<c.syll.length);
+}
+
+function completeSoundStep(){
+  const targets=getSoundTargets();
+  $$('#soundSyllables .syll').forEach(b=>b.disabled=true);
+  $('#soundFeedback').className='feedback ok';
+  $('#soundFeedback').textContent='Muy bien. Has encontrado dónde suena la M.';
+  addPoints(pointsFor(soundTries));
+  show('#toSentenceBtn');
+  refitStage();
+}
+
+function checkSound(button,i){
+  if(found.has(i)) return;
+
+  const targets=getSoundTargets();
+  soundTries++;
+
+  if(targets.includes(i)){
+    found.add(i);
+    button.classList.add('hit');
+    button.disabled=true;
+
+    if(!button.querySelector('.cap')){
+      const cap=document.createElement('span');
+      cap.className='cap';
+      cap.setAttribute('aria-hidden','true');
+      button.appendChild(cap);
+    }
+
+    const remaining=targets.filter(pos=>!found.has(pos));
+
+    if(remaining.length===0){
+      completeSoundStep();
+    } else {
+      $('#soundFeedback').className='feedback ok';
+      $('#soundFeedback').textContent='Muy bien. La M también suena en otra sílaba. Tócala.';
+      refitStage();
+    }
+  } else {
+    button.classList.add('bad');
+    $('#soundFeedback').className='feedback try';
+    $('#soundFeedback').textContent='Casi. Escucha despacio y toca otra sílaba.';
+    setTimeout(()=>button.classList.remove('bad'),550);
+  }
+}
+
+function finishGame(){
+  hide('#gameScreen'); show('#finishScreen');
+  $('#finishLevel').textContent=NAMES[level];
+  $('#finishPoints').textContent='Puntos: '+score;
+  clearStepTrack();
+  refitStage();
+}
+
+$$('[data-level]').forEach(b=>b.addEventListener('click',()=>startLevel(b.dataset.level)));
+
+$('#revealBtn').addEventListener('click',()=>{
+  $('#identifyWord').textContent=current().label.toUpperCase();
+  $('#revealBtn').disabled=true;
+  hide('#revealBtn'); show('#toCountBtn');
+  refitStage();
+});
+
+$('#toCountBtn').addEventListener('click',()=>showOnly('#screenCount'));
+$('#toSoundBtn').addEventListener('click',()=>showOnly('#screenSound'));
+$('#toSentenceBtn').addEventListener('click',()=>showOnly('#screenSentence'));
+
+$('#clapBtn').addEventListener('click',()=>{
+  const syllables=$$('#soundSyllables .syll');
+  $('#soundFeedback').className='feedback';
+  $('#soundFeedback').textContent='Palmea cada sílaba...';
+
+  syllables.forEach((el,i)=>{
+    setTimeout(()=>{
+      el.classList.add('clapPulse');
+      setTimeout(()=>el.classList.remove('clapPulse'),360);
+    },i*430);
+  });
+
+  const total=Math.max(450, syllables.length*430+120);
+  setTimeout(()=>{
+    if(getSoundTargets().some(pos=>!found.has(pos))){
+      $('#soundFeedback').className='feedback';
+      $('#soundFeedback').textContent='Ahora toca la sílaba o sílabas donde suena la M.';
+      refitStage();
+    }
+  },total);
+});
+
+$('#sentenceDoneBtn').addEventListener('click',()=>{
+  addPoints(1);
+  $('#successLead').textContent=POSITIVE[index % POSITIVE.length];
+  showOnly('#screenSuccess');
+  refitStage();
+});
+
+$('#nextWordBtn').addEventListener('click',()=>{
+  index++;
+  if(index>=deck.length) finishGame();
+  else resetWord();
+  refitStage();
+});
+
+$('#restartLevel').addEventListener('click',()=>startLevel(level));
+$('#quickNewPlayer').addEventListener('click',prepareNewPlayer);
+$('#quickChangeLevel').addEventListener('click',changeLevel);
+$('#centerStartBtn').addEventListener('click',resetWord);
+$('#playAgain').addEventListener('click',samePlayerAnotherFive);
+$('#chooseLevel').addEventListener('click',changeLevel);
+$('#finishNewPlayer').addEventListener('click',prepareNewPlayer);
+
+
+wrapStageContent();
+window.addEventListener('resize', refitStage);
+window.addEventListener('load', refitStage);
+document.addEventListener('fullscreenchange', ()=>setTimeout(refitStage,120));
+
+const fullscreenBtn=document.getElementById('fullscreenBtn');
+if(fullscreenBtn){
+  fullscreenBtn.addEventListener('click', async ()=>{
+    try{
+      if(!document.fullscreenElement){
+        await document.documentElement.requestFullscreen();
+        fullscreenBtn.textContent='Salir de pantalla completa';
+      }else{
+        await document.exitFullscreen();
+        fullscreenBtn.textContent='Pantalla completa';
+      }
+    }catch(e){
+      fullscreenBtn.textContent='Pantalla completa';
+    }
+  });
+  document.addEventListener('fullscreenchange',()=>{
+    fullscreenBtn.textContent=document.fullscreenElement?'Salir de pantalla completa':'Pantalla completa';
+  });
+}
+
+</script>
+
+
+<script id="zurron-local-nav">
+(() => {
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+
+  function normalizeInternal(href) {
+    if (!href) return null;
+    href = String(href).trim();
+
+    // Solo rutas internas absolutas del proyecto.
+    if (!href.startsWith('/')) return null;
+
+    let path = href.split('?')[0].split('#')[0];
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+
+    return ROUTES.has(path) ? path : null;
+  }
+
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[href]');
+    if (!a) return;
+
+    const path = normalizeInternal(a.getAttribute('href'));
+    if (!path) return;
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'zurron:navigate', path}, '*');
+    }
+  }, true);
+})();
+</script>
+
+
+<script id="zurron-responsive-viewport">
+(() => {
+  const applyViewport = () => {
+    const h = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight)
+    );
+    const w = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.width : window.innerWidth)
+    );
+    document.documentElement.style.setProperty('--zurron-view-h', h + 'px');
+    document.documentElement.style.setProperty('--zurron-view-w', w + 'px');
+  };
+  applyViewport();
+  window.addEventListener('resize', applyViewport, {passive:true});
+  window.addEventListener('orientationchange', applyViewport, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', applyViewport, {passive:true});
+  }
+})();
+</script>
+
+</body>
+</html>

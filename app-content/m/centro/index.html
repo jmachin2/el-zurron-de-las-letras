@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400;700&display=swap" rel="stylesheet">
+<title>Centro interactivo · Letra M</title>
+<style>
+:root{
+  --bg:#eef7ff;--panel:#fff;--ink:#17324d;--muted:#58718a;--accent:#2f80ed;--accent2:#dcefff;
+  --line:#c4def8;--good:#2f9e5b;--bad:#d94a4a;--gold:#e6b93f;--soft:#f7fbff;--shadow:0 8px 20px rgba(26,83,132,.12);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eef7ff,#fbfdff);overflow:hidden}
+button{font:inherit;border:0;cursor:pointer} button:disabled{opacity:.5;cursor:not-allowed}
+.app{height:100%;height:100dvh;max-width:1600px;margin:auto;padding:6px 8px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:3px solid var(--line);border-radius:18px;padding:7px 10px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.badge{width:54px;height:54px;border-radius:15px;border:3px solid var(--accent);display:grid;place-items:center;font-size:32px;font-weight:900;background:linear-gradient(#9edcff,#fff);flex:0 0 54px}
+h1{font-size:25px;margin:0;line-height:1.05} .subtitle{font-size:14px;color:var(--muted);margin-top:2px}
+.actions,.nav{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.btn{border-radius:14px;padding:10px 14px;font-size:16px;font-weight:900;background:var(--accent2);color:var(--ink);box-shadow:0 4px 10px rgba(26,83,132,.08)}
+.btn.primary{background:var(--accent);color:#fff} .btn.good{background:var(--good);color:#fff} .btn.secondary{background:#fff;border:2px solid var(--line)} .btn.danger{background:#fff1f1;border:2px solid #efb0b0;color:#9f3232}
+.nav .btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pages{flex:1 1 auto;min-height:0;position:relative}
+.page{display:none;height:100%;min-height:0} .page.active{display:block}
+.card{background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow);min-width:0}
+.small{font-size:13px;color:var(--muted)} .avatar-svg{display:block}
+
+/* PÁGINA 1: jugadores + ruleta */
+.players-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(350px,.75fr);gap:10px;height:100%;min-height:0}
+.players-panel{display:flex;flex-direction:column;min-height:0}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.panel-title{font-size:22px;font-weight:900;line-height:1.1} .panel-help{font-size:14px;color:var(--muted);line-height:1.25;margin-top:2px}
+.current-turn{display:flex;align-items:center;gap:8px;min-height:52px;padding:7px 10px;border-radius:14px;background:var(--soft);border:2px dashed var(--line);margin-bottom:8px}
+.current-turn .avatar-svg{width:38px;height:38px;flex:0 0 38px} .current-turn strong{font-size:17px}
+.animal-roster{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));grid-auto-rows:minmax(92px,1fr);gap:6px;flex:1;min-height:0}
+.animal-card{position:relative;padding:5px 3px;border-radius:14px;border:3px solid var(--line);background:#f7fbff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:none;min-width:0}
+.animal-card .avatar-svg{width:42px;height:42px} .animal-label{font-size:11px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.animal-meta{font-size:9px;color:var(--muted);font-weight:800;white-space:nowrap} .animal-card.inactive{opacity:.58;background:#fff} .animal-card.pending{border-color:#75b7ef}
+.animal-card.current{border-color:var(--gold);background:#fff8d9} .animal-card.finished{border-color:#83c99e;background:#edf9f1} .animal-card.priority{box-shadow:inset 0 0 0 3px #9edcff}
+.status-dot{position:absolute;right:4px;top:3px;font-size:13px;font-weight:900}
+.roster-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid #e2ebf3}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)} .legend b{color:var(--ink)}
+.wheel-panel{display:flex;flex-direction:column;align-items:center;min-height:0;text-align:center}
+.priority-box{width:100%;padding:8px 10px;background:#eef7ff;border:2px solid var(--line);border-radius:14px;font-size:13px;line-height:1.25;margin-bottom:5px}
+.priority-box strong{font-size:15px}
+.roulette-kicker{font-size:14px;font-weight:900;letter-spacing:.08em;color:var(--muted)} .wheel-panel h2{font-size:25px;margin:2px 0 4px}
+.roulette-stage{display:grid;place-items:center;flex:1;min-height:0;width:100%} .roulette-pointer{width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:28px solid var(--gold);margin-bottom:-5px;z-index:2}
+.roulette-stage canvas{width:min(310px,100%);height:auto;aspect-ratio:1/1;border:3px solid var(--line);border-radius:50%;background:#fff}
+.roulette-choice{width:100%;min-height:66px;display:flex;align-items:center;justify-content:center;gap:10px;border:2px dashed var(--line);border-radius:14px;padding:7px;margin-top:5px}
+.roulette-choice .avatar-svg{width:48px;height:48px} .roulette-choice strong{font-size:21px;display:block} .roulette-choice span{font-size:13px;color:var(--muted)}
+.roulette-buttons{display:flex;justify-content:flex-start;align-items:center;gap:7px;flex-wrap:nowrap;margin-top:5px;width:100%;padding-left:8px;padding-right:110px} .roulette-buttons .btn{flex:0 0 108px;min-width:0;padding:8px 10px;font-size:14px;min-height:38px}
+
+/* PÁGINA 2: niveles + actividad */
+.activity-layout{height:100%;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:8px}
+.activity-head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:3px solid var(--line);border-radius:18px;padding:7px 10px;box-shadow:var(--shadow)}
+.activity-title{font-size:23px;font-weight:900} .activity-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end} .player-badge{display:flex;align-items:center;gap:8px;background:#fff8d9;border:3px solid #f0d779;padding:5px 9px;border-radius:15px}
+.player-badge .avatar-svg{width:38px;height:38px} .player-badge strong{font-size:17px} .mistakes{font-size:14px;font-weight:900}
+.mistakes .mark{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;border:2px solid #d9e5ef;margin-left:3px} .mistakes .mark.used{border-color:#e68a8a;background:#ffe8e8;color:#a12d2d}
+.progress-track{display:grid;grid-template-columns:repeat(4,1fr);gap:7px} .step{padding:7px 4px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;background:#f2f6fa;border:2px solid #d7e4ef}
+.step.done{background:#edf9f1;border-color:#92d2a7} .step.active{background:#eaf4ff;border-color:#78b7ee} .step.locked{opacity:.55}
+.journey-wrap{position:relative;background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%);border:4px solid #9fd3ff;border-radius:22px;padding:14px 18px;box-shadow:0 10px 26px rgba(26,83,132,.14);overflow:hidden;min-height:138px}
+.journey-wrap::after{content:"CAMINO A LA META";position:absolute;top:6px;right:12px;font-size:12px;font-weight:900;letter-spacing:.06em;color:#6b92b5}
+.journey-line{position:relative;display:grid;grid-template-columns:repeat(4,1fr);align-items:end;gap:0;min-height:98px}
+.journey-line::before{content:"";position:absolute;left:6%;right:6%;top:44px;height:14px;border-radius:999px;background:linear-gradient(90deg,#d9ebfb 0%, #eef7ff 100%);border:2px solid #b8daf5;z-index:0;box-shadow:inset 0 1px 2px rgba(255,255,255,.9)}
+.journey-fill{position:absolute;left:6%;top:44px;height:14px;width:0;border-radius:999px;background:linear-gradient(90deg,#7fd3ff 0%, #2f80ed 45%, #ffd56a 100%);z-index:0;box-shadow:0 0 14px rgba(47,128,237,.30);transition:width .9s ease}
+.journey-stop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.journey-node{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:4px solid #b9d9f5;background:#fff;font-size:14px;font-weight:900;color:#4d6e88;box-shadow:0 4px 9px rgba(26,83,132,.12)}
+.journey-stop.done .journey-node{background:#edf9f1;border-color:#90d4a8;color:#2f9e5b}
+.journey-stop.active .journey-node{background:#fff8d9;border-color:#e6b93f;color:#9c7607;box-shadow:0 0 0 5px rgba(230,185,63,.20)}
+.journey-stop.goal .journey-node{width:44px;height:44px;border-radius:12px;font-size:22px;background:#fff3bf;border-color:#e6b93f}
+.journey-label{font-size:14px;font-weight:900;color:#46647f;text-align:center;line-height:1.05}
+.journey-animal{position:absolute;top:0;transform:translateX(-50%);transition:left .95s cubic-bezier(.22,.76,.22,1);z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.journey-animal.moving .avatar-svg{animation:hop .95s ease-in-out 1}
+.journey-animal .avatar-svg{width:60px;height:60px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.15))}
+.journey-animal .bubble{margin-top:2px;padding:5px 10px;border-radius:999px;background:#fff8d9;border:2px solid #f0d779;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 3px 8px rgba(0,0,0,.08)}
+@keyframes hop{0%{transform:translateY(0) scale(1)}25%{transform:translateY(-10px) scale(1.04)}50%{transform:translateY(-4px) scale(1.08)}75%{transform:translateY(-10px) scale(1.04)}100%{transform:translateY(0) scale(1)}}
+.school-script,.question-main,.prompt,.choice,.instruction-text{font-family:"Edu NSW ACT Cursive","Segoe Print","Comic Sans MS",cursive}
+.question-card{height:100%;min-height:0;display:flex;flex-direction:column;justify-content:center;text-align:center;background:#fff;border:3px solid var(--line);border-radius:20px;padding:12px;box-shadow:var(--shadow);overflow:hidden}
+.question-kicker{font-size:14px;font-weight:900;color:var(--muted);letter-spacing:.05em} .question-main{font-size:clamp(34px,5vw,64px);font-weight:700;margin:8px 0 10px;line-height:1.05}
+.instruction-box{display:flex;align-items:center;justify-content:center;gap:10px;max-width:980px;width:100%;margin:5px auto 6px;padding:8px 12px;border:2px solid #d7e8f7;border-radius:14px;background:#f7fbff;text-align:left}.instruction-box strong{font-size:13px;letter-spacing:.04em;color:#53708b;white-space:nowrap}.instruction-text{font-size:clamp(18px,1.8vw,24px);font-weight:700;line-height:1.25;flex:1}.instruction-listen{min-height:42px;padding:8px 12px;font-size:14px;box-shadow:none}
+.question-main.sentence{font-size:clamp(28px,3.6vw,48px)} .prompt{font-size:clamp(22px,2.4vw,30px);font-weight:700;margin:0 0 10px;color:#35536f}
+.audio-zone{display:none;align-items:center;justify-content:center;gap:14px;margin:8px auto 12px;min-height:100px} .audio-zone.show{display:flex}
+.speaker-disc{width:94px;height:94px;border-radius:50%;display:grid;place-items:center;background:#eef7ff;border:4px solid var(--accent)} .speaker-disc svg{width:54px;height:54px}
+.listen-btn{min-width:190px;min-height:58px;font-size:19px}
+.audio-status{font-size:13px;color:var(--muted);min-height:18px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;max-width:900px;width:100%;margin:0 auto}
+.choice{min-height:62px;border-radius:16px;border:3px solid var(--line);background:#fff;font-size:clamp(28px,3.2vw,38px);font-weight:700;color:var(--ink);padding:8px;line-height:1.05}.choice.long{font-size:clamp(20px,2vw,27px);line-height:1.2;padding:10px 12px}
+.choice.correct{background:#e9f8ef;border-color:#76c593} .choice.wrong{background:#ffeaea;border-color:#e99b9b}
+.feedback{min-height:32px;margin-top:7px;font-size:21px;font-weight:900} .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+.activity-waiting{height:100%;display:grid;place-items:center;text-align:center} .activity-waiting .bigM{font-size:95px;font-weight:900;color:var(--accent);line-height:1} .activity-waiting h2{font-size:32px;margin:5px 0} .activity-waiting p{font-size:17px;color:var(--muted);max-width:600px;line-height:1.35}.activity-waiting .avatar-svg{width:90px;height:90px;margin:0 auto 4px}.waiting-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}.waiting-selected{display:none}.waiting-selected.show{display:block}.waiting-default.hidden{display:none}
+
+/* Mensajes de transición */
+.turn-overlay{display:none;position:fixed;inset:0;z-index:90;background:rgba(15,38,60,.42);padding:14px;align-items:center;justify-content:center}
+.turn-overlay.open{display:flex} .turn-card{width:min(560px,94vw);background:#fff;border:4px solid var(--line);border-radius:24px;padding:22px;text-align:center;box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.turn-card .avatar-svg{width:82px;height:82px;margin:auto} .turn-card h2{font-size:31px;margin:7px 0} .turn-card p{font-size:18px;color:var(--muted);line-height:1.35} .turn-card .btn{margin-top:8px}
+
+@media(max-height:820px) and (min-width:1101px){
+  .app{padding:4px 7px;gap:4px}
+  .topbar{padding:4px 8px;border-radius:15px}
+  .badge{width:46px;height:46px;flex-basis:46px;font-size:28px}
+  h1{font-size:22px}.subtitle{font-size:12px}
+  .btn{padding:8px 11px;font-size:14px}
+  .card{padding:9px;border-radius:17px}
+  .current-turn{min-height:44px;padding:5px 8px;margin-bottom:5px}
+  .animal-roster{grid-auto-rows:minmax(76px,1fr);gap:4px}
+  .animal-card .avatar-svg{width:36px;height:36px}
+  .animal-label{font-size:10px}.animal-meta{font-size:8px}
+  .roster-footer{margin-top:5px;padding-top:5px}
+  .priority-box{padding:5px 8px;margin-bottom:3px}
+  .wheel-panel h2{font-size:21px;margin:1px 0 2px}
+  .roulette-stage canvas{width:min(260px,100%)}
+  .roulette-choice{min-height:54px;margin-top:3px;padding:5px}
+  .roulette-choice .avatar-svg{width:40px;height:40px}
+  .roulette-choice strong{font-size:18px}
+  .roulette-buttons{margin-top:3px;padding-left:4px;padding-right:120px}
+  .roulette-buttons .btn{flex-basis:94px;min-height:34px;padding:6px 8px;font-size:13px}
+  .activity-head{padding:5px 8px}
+  .progress-track{gap:4px}.step{padding:5px 3px;font-size:12px}
+  .journey-wrap{min-height:112px;padding:9px 15px}
+  .journey-line{min-height:80px}
+  .question-card{padding:8px}
+}
+@media(max-height:700px) and (min-width:1101px){
+  .subtitle{display:none}
+  .roulette-stage canvas{width:min(225px,100%)}
+  .animal-roster{grid-auto-rows:minmax(68px,1fr)}
+  .animal-card .avatar-svg{width:32px;height:32px}
+  .roulette-buttons{padding-right:135px}
+  .roulette-buttons .btn{flex-basis:86px;font-size:12px}
+}
+@media(max-width:900px){
+  html,body{overflow:auto;height:auto;min-height:100%} .app{height:auto;min-height:100vh} .page{height:auto}
+  .players-layout{grid-template-columns:1fr} .animal-roster{grid-template-columns:repeat(5,minmax(66px,1fr));grid-auto-rows:92px} .roulette-stage{min-height:300px}
+}
+@media(max-width:650px){
+  .topbar{align-items:flex-start} h1{font-size:21px} .subtitle{display:none} .badge{width:48px;height:48px;flex-basis:48px;font-size:29px}
+  .nav{width:100%;order:3} .nav .btn{flex:1} .actions{width:100%} .actions .btn{flex:1}
+  .animal-roster{grid-template-columns:repeat(4,minmax(62px,1fr))} .progress-track{grid-template-columns:repeat(2,1fr)} .activity-head{align-items:flex-start;flex-direction:column}
+}
+
+/* AJUSTES DE VOZ Y VOLUMEN */
+.voice-overlay{display:none;position:fixed;inset:0;z-index:110;background:rgba(15,38,60,.5);padding:14px;align-items:center;justify-content:center}
+.voice-overlay.open{display:flex}
+.voice-card{width:min(720px,96vw);background:#fff;border:4px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.22)}
+.voice-card h2{margin:0 0 4px;font-size:28px}.voice-card>p{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.35}
+.voice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.voice-option{min-height:82px;text-align:left;border:3px solid var(--line);border-radius:16px;background:#f8fbff;padding:10px 12px;color:var(--ink)}
+.voice-option.selected{border-color:var(--accent);background:#eaf4ff;box-shadow:inset 0 0 0 2px #9edcff}
+.voice-option strong{font-size:17px;display:block}.voice-option span{font-size:12px;color:var(--muted);display:block;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.volume-row{display:grid;grid-template-columns:auto minmax(160px,1fr) 58px;gap:10px;align-items:center;margin:16px 0 10px;padding:12px;border-radius:16px;background:#f7fbff;border:2px solid #d7e8f7}
+.volume-row label{font-weight:900}.volume-row input{width:100%;accent-color:var(--accent)}.volume-value{text-align:center;font-weight:900;font-size:18px}
+.voice-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+.voice-note{font-size:12px;color:var(--muted);line-height:1.3;margin-top:8px}
+@media(max-width:620px){.voice-grid{grid-template-columns:1fr}.volume-row{grid-template-columns:1fr}.volume-value{text-align:left}}
+
+
+/* Navegación de la consola general */
+.zurron-back-letter{
+  position:fixed;
+  left:8px;
+  bottom:8px;
+  z-index:99999;
+  min-height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 11px;
+  border:2px solid rgba(23,50,77,.18);
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  color:#17324d;
+  text-decoration:none;
+  font:900 12px/1 Arial,Helvetica,sans-serif;
+  box-shadow:0 5px 14px rgba(23,50,77,.12);
+  backdrop-filter:blur(5px)
+}
+.zurron-back-letter:hover{border-color:#2f80ed}
+@media(max-height:650px){
+  .zurron-back-letter{min-height:31px;padding:4px 9px;font-size:11px;bottom:5px;left:5px}
+}
+
+
+/* La pantalla completa la controla EXCLUSIVAMENTE la consola superior. */
+#fullscreenBtn,
+[data-page-fullscreen],
+.s-page-fullscreen,
+.cuento-fullscreen{
+  display:none!important;
+}
+html,body{
+  max-width:100%;
+}
+
+
+/* ==========================================================
+   ZURRÓN · AJUSTE GLOBAL RESPONSIVE v3
+   La altura útil se calcula con JS y corresponde al viewport
+   REAL de cada pantalla interna.
+   ========================================================== */
+:root{
+  --zurron-view-h:100dvh;
+  --zurron-view-w:100vw;
+}
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+body{
+  overflow:hidden!important;
+}
+
+/* Contenedores principales: nunca deben sobrepasar el viewport */
+.page,
+.app{
+  width:100%!important;
+  height:var(--zurron-view-h)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:var(--zurron-view-h)!important;
+}
+.shell{
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Cualquier imagen funcional debe entrar COMPLETA en su contenedor */
+img{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Pictogramas de las misiones */
+.picture{
+  width:min(40vw,46vh,420px)!important;
+  height:min(40vw,46vh,420px)!important;
+  max-width:88vw!important;
+  max-height:46vh!important;
+  object-fit:contain!important;
+}
+.picture.small{
+  width:min(28vw,30vh,285px)!important;
+  height:min(28vw,30vh,285px)!important;
+  max-width:72vw!important;
+  max-height:30vh!important;
+  object-fit:contain!important;
+}
+
+/* Portada: siempre se ve la ilustración completa */
+.hero{
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Cuento: página completa dentro del área disponible */
+.storyImageWrap{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Ilustraciones de las canciones */
+.audioIllu{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:min(42vh,390px)!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Canvas/ruletas: nunca salen de pantalla */
+canvas{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* SVG y vídeo, por seguridad */
+svg,video{
+  max-width:100%;
+  max-height:100%;
+}
+
+/* Evitar que grids/flex fuerzen anchuras superiores al viewport */
+.stage,
+.storyStage,
+.storyLayout,
+.audioGrid,
+.quizWrap,
+.quizCard,
+.question-card,
+.activity,
+.activity-body,
+.activity-panel,
+.main,
+.content,
+.cardsWrap,
+.grid,
+.levels,
+.players-layout,
+.roulette-stage{
+  min-width:0!important;
+  min-height:0!important;
+}
+
+/* Ordenador/PDI: todo debe caber, sin scroll */
+@media (min-width:761px){
+  html,body{
+    overflow:hidden!important;
+  }
+  .page,.app{
+    overflow:hidden!important;
+  }
+}
+
+/* Pantallas de poca altura: reducir automáticamente elementos visuales */
+@media (max-height:760px) and (min-width:761px){
+  .picture{
+    width:min(34vw,40vh,340px)!important;
+    height:min(34vw,40vh,340px)!important;
+    max-height:40vh!important;
+  }
+  .picture.small{
+    width:min(23vw,25vh,230px)!important;
+    height:min(23vw,25vh,230px)!important;
+    max-height:25vh!important;
+  }
+  .audioIllu{
+    max-height:32vh!important;
+  }
+}
+
+/* Pantalla especialmente baja */
+@media (max-height:620px) and (min-width:761px){
+  .picture{
+    width:min(29vw,34vh,290px)!important;
+    height:min(29vw,34vh,290px)!important;
+    max-height:34vh!important;
+  }
+  .picture.small{
+    width:min(20vw,21vh,190px)!important;
+    height:min(20vw,21vh,190px)!important;
+    max-height:21vh!important;
+  }
+  .audioIllu{
+    max-height:26vh!important;
+  }
+}
+
+/* Móvil/tablet vertical: se prioriza legibilidad y se permite flujo vertical */
+@media (max-width:760px){
+  html,body{
+    height:auto!important;
+    min-height:100%!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .page,.app{
+    height:auto!important;
+    min-height:var(--zurron-view-h)!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .picture{
+    width:min(86vw,390px)!important;
+    height:min(86vw,390px)!important;
+    max-height:none!important;
+  }
+  .picture.small{
+    width:min(70vw,270px)!important;
+    height:min(70vw,270px)!important;
+    max-height:none!important;
+  }
+  .audioIllu{
+    max-height:340px!important;
+  }
+}
+
+
+/* ==========================================================
+   CARTILLA · AJUSTE DE ALTURA REAL v4
+   ========================================================== */
+:root{
+  --cartilla-real-h:100%;
+}
+
+/* El documento de la cartilla ocupa exactamente el iframe, no el viewport exterior. */
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+
+.app{
+  width:100%!important;
+  height:var(--cartilla-real-h)!important;
+  min-height:0!important;
+  max-height:var(--cartilla-real-h)!important;
+  padding:4px 6px!important;
+  gap:4px!important;
+  overflow:hidden!important;
+}
+
+/* La cabecera nunca roba más espacio del necesario. */
+.topbar{
+  flex:0 0 auto!important;
+  min-height:0!important;
+  padding:4px 7px!important;
+  border-width:2px!important;
+  border-radius:14px!important;
+}
+.badge{
+  width:42px!important;
+  height:42px!important;
+  flex-basis:42px!important;
+  font-size:25px!important;
+}
+h1{font-size:clamp(18px,2vw,22px)!important}
+.subtitle{font-size:11px!important}
+.topbar .btn{
+  min-height:32px!important;
+  padding:5px 8px!important;
+  font-size:12px!important;
+}
+
+/* Área útil restante. */
+.pages{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:hidden!important;
+}
+.page{
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+.page.active{
+  display:block!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+}
+
+/* PÁGINA JUGADORES + RULETA */
+.players-layout{
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  gap:6px!important;
+  grid-template-columns:minmax(0,1.65fr) minmax(285px,.72fr)!important;
+}
+.players-panel,
+.wheel-panel{
+  min-height:0!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+.card{
+  padding:7px!important;
+  border-width:2px!important;
+  border-radius:15px!important;
+}
+.panel-head{margin-bottom:4px!important}
+.panel-title{font-size:18px!important}
+.panel-help{font-size:11px!important}
+.current-turn{
+  min-height:38px!important;
+  padding:3px 6px!important;
+  margin-bottom:4px!important;
+}
+.current-turn .avatar-svg{width:30px!important;height:30px!important;flex-basis:30px!important}
+.current-turn strong{font-size:14px!important}
+
+.animal-roster{
+  min-height:0!important;
+  grid-auto-rows:minmax(58px,1fr)!important;
+  gap:3px!important;
+}
+.animal-card{
+  padding:2px!important;
+  border-width:2px!important;
+  border-radius:10px!important;
+  gap:0!important;
+}
+.animal-card .avatar-svg{width:30px!important;height:30px!important}
+.animal-label{font-size:9px!important}
+.animal-meta{font-size:7px!important}
+.status-dot{font-size:10px!important}
+.roster-footer{
+  margin-top:3px!important;
+  padding-top:3px!important;
+  gap:4px!important;
+}
+.legend{font-size:9px!important;gap:5px!important}
+.roster-footer .btn{
+  min-height:30px!important;
+  padding:4px 7px!important;
+  font-size:10px!important;
+}
+
+.priority-box{
+  padding:4px 6px!important;
+  margin-bottom:2px!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+}
+.priority-box strong{font-size:12px!important}
+.roulette-kicker{font-size:10px!important}
+.wheel-panel h2{font-size:18px!important;margin:0 0 2px!important}
+.roulette-stage{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.roulette-pointer{
+  border-left-width:12px!important;
+  border-right-width:12px!important;
+  border-top-width:19px!important;
+}
+.roulette-stage canvas{
+  width:min(235px,31vh,92%)!important;
+  height:auto!important;
+  max-height:31vh!important;
+}
+.roulette-choice{
+  min-height:45px!important;
+  padding:3px!important;
+  margin-top:2px!important;
+}
+.roulette-choice .avatar-svg{width:32px!important;height:32px!important}
+.roulette-choice strong{font-size:15px!important}
+.roulette-choice span{font-size:10px!important}
+.roulette-buttons{
+  margin-top:2px!important;
+  padding:0!important;
+  gap:4px!important;
+  justify-content:center!important;
+  flex-wrap:wrap!important;
+}
+.roulette-buttons .btn{
+  flex:1 1 88px!important;
+  max-width:130px!important;
+  min-height:31px!important;
+  padding:4px 6px!important;
+  font-size:11px!important;
+}
+
+/* PÁGINA DE ACTIVIDAD */
+.activity-layout{
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  grid-template-rows:auto auto minmax(0,1fr)!important;
+  gap:4px!important;
+  overflow:hidden!important;
+}
+.activity-head{
+  padding:3px 6px!important;
+  border-width:2px!important;
+  border-radius:13px!important;
+}
+.activity-title{font-size:17px!important}
+.player-badge{
+  padding:2px 5px!important;
+  border-width:2px!important;
+}
+.player-badge .avatar-svg{width:28px!important;height:28px!important}
+.player-badge strong{font-size:13px!important}
+.mistakes{font-size:11px!important}
+.mistakes .mark{width:18px!important;height:18px!important}
+.progress-track{gap:3px!important}
+.step{
+  padding:3px 2px!important;
+  font-size:10px!important;
+  border-width:2px!important;
+  border-radius:9px!important;
+}
+
+/* El camino se reduce: la prioridad es que respuestas y botones queden visibles. */
+.journey-wrap{
+  min-height:72px!important;
+  max-height:82px!important;
+  padding:4px 9px!important;
+  border-width:2px!important;
+  border-radius:14px!important;
+}
+.journey-wrap::after{font-size:8px!important;top:2px!important}
+.journey-line{min-height:60px!important}
+.journey-line::before,
+.journey-fill{
+  top:28px!important;
+  height:9px!important;
+}
+.journey-node{
+  width:24px!important;
+  height:24px!important;
+  border-width:3px!important;
+  font-size:10px!important;
+}
+.journey-stop.goal .journey-node{
+  width:30px!important;
+  height:30px!important;
+  font-size:15px!important;
+}
+.journey-stop{gap:2px!important}
+.journey-label{font-size:9px!important}
+.journey-animal .avatar-svg{width:36px!important;height:36px!important}
+.journey-animal .bubble{
+  font-size:8px!important;
+  padding:2px 5px!important;
+}
+
+/* La tarjeta de pregunta es la zona que debe conservar siempre sus botones. */
+.question-card{
+  min-height:0!important;
+  height:100%!important;
+  max-height:100%!important;
+  padding:6px!important;
+  border-width:2px!important;
+  border-radius:14px!important;
+  justify-content:flex-start!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+}
+.question-kicker{font-size:10px!important}
+.question-main{
+  font-size:clamp(25px,4vw,40px)!important;
+  margin:3px 0 4px!important;
+}
+.question-main.sentence{font-size:clamp(20px,3vw,32px)!important}
+.prompt{
+  font-size:clamp(16px,2vw,21px)!important;
+  margin:0 0 4px!important;
+}
+.instruction-box{
+  gap:5px!important;
+  margin:2px auto 3px!important;
+  padding:4px 6px!important;
+  border-width:1px!important;
+  border-radius:10px!important;
+}
+.instruction-box strong{font-size:9px!important}
+.instruction-text{
+  font-size:clamp(13px,1.5vw,17px)!important;
+  line-height:1.1!important;
+}
+.instruction-listen{
+  min-height:30px!important;
+  padding:3px 6px!important;
+  font-size:10px!important;
+}
+
+/* Audio compacto. */
+.audio-zone{
+  min-height:52px!important;
+  margin:2px auto 4px!important;
+  gap:7px!important;
+}
+.speaker-disc{
+  width:52px!important;
+  height:52px!important;
+  border-width:3px!important;
+}
+.speaker-disc svg{width:30px!important;height:30px!important}
+.listen-btn{
+  min-width:130px!important;
+  min-height:38px!important;
+  padding:5px 8px!important;
+  font-size:13px!important;
+}
+.audio-status{
+  min-height:12px!important;
+  font-size:9px!important;
+}
+
+/* Controles del nivel 4 de S/L. */
+.phrase-controls{
+  width:min(700px,98%)!important;
+  margin:0 auto 3px!important;
+  padding:3px 5px!important;
+  gap:4px!important;
+}
+.phrase-control{
+  grid-template-columns:auto 28px minmax(65px,1fr) 28px!important;
+  gap:3px!important;
+}
+.phrase-control strong,.phrase-value{font-size:9px!important}
+.phrase-step{
+  width:28px!important;
+  height:25px!important;
+  font-size:15px!important;
+  border-radius:7px!important;
+}
+
+/* Opciones y feedback: siempre accesibles. */
+.choices{
+  gap:5px!important;
+  max-width:960px!important;
+  grid-template-columns:repeat(auto-fit,minmax(105px,1fr))!important;
+}
+.choice{
+  min-height:43px!important;
+  padding:4px 6px!important;
+  border-width:2px!important;
+  border-radius:11px!important;
+  font-size:clamp(21px,2.5vw,29px)!important;
+}
+.choice.long{
+  min-height:43px!important;
+  padding:5px 7px!important;
+  font-size:clamp(15px,1.6vw,20px)!important;
+}
+.feedback{
+  min-height:22px!important;
+  margin-top:3px!important;
+  font-size:15px!important;
+}
+
+/* Pantalla de espera. */
+.activity-waiting .bigM{font-size:62px!important}
+.activity-waiting h2{font-size:22px!important}
+.activity-waiting p{font-size:13px!important}
+.activity-waiting .avatar-svg{width:62px!important;height:62px!important}
+.waiting-actions{margin-top:5px!important;gap:5px!important}
+.waiting-actions .btn{min-height:34px!important;padding:5px 8px!important;font-size:12px!important}
+
+/* El botón volver no debe tapar controles del juego. */
+.zurron-back-letter{
+  bottom:4px!important;
+  left:4px!important;
+  min-height:28px!important;
+  padding:3px 7px!important;
+  font-size:9px!important;
+}
+
+/* Pantallas todavía más bajas: reducimos un paso más. */
+@media (max-height:640px) and (min-width:761px){
+  .topbar{padding:2px 5px!important}
+  .badge{width:34px!important;height:34px!important;flex-basis:34px!important;font-size:20px!important}
+  h1{font-size:17px!important}.subtitle{display:none!important}
+  .topbar .btn{min-height:27px!important;padding:3px 6px!important;font-size:10px!important}
+
+  .animal-roster{grid-auto-rows:minmax(49px,1fr)!important}
+  .animal-card .avatar-svg{width:24px!important;height:24px!important}
+  .roulette-stage canvas{width:min(190px,27vh,90%)!important;max-height:27vh!important}
+  .roulette-choice{min-height:38px!important}
+  .roulette-choice .avatar-svg{width:26px!important;height:26px!important}
+
+  .journey-wrap{min-height:58px!important;max-height:64px!important;padding:2px 7px!important}
+  .journey-line{min-height:50px!important}
+  .journey-line::before,.journey-fill{top:24px!important}
+  .journey-animal .avatar-svg{width:30px!important;height:30px!important}
+  .journey-animal .bubble{display:none!important}
+
+  .question-main{font-size:24px!important}
+  .audio-zone{min-height:42px!important}
+  .speaker-disc{width:42px!important;height:42px!important}
+  .speaker-disc svg{width:24px!important;height:24px!important}
+  .listen-btn{min-height:32px!important}
+  .choice{min-height:36px!important;font-size:19px!important}
+  .choice.long{font-size:14px!important}
+}
+
+/* En móvil sí permitimos una página vertical normal. */
+@media (max-width:760px){
+  html,body{height:auto!important;max-height:none!important;overflow:auto!important}
+  .app{
+    height:auto!important;
+    min-height:100dvh!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .pages,.page,.page.active{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .players-layout{
+    height:auto!important;
+    max-height:none!important;
+    grid-template-columns:1fr!important;
+  }
+  .players-panel,.wheel-panel{overflow:visible!important}
+  .activity-layout{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .question-card{height:auto!important;max-height:none!important;overflow:visible!important}
+}
+
+
+/* === ZURRÓN · LIMPIEZA VISUAL v5 === */
+html,body{background:#f4f7fa!important}
+:root{
+  --accent2:#f1f5f9!important;
+  --line:#d7e1eb!important;
+  --muted:#6f8194!important;
+  --shadow:0 4px 12px rgba(26,83,132,.06)!important;
+}
+.topbar,.activity-head,.card,.question-card,.journey-wrap,.current-turn,.priority-box,.roulette-choice,.instruction-box{
+  box-shadow:none!important;
+}
+.topbar{padding:6px 10px!important;border-width:2px!important;background:rgba(255,255,255,.97)!important}
+.subtitle{display:none!important}
+.badge{width:46px!important;height:46px!important;flex-basis:46px!important;font-size:28px!important;border-width:2px!important;background:#fff!important}
+.brand h1{font-size:clamp(20px,2vw,24px)!important}
+.actions .btn,.nav .btn{
+  min-height:34px!important;padding:7px 10px!important;font-size:13px!important;
+  border:1px solid #d6dee8!important;background:#f8fafc!important;color:#4e677f!important;box-shadow:none!important
+}
+.nav .btn.active{background:#24486f!important;color:#fff!important;border-color:#24486f!important}
+.activity-title{font-size:clamp(18px,2.2vw,22px)!important;line-height:1.1!important}
+.player-badge{padding:4px 8px!important;border-width:2px!important;box-shadow:none!important}
+.player-badge strong{font-size:15px!important}.mistakes{font-size:13px!important}.mistakes .mark{width:20px!important;height:20px!important}
+.progress-track{display:none!important}
+.journey-wrap{padding:8px 14px!important;border-width:2px!important;min-height:76px!important;background:#fbfcfd!important}
+.journey-wrap::after{display:none!important}
+.journey-line{min-height:54px!important}
+.journey-line::before,.journey-fill{top:22px!important;height:6px!important}
+.journey-node{width:24px!important;height:24px!important;border-width:2px!important;font-size:10px!important;box-shadow:none!important}
+.journey-stop.goal .journey-node{width:30px!important;height:30px!important;border-radius:10px!important;font-size:15px!important}
+.journey-label{font-size:11px!important;color:#6b8094!important}
+.journey-animal{top:0!important}.journey-animal .avatar-svg{width:28px!important;height:28px!important}.journey-animal .bubble{display:none!important}
+.question-card{border-width:2px!important;padding:10px 14px!important;background:#fff!important}
+.question-kicker{font-size:12px!important;color:#8598aa!important;letter-spacing:.03em!important}
+.prompt{font-size:clamp(18px,2vw,24px)!important;color:#29445f!important;margin-bottom:8px!important}
+.question-main{font-size:clamp(48px,7vw,86px)!important;line-height:1.02!important;margin:4px 0 8px!important;color:#17324d!important}
+.question-main.sentence{font-size:clamp(28px,4vw,42px)!important;line-height:1.15!important}
+.instruction-box{max-width:980px!important;background:#fbfcfd!important;border:1px solid #dbe4ed!important;padding:7px 10px!important;margin:2px auto 8px!important}
+.instruction-box strong{font-size:11px!important;color:#7a8ea1!important}
+.instruction-text{font-size:clamp(18px,2vw,24px)!important;color:#24405a!important}
+.audio-zone{min-height:72px!important;margin:4px auto 10px!important}
+.speaker-disc{width:72px!important;height:72px!important;border-width:3px!important;background:#f2f7fc!important}
+.speaker-disc svg{width:42px!important;height:42px!important}.listen-btn{min-height:48px!important;min-width:170px!important;font-size:18px!important}
+.choices{max-width:1080px!important;gap:10px!important}
+.choice{min-height:74px!important;font-size:clamp(36px,4vw,52px)!important;border-width:2px!important;background:#fff!important;box-shadow:none!important}
+.choice.long{font-size:clamp(19px,2vw,27px)!important;line-height:1.18!important}
+.feedback{font-size:18px!important;margin-top:4px!important}
+.question-kicker,.audio-status,.small,.journey-label,.instruction-box strong{font-weight:800!important}
+.zurron-back-letter{opacity:.9!important;background:rgba(255,255,255,.95)!important;border-color:rgba(23,50,77,.14)!important}
+@media(max-height:760px) and (min-width:901px){
+  .journey-wrap{min-height:64px!important;padding:6px 12px!important}
+  .journey-line{min-height:46px!important}
+  .question-main{font-size:clamp(42px,6vw,72px)!important}
+  .choice{min-height:64px!important;font-size:clamp(30px,3.5vw,44px)!important}
+}
+
+</style>
+</head>
+<body>
+<a class="zurron-back-letter" href="/m/" aria-label="Volver a la letra M">← LETRA M</a>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="badge">M</div>
+      <div><h1>Centro interactivo · Letra M</h1><div class="subtitle">Dos pantallas: jugadores y ruleta / niveles y actividad. Al comenzar, el juego sustituye esta pantalla de espera.</div></div>
+    </div>
+    <nav class="nav" aria-label="Pantallas del juego">
+      <button class="btn active" id="playersTab" type="button">JUGADORES Y RULETA</button>
+      <button class="btn secondary" id="activityTab" type="button">NIVELES Y ACTIVIDAD</button>
+    </nav>
+    <div class="actions">
+      <button class="btn secondary" id="voiceSettingsBtn" type="button">VOZ Y VOLUMEN</button>
+      <button class="btn secondary" id="fullscreenBtn" type="button">PANTALLA COMPLETA</button>
+      <button class="btn danger" id="resetBtn" type="button">NUEVA PARTIDA</button>
+    </div>
+  </header>
+
+  <div class="pages">
+    <section class="page active" id="playersPage" aria-label="Jugadores y ruleta">
+      <div class="players-layout">
+        <div class="card players-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">ELIGE TU ANIMALITO</div>
+              <div class="panel-help">Cada niño toca un animal libre al terminar su trabajo. Los 20 permanecen visibles. El borde azul señala a quienes tienen prioridad para salir.</div>
+            </div>
+          </div>
+          <div class="current-turn" id="currentTurn"><span><strong>Sin turno.</strong> Elige animalitos y gira la ruleta.</span></div>
+          <div class="animal-roster" id="animalRoster"></div>
+          <div class="roster-footer">
+            <div class="legend"><span><b>Azul:</b> prioridad</span><span><b>Amarillo:</b> juega ahora</span><span><b>Verde:</b> finalizado</span></div>
+            <div class="small">La ruleta prioriza primero a quienes todavía no han jugado y después a quienes llevan menos turnos.</div>
+          </div>
+        </div>
+
+        <aside class="card wheel-panel">
+          <div class="roulette-kicker">LA RULETA ELIGE</div>
+          <h2>¿Quién juega ahora?</h2>
+          <div class="priority-box" id="priorityInfo"><strong>Prioridad</strong><br>Elige varios animalitos para empezar.</div>
+          <div class="roulette-stage">
+            <div class="roulette-pointer"></div>
+            <canvas id="wheel" width="420" height="420" aria-label="Ruleta de jugadores"></canvas>
+          </div>
+          <div class="roulette-choice" id="wheelResult"><div><strong>Preparados</strong><span>Primero juegan quienes todavía no han participado.</span></div></div>
+          <div class="roulette-buttons">
+            <button class="btn primary" id="spinBtn" type="button">GIRAR</button>
+            <button class="btn good" id="startTurnBtn" type="button" disabled>COMENZAR</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page" id="activityPage" aria-label="Niveles y actividad">
+      <div class="activity-layout">
+        <div class="activity-head">
+          <div>
+            <div class="activity-title" id="levelTitle">Niveles y actividad</div>
+            <div class="small" id="levelDesc">La ruleta debe elegir primero a un jugador.</div>
+          </div>
+          <div class="activity-actions"><div class="player-badge" id="playerBadge"><strong>Sin jugador</strong></div><button class="btn secondary" id="changePlayerBtn" type="button">CAMBIAR JUGADOR</button></div>
+        </div>
+        <div class="progress-track" id="progressTrack"></div>
+        <div class="journey-wrap" id="journeyWrap"></div>
+        <div id="activityBody" style="height:100%;min-height:0">
+          <div class="activity-waiting" id="waitingView">
+            <div>
+              <div class="waiting-default" id="waitingDefault">
+                <div class="bigM">M</div>
+                <h2>Preparados para leer</h2>
+                <p>Primero la ruleta debe elegir un animalito.</p>
+                <div class="waiting-actions">
+                  <button class="btn primary" id="goPlayersBtn" type="button">IR A LA RULETA</button>
+                </div>
+              </div>
+              <div class="waiting-selected" id="waitingSelected">
+                <div id="waitingAvatar"></div>
+                <h2 id="waitingName">Jugador elegido</h2>
+                <p id="waitingLevel">Preparado para comenzar.</p>
+                <div class="waiting-actions">
+                  <button class="btn good" id="waitingStartBtn" type="button">COMENZAR ACTIVIDAD</button>
+                  <button class="btn secondary" id="waitingBackBtn" type="button">VOLVER A LA RULETA</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="question-card" id="levelView" hidden>
+            <div class="question-kicker" id="questionKicker">PREGUNTA</div>
+            <div class="instruction-box" id="instructionBox">
+              <strong>QUÉ HAGO</strong>
+              <div class="instruction-text" id="instructionText">Escucha o lee con calma y elige la respuesta correcta.</div>
+              <button class="btn secondary instruction-listen" id="instructionListenBtn" type="button">OÍR INSTRUCCIÓN</button>
+            </div>
+            <div class="audio-zone" id="audioZone">
+              <div class="speaker-disc" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><path d="M12 26h11l13-11v34L23 38H12z" fill="#2f80ed" stroke="#17324d" stroke-width="3"/><path d="M43 24q8 8 0 16M49 18q14 14 0 28" fill="none" stroke="#17324d" stroke-width="3.5" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <button class="btn primary listen-btn" id="listenBtn" type="button">ESCUCHAR</button>
+                <div class="audio-status" id="audioStatus">Escucha y después toca la sílaba.</div>
+              </div>
+            </div>
+            <div class="question-main" id="questionMain"></div>
+            <div class="prompt" id="questionPrompt"></div>
+            <div class="choices" id="questionChoices"></div>
+            <div class="feedback" id="feedback" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="voice-overlay" id="voiceOverlay" role="dialog" aria-modal="true" aria-labelledby="voiceTitle">
+  <div class="voice-card">
+    <h2 id="voiceTitle">Voz y volumen</h2>
+    <p>Elige una de las cuatro voces. La página busca primero voces españolas naturales o neurales instaladas en Chrome, Edge o Windows.</p>
+    <div class="voice-grid" id="voiceGrid"></div>
+    <div class="volume-row">
+      <label for="volumeSlider">Volumen</label>
+      <input id="volumeSlider" type="range" min="0" max="200" step="10" value="100" aria-label="Volumen de la voz, de 0 a 200 por ciento">
+      <div class="volume-value" id="volumeValue">100%</div>
+    </div>
+    <div class="voice-actions">
+      <button class="btn secondary" id="testVoiceBtn" type="button">PROBAR VOZ</button>
+      <button class="btn primary" id="closeVoiceBtn" type="button">LISTO</button>
+    </div>
+    <div class="voice-note" id="voiceNote">La calidad final depende de las voces disponibles en este ordenador. El control llega a 200 %. También ajusta la intensidad de los sonidos de acierto y fallo. El sintetizador del navegador limita físicamente su salida de voz a su máximo propio; por encima de 100 % se mantiene ese máximo.</div>
+  </div>
+</div>
+
+<div class="turn-overlay" id="turnOverlay" role="dialog" aria-modal="true">
+  <div class="turn-card" id="turnCard"></div>
+</div>
+
+<script>
+const animalSpecs=[
+{name:'Gato',kind:'cat',fill:'#ffd9a8',accent:'#f2b66a'},{name:'Perro',kind:'dog',fill:'#d9c2a3',accent:'#b98854'},{name:'Conejo',kind:'rabbit',fill:'#f5e2ff',accent:'#e4b8ff'},{name:'Búho',kind:'owl',fill:'#dfc7a7',accent:'#b1834d'},{name:'Tortuga',kind:'turtle',fill:'#cdebb7',accent:'#89c56a'},{name:'Pez',kind:'fish',fill:'#bde8ff',accent:'#73c5f2'},{name:'Osito',kind:'bear',fill:'#e7c7a8',accent:'#c28f5c'},{name:'Zorro',kind:'fox',fill:'#ffd0a8',accent:'#f39a4e'},{name:'Pollito',kind:'chick',fill:'#fff0a8',accent:'#ffd65f'},{name:'Abejita',kind:'bee',fill:'#ffe28e',accent:'#222'},{name:'Rana',kind:'frog',fill:'#bfe8a9',accent:'#7ec45e'},{name:'Panda',kind:'panda',fill:'#fff',accent:'#30343b'},{name:'León',kind:'lion',fill:'#f4c86e',accent:'#b77831'},{name:'Koala',kind:'koala',fill:'#cdd2d7',accent:'#8a959e'},{name:'Pingüino',kind:'penguin',fill:'#f3f5f7',accent:'#263746'},{name:'Elefante',kind:'elephant',fill:'#c9d6e5',accent:'#8ca3bd'},{name:'Mariquita',kind:'ladybug',fill:'#ef767a',accent:'#263746'},{name:'Caracol',kind:'snail',fill:'#f2c995',accent:'#bf8e55'},{name:'Mariposa',kind:'butterfly',fill:'#e3c3ff',accent:'#8f68b7'},{name:'Delfín',kind:'dolphin',fill:'#a9dcf5',accent:'#559fc4'}
+];
+function animalSVG(index){const a=animalSpecs[index],s='#17324d',base=b=>`<svg class="avatar-svg" viewBox="0 0 68 68" aria-hidden="true">${b}</svg>`;switch(a.kind){
+case'cat':return base(`<circle cx="34" cy="37" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><path d="M20 27 L26 14 L31 27 M37 27 L42 14 L48 27" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="36" r="2.3"/><circle cx="40" cy="36" r="2.3"/><path d="M31 43 Q34 46 37 43" fill="none" stroke="${s}" stroke-width="2.4"/>`);
+case'dog':return base(`<circle cx="34" cy="38" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><ellipse cx="20" cy="27" rx="6" ry="11" fill="${a.accent}" stroke="${s}" stroke-width="2.5" transform="rotate(-18 20 27)"/><ellipse cx="48" cy="27" rx="6" ry="11" fill="${a.accent}" stroke="${s}" stroke-width="2.5" transform="rotate(18 48 27)"/><circle cx="28" cy="36" r="2.3"/><circle cx="40" cy="36" r="2.3"/><ellipse cx="34" cy="43" rx="6" ry="4" fill="#fff" stroke="${s}" stroke-width="2"/>`);
+case'rabbit':return base(`<circle cx="34" cy="41" r="16" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><rect x="23" y="8" width="8" height="24" rx="4" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><rect x="37" y="8" width="8" height="24" rx="4" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="29" cy="40" r="2.2"/><circle cx="39" cy="40" r="2.2"/><circle cx="34" cy="45" r="2.3"/>`);
+case'owl':return base(`<ellipse cx="34" cy="39" rx="18" ry="20" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="35" r="6" fill="#fff" stroke="${s}" stroke-width="2"/><circle cx="40" cy="35" r="6" fill="#fff" stroke="${s}" stroke-width="2"/><circle cx="28" cy="35" r="2"/><circle cx="40" cy="35" r="2"/><path d="M34 39 l-4 4 h8 z" fill="#f2b24f" stroke="${s}" stroke-width="1.5"/>`);
+case'turtle':return base(`<ellipse cx="32" cy="39" rx="18" ry="14" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="50" cy="38" r="7" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="52" cy="36" r="2"/><path d="M19 31 l-5 -4 M19 47 l-5 4 M32 25 v-5 M32 53 v5" stroke="${s}" stroke-width="2.5" stroke-linecap="round"/>`);
+case'fish':return base(`<ellipse cx="31" cy="36" rx="18" ry="12" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><path d="M48 36 l11 -8 v16 z" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="24" cy="34" r="2.4"/>`);
+case'bear':return base(`<circle cx="23" cy="23" r="7" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="45" cy="23" r="7" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="34" cy="38" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="36" r="2.2"/><circle cx="40" cy="36" r="2.2"/><ellipse cx="34" cy="43" rx="7" ry="5" fill="#fff4e8" stroke="${s}" stroke-width="2"/>`);
+case'fox':return base(`<path d="M17 41 q17 -24 34 0 q-2 14 -17 14 q-15 0 -17 -14z" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><path d="M22 29 l5 -15 l7 13 M46 29 l-5 -15 l-7 13" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="39" r="2.2"/><circle cx="40" cy="39" r="2.2"/>`);
+case'chick':return base(`<circle cx="34" cy="38" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="36" r="2.2"/><circle cx="40" cy="36" r="2.2"/><path d="M34 40 l-5 3 h10 z" fill="#f2a84a" stroke="${s}" stroke-width="1.6"/>`);
+case'bee':return base(`<ellipse cx="34" cy="39" rx="16" ry="13" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><ellipse cx="27" cy="27" rx="8" ry="6" fill="#e9f7ff" stroke="${s}" stroke-width="2"/><ellipse cx="41" cy="27" rx="8" ry="6" fill="#e9f7ff" stroke="${s}" stroke-width="2"/><path d="M24 35 h20 M25 43 h18" stroke="${s}" stroke-width="3"/>`);
+case'frog':return base(`<circle cx="26" cy="25" r="7" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="42" cy="25" r="7" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="34" cy="40" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="26" cy="25" r="2"/><circle cx="42" cy="25" r="2"/><path d="M25 45 q9 8 18 0" stroke="${s}" stroke-width="2.4" fill="none"/>`);
+case'panda':return base(`<circle cx="23" cy="22" r="7" fill="${a.accent}"/><circle cx="45" cy="22" r="7" fill="${a.accent}"/><circle cx="34" cy="38" r="18" fill="#fff" stroke="${s}" stroke-width="2.5"/><ellipse cx="27" cy="35" rx="5" ry="6" fill="${a.accent}"/><ellipse cx="41" cy="35" rx="5" ry="6" fill="${a.accent}"/><ellipse cx="34" cy="44" rx="4" ry="3" fill="${a.accent}"/>`);
+case'lion':return base(`<circle cx="34" cy="36" r="23" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="34" cy="38" r="16" fill="${a.fill}" stroke="${s}" stroke-width="2"/><circle cx="29" cy="36" r="2.2"/><circle cx="39" cy="36" r="2.2"/><path d="M31 44 q3 3 6 0" stroke="${s}" stroke-width="2.2" fill="none"/>`);
+case'koala':return base(`<circle cx="20" cy="29" r="9" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="48" cy="29" r="9" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><circle cx="34" cy="39" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="36" r="2.2"/><circle cx="40" cy="36" r="2.2"/><ellipse cx="34" cy="43" rx="5" ry="7" fill="#5e6870"/>`);
+case'penguin':return base(`<ellipse cx="34" cy="38" rx="18" ry="22" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><ellipse cx="34" cy="42" rx="11" ry="15" fill="#fff"/><circle cx="28" cy="31" r="2" fill="#fff"/><circle cx="40" cy="31" r="2" fill="#fff"/><path d="M34 35 l-5 3 h10 z" fill="#f2b24f"/>`);
+case'elephant':return base(`<circle cx="34" cy="36" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><ellipse cx="18" cy="35" rx="9" ry="13" fill="${a.accent}" stroke="${s}" stroke-width="2"/><ellipse cx="50" cy="35" rx="9" ry="13" fill="${a.accent}" stroke="${s}" stroke-width="2"/><circle cx="29" cy="34" r="2"/><circle cx="39" cy="34" r="2"/><path d="M34 40 q-2 13 6 13" stroke="${s}" stroke-width="5" fill="none" stroke-linecap="round"/>`);
+case'ladybug':return base(`<circle cx="34" cy="38" r="18" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><path d="M34 21 v34" stroke="${s}" stroke-width="3"/><circle cx="28" cy="31" r="3"/><circle cx="41" cy="32" r="3"/><circle cx="27" cy="44" r="3"/><circle cx="42" cy="45" r="3"/>`);
+case'snail':return base(`<ellipse cx="42" cy="43" rx="16" ry="10" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><circle cx="28" cy="36" r="14" fill="${a.accent}" stroke="${s}" stroke-width="2.5"/><path d="M28 28 q10 8 0 16 q-7 -5 0 -10" stroke="#fff" stroke-width="2.5" fill="none"/>`);
+case'butterfly':return base(`<ellipse cx="25" cy="34" rx="11" ry="15" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><ellipse cx="43" cy="34" rx="11" ry="15" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><ellipse cx="34" cy="38" rx="4" ry="14" fill="${a.accent}"/>`);
+case'dolphin':return base(`<path d="M13 42 q14 -23 38 -11 q5 2 7 -2 q-1 8 -9 9 q-8 9 -23 10 q-10 0 -13 -6z" fill="${a.fill}" stroke="${s}" stroke-width="2.5"/><path d="M30 31 l4 -10 l7 10" fill="${a.accent}" stroke="${s}" stroke-width="2"/><circle cx="46" cy="32" r="2"/>`);
+}}
+
+
+
+const levelDefs=[
+  {title:'Nivel 1 · Escucho sílabas',desc:'Escucha el sonido y reconoce ma, me, mi, mo y mu.',instruction:'Escucha con atención. Oirás una sílaba. Después, toca la sílaba que has escuchado.',questions:[
+    {audio:true,audioType:'sílaba',sound:'ma',prompt:'¿Qué sílaba has oído?',options:['ma','me','mi','mo','mu'],answer:'ma'},
+    {audio:true,audioType:'sílaba',sound:'me',prompt:'¿Qué sílaba has oído?',options:['ma','me','mi','mo','mu'],answer:'me'},
+    {audio:true,audioType:'sílaba',sound:'mi',prompt:'¿Qué sílaba has oído?',options:['ma','me','mi','mo','mu'],answer:'mi'},
+    {audio:true,audioType:'sílaba',sound:'mo',prompt:'¿Qué sílaba has oído?',options:['ma','me','mi','mo','mu'],answer:'mo'},
+    {audio:true,audioType:'sílaba',sound:'mu',prompt:'¿Qué sílaba has oído?',options:['ma','me','mi','mo','mu'],answer:'mu'}
+  ]},
+  {title:'Nivel 2 · Escucho más sílabas',desc:'Escucha y reconoce sílabas en mayúscula e inversas.',instruction:'Escucha con atención. Oirás una sílaba. Después, toca la sílaba que has escuchado.',questions:[
+    {audio:true,audioType:'sílaba',sound:'me',prompt:'¿Qué sílaba has oído?',options:['MI','ME','MA','MU'],answer:'ME'},
+    {audio:true,audioType:'sílaba',sound:'ma',prompt:'¿Qué sílaba has oído?',options:['MO','MU','MA','ME'],answer:'MA'},
+    {audio:true,audioType:'sílaba',sound:'am',prompt:'¿Qué sílaba has oído?',options:['em','im','am','om'],answer:'am'},
+    {audio:true,audioType:'sílaba',sound:'em',prompt:'¿Qué sílaba has oído?',options:['um','em','am','im'],answer:'em'},
+    {audio:true,audioType:'sílaba',sound:'om',prompt:'¿Qué sílaba has oído?',options:['im','um','om','em'],answer:'om'}
+  ]},
+  {title:'Nivel 3 · Escucho palabras',desc:'Escucha palabras de la cartilla y encuentra la misma palabra.',instruction:'Escucha con atención. Oirás una palabra. Después, toca la palabra que has escuchado.',questions:[
+    {audio:true,audioType:'palabra',sound:'mamá',prompt:'¿Qué palabra has oído?',options:['mimo','mamá','Mimí','momia'],answer:'mamá'},
+    {audio:true,audioType:'palabra',sound:'Mimí',prompt:'¿Qué palabra has oído?',options:['mamá','momia','Mimí','mimo'],answer:'Mimí'},
+    {audio:true,audioType:'palabra',sound:'mimo',prompt:'¿Qué palabra has oído?',options:['momia','mimo','mamá','Mimí'],answer:'mimo'},
+    {audio:true,audioType:'palabra',sound:'momia',prompt:'¿Qué palabra has oído?',options:['mimo','Mimí','momia','mamá'],answer:'momia'}
+  ]},
+  {title:'Nivel 4 · Escucho frases',desc:'Escucha una frase completa y encuentra la misma frase escrita.',instruction:'Escucha con atención. Oirás una frase. Después, toca la frase que has escuchado.',questions:[
+    {audio:true,audioType:'frase',sound:'Amo a mi mamá.',prompt:'¿Qué frase has oído?',options:['Amo a mi mamá.','Emma mima a Mimí.','Amo a Mimí.'],answer:'Amo a mi mamá.',longOptions:true},
+    {audio:true,audioType:'frase',sound:'Emma mima a Mimí.',prompt:'¿Qué frase has oído?',options:['Mimí mima a Emma.','Emma mima a Mimí.','Amo a mi mamá.'],answer:'Emma mima a Mimí.',longOptions:true},
+    {audio:true,audioType:'frase',sound:'Amo a mi mamá.',prompt:'Escucha otra vez y elige.',options:['Emma mima a Mimí.','Amo a Mimí.','Amo a mi mamá.'],answer:'Amo a mi mamá.',longOptions:true},
+    {audio:true,audioType:'frase',sound:'Emma mima a Mimí.',prompt:'Escucha otra vez y elige.',options:['Emma mima a Mimí.','Mamá mima a Mimí.','Amo a mi mamá.'],answer:'Emma mima a Mimí.',longOptions:true}
+  ]}
+];
+
+let animals=animalSpecs.map((_,i)=>({id:i,active:false,level:1,turns:0,finished:false}));
+let currentPlayerId=null;
+let selectedByWheelId=null;
+let spinning=false;
+let wheelRotation=0;
+let turnMistakes=0;
+let questionIndex=0;
+let currentQuestions=[];
+let currentQuestion=null;
+let questionLocked=false;
+let preferredSpanishVoice=null;
+let availableSpanishVoices=[];
+let voiceAssignments=[null,null,null,null];
+let selectedVoiceProfile=0;
+let speechVolume=1; // 0.0 a 2.0 en la interfaz (0 % a 200 %)
+let speechSequenceId=0;
+let levelInstructionSpokenFor=0;
+const wheelColors=['#8fd3ff','#ffd56a','#cdebb7','#f6c1ff','#ffd0a8','#d2c2ff','#ffe7a8','#bde8ff'];
+const $=id=>document.getElementById(id);
+const STORAGE_KEY='letraM_v13';
+const AUDIO_STORAGE_KEY='letraM_audio_v13';
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function activeUnfinished(){return animals.filter(a=>a.active&&!a.finished)}
+function priorityAnimals(){
+  const all=activeUnfinished();
+  if(!all.length)return[];
+  const min=Math.min(...all.map(a=>a.turns));
+  return all.filter(a=>a.turns===min);
+}
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({animals}))}catch(e){}
+}
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+    if(s&&Array.isArray(s.animals)&&s.animals.length===animals.length){
+      animals=s.animals.map((a,i)=>({
+        id:i,active:!!a.active,level:Math.min(4,Math.max(1,Number(a.level)||1)),
+        turns:Math.max(0,Number(a.turns)||0),finished:!!a.finished
+      }));
+    }
+  }catch(e){}
+}
+
+function showPage(which){
+  const players=which==='players';
+  $('playersPage').classList.toggle('active',players);
+  $('activityPage').classList.toggle('active',!players);
+  $('playersTab').classList.toggle('active',players);
+  $('playersTab').classList.toggle('secondary',!players);
+  $('activityTab').classList.toggle('active',!players);
+  $('activityTab').classList.toggle('secondary',players);
+  if(players)drawWheel();
+  else renderActivityState();
+}
+
+function toggleAnimal(id){
+  if(spinning||id===currentPlayerId)return;
+  const a=animals[id];
+  a.active=!a.active;
+  // Al quitar un animal se limpia una selección pendiente de ese mismo animal.
+  if(!a.active&&selectedByWheelId===id)selectedByWheelId=null;
+  save();renderAll();
+}
+
+function renderRoster(){
+  const roster=$('animalRoster');roster.innerHTML='';
+  const priorityIds=new Set(priorityAnimals().map(a=>a.id));
+  animals.forEach(a=>{
+    const b=document.createElement('button');b.type='button';
+    let state=!a.active?'inactive':a.finished?'finished':a.id===currentPlayerId?'current':'pending';
+    b.className=`animal-card ${state}${priorityIds.has(a.id)&&a.active&&!a.finished?' priority':''}`;
+    const mark=a.finished?'✓':a.id===currentPlayerId?'▶':a.active?'•':'';
+    b.innerHTML=`${animalSVG(a.id)}<span class="animal-label">${animalSpecs[a.id].name}</span><span class="animal-meta">${a.active?(a.finished?'FINAL':`N${a.level} · T${a.turns}`):'LIBRE'}</span><span class="status-dot">${mark}</span>`;
+    b.addEventListener('click',()=>toggleAnimal(a.id));
+    roster.appendChild(b);
+  });
+}
+
+function renderCurrent(){
+  const box=$('currentTurn');
+  if(currentPlayerId!==null){
+    const a=animals[currentPlayerId];
+    box.innerHTML=`${animalSVG(a.id)}<div><strong>JUEGA AHORA: ${animalSpecs[a.id].name}</strong><div class="small">Nivel ${a.level} · Fallos: ${turnMistakes}/2</div></div>`;
+  }else if(selectedByWheelId!==null){
+    const a=animals[selectedByWheelId];
+    box.innerHTML=`${animalSVG(a.id)}<div><strong>ELEGIDO: ${animalSpecs[a.id].name}</strong><div class="small">Nivel ${a.level} · pulsa COMENZAR</div></div>`;
+  }else{
+    const p=priorityAnimals(),active=animals.filter(a=>a.active).length;
+    box.innerHTML=`<span><strong>Sin turno.</strong> ${active} jugador${active===1?'':'es'} activo${active===1?'':'s'} · ${p.length?`${p.length} con prioridad`:'toca un animalito para incorporarlo'}.</span>`;
+  }
+}
+
+function renderPriority(){
+  const p=priorityAnimals(),box=$('priorityInfo');
+  if(!animals.some(a=>a.active)){box.innerHTML='<strong>Prioridad</strong><br>Toca varios animalitos para empezar.';return}
+  if(!p.length){box.innerHTML='<strong>Partida completada</strong><br>Todos los jugadores activos han llegado al final.';return}
+  const min=p[0].turns;
+  if(min===0)box.innerHTML=`<strong>Primero: quienes no han jugado</strong><br>${p.length} animalito${p.length===1?'':'s'} con 0 turnos.`;
+  else box.innerHTML=`<strong>Después: menos turnos</strong><br>${p.length} animalito${p.length===1?'':'s'} con ${min} turno${min===1?'':'s'}.`;
+}
+
+function levelToPercent(level){
+  const safe=Math.max(1,Math.min(4,Number(level)||1));
+  return ((safe-1)/3)*88+6;
+}
+
+function renderJourney(actorOverride=null,moverLevelOverride=null,fillLevelOverride=null,bubbleOverride=''){
+  const wrap=$('journeyWrap'); if(!wrap)return;
+  const actor=actorOverride||(currentPlayerId!==null?animals[currentPlayerId]:(selectedByWheelId!==null?animals[selectedByWheelId]:null));
+  const moverLevel=actor?Math.max(1,Math.min(4,moverLevelOverride||actor.level||1)):0;
+  const fillLevel=actor?Math.max(1,Math.min(4,fillLevelOverride||moverLevel)):0;
+  wrap.innerHTML='';
+  const line=document.createElement('div');
+  line.className='journey-line';
+  const fill=document.createElement('div');
+  fill.className='journey-fill';
+  fill.style.width=actor?`calc(${levelToPercent(fillLevel)}% - 6%)`:'0';
+  line.appendChild(fill);
+  const labels=['Nivel 1','Nivel 2','Nivel 3','Meta · Nivel 4'];
+  labels.forEach((label,idx)=>{
+    const stop=document.createElement('div');
+    const stepNo=idx+1;
+    const doneUntil=Math.max(0,fillLevel-1);
+    stop.className='journey-stop '+(actor?(stepNo<=doneUntil?'done':stepNo===moverLevel?'active':'locked'):'locked')+(stepNo===4?' goal':'');
+    const node=document.createElement('div'); node.className='journey-node'; node.textContent=stepNo===4?'🏁':String(stepNo);
+    const caption=document.createElement('div'); caption.className='journey-label school-script'; caption.textContent=label;
+    stop.appendChild(node); stop.appendChild(caption); line.appendChild(stop);
+  });
+  wrap.appendChild(line);
+  if(actor){
+    const mover=document.createElement('div'); mover.className='journey-animal';
+    mover.style.left=`${levelToPercent(moverLevel)}%`;
+    const state=bubbleOverride || (actor.finished?'¡Meta!':`Va por el nivel ${moverLevel}`);
+    mover.innerHTML=`${animalSVG(actor.id)}<div class="bubble">${state}</div>`;
+    wrap.appendChild(mover);
+  }else{
+    wrap.innerHTML += "<div class='small school-script' style='margin-top:8px;text-align:center;font-size:16px'>Elige un animalito para ver su camino hasta la meta.</div>";
+  }
+}
+
+function animateJourneyAdvance(fromLevel,toLevel,onDone){
+  if(currentPlayerId===null){ if(onDone)onDone(); return; }
+  const actor=animals[currentPlayerId];
+  renderJourney(actor,fromLevel,fromLevel,`¡Nivel ${fromLevel} superado!`);
+  const wrap=$('journeyWrap');
+  const mover=wrap.querySelector('.journey-animal');
+  const fill=wrap.querySelector('.journey-fill');
+  playAdvanceSound();
+  requestAnimationFrame(()=>{
+    if(mover){
+      mover.classList.add('moving');
+      mover.style.left=`${levelToPercent(toLevel)}%`;
+      const bubble=mover.querySelector('.bubble');
+      if(bubble)bubble.textContent=toLevel===4?'¡Hasta la meta!':`Avanza al nivel ${toLevel}`;
+    }
+    if(fill)fill.style.width=`calc(${levelToPercent(toLevel)}% - 6%)`;
+  });
+  setTimeout(()=>{
+    renderJourney();
+    renderActivityHeader();
+    if(onDone)onDone();
+  },1200);
+}
+
+function renderActivityHeader(){
+  const track=$('progressTrack');track.innerHTML='';
+  const level=currentPlayerId!==null?animals[currentPlayerId].level:(selectedByWheelId!==null?animals[selectedByWheelId].level:0);
+  for(let i=1;i<=4;i++){
+    const s=document.createElement('div');
+    s.className='step '+(i<level?'done':i===level?'active':'locked');
+    s.textContent=`Nivel ${i}`;track.appendChild(s);
+  }
+  renderJourney();
+  if(currentPlayerId!==null){
+    const a=animals[currentPlayerId],def=levelDefs[a.level-1];
+    $('levelTitle').textContent=def.title;$('levelDesc').textContent=def.desc;
+    $('playerBadge').innerHTML=`${animalSVG(a.id)}<div><strong>${animalSpecs[a.id].name}</strong><div class="mistakes">Fallos: <span class="mark ${turnMistakes>=1?'used':''}">×</span><span class="mark ${turnMistakes>=2?'used':''}">×</span></div></div>`;
+    $('changePlayerBtn').textContent='CEDER TURNO';
+  }else if(selectedByWheelId!==null){
+    const a=animals[selectedByWheelId];
+    $('levelTitle').textContent='Jugador preparado';$('levelDesc').textContent=`${animalSpecs[a.id].name} está en el nivel ${a.level}.`;
+    $('playerBadge').innerHTML=`${animalSVG(a.id)}<div><strong>${animalSpecs[a.id].name}</strong><div class="small">Nivel ${a.level}</div></div>`;
+    $('changePlayerBtn').textContent='ELEGIR OTRO';
+  }else{
+    $('levelTitle').textContent='Niveles y actividad';$('levelDesc').textContent='La ruleta debe elegir primero a un jugador.';
+    $('playerBadge').innerHTML='<strong>Sin jugador</strong>';
+    $('changePlayerBtn').textContent='IR A LA RULETA';
+  }
+}
+
+function renderActivityState(){
+  const waiting=$('waitingView'),level=$('levelView');
+  const hasActiveTurn=currentPlayerId!==null;
+  waiting.hidden=hasActiveTurn;
+  level.hidden=!hasActiveTurn;
+  if(hasActiveTurn)return;
+
+  const hasSelected=selectedByWheelId!==null;
+  $('waitingDefault').classList.toggle('hidden',hasSelected);
+  $('waitingSelected').classList.toggle('show',hasSelected);
+  if(hasSelected){
+    const a=animals[selectedByWheelId];
+    $('waitingAvatar').innerHTML=animalSVG(a.id);
+    $('waitingName').textContent=`${animalSpecs[a.id].name} ha sido elegido`;
+    $('waitingLevel').textContent=`Nivel ${a.level}. Pulsa COMENZAR ACTIVIDAD.`;
+  }
+}
+
+function renderAll(){
+  renderRoster();renderCurrent();renderPriority();renderActivityHeader();renderActivityState();updateButtons();drawWheel();
+}
+
+function updateButtons(){
+  const candidates=priorityAnimals();
+  $('spinBtn').disabled=spinning||candidates.length===0||currentPlayerId!==null;
+  $('spinBtn').textContent=spinning?'GIRANDO...':'GIRAR';
+  $('startTurnBtn').disabled=spinning||selectedByWheelId===null||currentPlayerId!==null;
+  $('startTurnBtn').textContent='COMENZAR';
+  $('waitingStartBtn').disabled=spinning||selectedByWheelId===null||currentPlayerId!==null;
+}
+
+function normalizeAngle(a){
+  const two=Math.PI*2;
+  return ((a%two)+two)%two;
+}
+
+function wheelIndexAtPointer(rotation,count){
+  if(!count)return -1;
+  const slice=Math.PI*2/count;
+  // El puntero está exactamente a las 12. En drawWheel el primer sector
+  // empieza en rotation - PI/2, por lo que -rotation determina el sector bajo la flecha.
+  return Math.floor(normalizeAngle(-rotation)/slice)%count;
+}
+
+function drawWheel(rotation=wheelRotation){
+  const c=$('wheel'),ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2,r=176;
+  ctx.clearRect(0,0,w,h);
+  const p=priorityAnimals();
+  if(!p.length){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#f4f7fa';ctx.fill();ctx.strokeStyle='#c4def8';ctx.lineWidth=7;ctx.stroke();
+    ctx.fillStyle='#55708a';ctx.textAlign='center';ctx.font='bold 22px Arial';ctx.fillText(animals.some(a=>a.active)?'Sin candidatos':'Elige animalitos',cx,cy);return;
+  }
+  const slice=Math.PI*2/p.length;
+  p.forEach((a,i)=>{
+    const st=rotation+i*slice-Math.PI/2,en=st+slice;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,st,en);ctx.closePath();ctx.fillStyle=wheelColors[i%wheelColors.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(st+slice/2);ctx.textAlign='right';ctx.fillStyle='#17324d';ctx.font='bold 15px Arial';ctx.fillText(animalSpecs[a.id].name,r-14,5);ctx.restore();
+  });
+  ctx.beginPath();ctx.arc(cx,cy,34,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#c4def8';ctx.lineWidth=5;ctx.stroke();
+  ctx.fillStyle='#17324d';ctx.textAlign='center';ctx.font='bold 19px Arial';ctx.fillText('M',cx,cy+7);
+}
+
+function spinWheel(){
+  if(spinning||currentPlayerId!==null)return;
+  const p=priorityAnimals();
+  if(!p.length){
+    $('wheelResult').innerHTML=`<div><strong>${animals.some(a=>a.active)?'No hay candidatos':'Primero elige animalitos'}</strong><span>${animals.some(a=>a.active)?'Los jugadores activos han terminado.':'Toca uno o varios animalitos.'}</span></div>`;
+    updateButtons();return;
+  }
+  spinning=true;selectedByWheelId=null;
+  $('wheelResult').innerHTML='<div><strong>Girando...</strong><span>Buscando al siguiente jugador.</span></div>';
+  renderCurrent();renderActivityHeader();renderActivityState();updateButtons();
+
+  const desiredIndex=Math.floor(Math.random()*p.length);
+  const slice=Math.PI*2/p.length;
+  const start=wheelRotation;
+  // Centro exacto del sector elegido bajo la flecha superior.
+  const desiredFinal=-(desiredIndex*slice+slice/2);
+  const extra=normalizeAngle(desiredFinal-normalizeAngle(start));
+  const target=start+Math.PI*2*6+extra;
+  const dur=1700,t0=performance.now();
+
+  function step(now){
+    const t=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-t,3),a=start+(target-start)*e;drawWheel(a);
+    if(t<1){requestAnimationFrame(step);return;}
+    wheelRotation=normalizeAngle(target);
+    // La selección se calcula desde la posición REAL del puntero, no desde el sorteo previo.
+    const actualIndex=wheelIndexAtPointer(wheelRotation,p.length);
+    const chosen=p[actualIndex];
+    selectedByWheelId=chosen.id;
+    spinning=false;
+    drawWheel(wheelRotation);
+    $('wheelResult').innerHTML=`${animalSVG(chosen.id)}<div><strong>${animalSpecs[chosen.id].name}</strong><span>Nivel ${chosen.level} · la flecha señala este mismo animal.</span></div>`;
+    renderCurrent();renderActivityHeader();renderActivityState();updateButtons();
+  }
+  requestAnimationFrame(step);
+}
+
+function startSelectedTurn(){
+  if(spinning||currentPlayerId!==null||selectedByWheelId===null)return;
+  const chosenId=selectedByWheelId;
+  currentPlayerId=chosenId;
+  selectedByWheelId=null;
+  const a=animals[currentPlayerId];
+  a.turns++;
+  turnMistakes=0;questionIndex=0;currentQuestions=[];currentQuestion=null;questionLocked=false;
+  save();
+  showPage('activity');
+  startLevel(a.level);
+  renderAll();
+}
+
+function startLevel(level){
+  const def=levelDefs[level-1];
+  if(!def||currentPlayerId===null)return;
+  currentQuestions=shuffle(def.questions);questionIndex=0;turnMistakes=0;currentQuestion=null;questionLocked=false;
+  levelInstructionSpokenFor=0;
+  $('waitingView').hidden=true;
+  $('levelView').hidden=false;
+  renderActivityHeader();
+  showQuestion();
+  // La explicación de cada nivel se escucha una sola vez al entrar.
+  setTimeout(()=>speakLevelInstruction(true),220);
+}
+
+const voiceProfiles=[
+  {label:'FEMENINA 1',tone:'Clara',gender:'female',pitch:1.00,rate:.92,names:/elvira|helena|luc[ií]a|monica|m[oó]nica|dalia|sabina|paulina|paloma|conchita|laura|ximena/i},
+  {label:'FEMENINA 2',tone:'Cálida',gender:'female',pitch:1.03,rate:.90,names:/sabina|dalia|paulina|luc[ií]a|elvira|helena|m[oó]nica|paloma|laura|ximena/i},
+  {label:'MASCULINA 1',tone:'Clara',gender:'male',pitch:.96,rate:.92,names:/[aá]lvaro|alvaro|jorge|pablo|diego|raul|ra[uú]l|enrique|antonio/i},
+  {label:'MASCULINA 2',tone:'Cálida',gender:'male',pitch:.93,rate:.90,names:/jorge|pablo|diego|[aá]lvaro|alvaro|enrique|antonio|raul|ra[uú]l/i}
+];
+
+function voiceQualityScore(v){
+  const name=(v.name||'').toLowerCase(),lang=(v.lang||'').toLowerCase();
+  let n=0;
+  if(lang==='es-es')n+=160; else if(lang.startsWith('es-'))n+=115; else if(lang.startsWith('es'))n+=90;
+  if(/natural|neural/.test(name))n+=150;
+  if(/premium|enhanced|online/.test(name))n+=90;
+  if(/microsoft/.test(name))n+=55;
+  if(/google/.test(name))n+=45;
+  if(/compact|espeak/.test(name))n-=120;
+  return n;
+}
+
+function assignVoiceProfiles(){
+  if(!('speechSynthesis' in window))return;
+  const all=window.speechSynthesis.getVoices()||[];
+  availableSpanishVoices=all.filter(v=>(v.lang||'').toLowerCase().startsWith('es'));
+  if(!availableSpanishVoices.length){voiceAssignments=[null,null,null,null];preferredSpanishVoice=null;renderVoiceSettings();return;}
+  const ranked=[...availableSpanishVoices].sort((a,b)=>voiceQualityScore(b)-voiceQualityScore(a));
+  const used=new Set();
+  voiceAssignments=voiceProfiles.map(profile=>{
+    const matching=ranked.filter(v=>profile.names.test(v.name||''));
+    let choice=matching.find(v=>!used.has(v.name+'|'+v.lang))||matching[0];
+    if(!choice) choice=ranked.find(v=>!used.has(v.name+'|'+v.lang))||ranked[0];
+    if(choice)used.add(choice.name+'|'+choice.lang);
+    return choice||null;
+  });
+  preferredSpanishVoice=voiceAssignments[selectedVoiceProfile]||ranked[0]||null;
+  renderVoiceSettings();
+}
+
+function loadAudioSettings(){
+  try{
+    const cfg=JSON.parse(localStorage.getItem(AUDIO_STORAGE_KEY)||'null');
+    if(cfg){
+      selectedVoiceProfile=Math.max(0,Math.min(3,Number(cfg.profile)||0));
+      speechVolume=Math.max(0,Math.min(2,Number(cfg.volume)));
+      if(!Number.isFinite(speechVolume))speechVolume=1;
+    }
+  }catch(e){speechVolume=1;selectedVoiceProfile=0}
+}
+
+function saveAudioSettings(){
+  try{localStorage.setItem(AUDIO_STORAGE_KEY,JSON.stringify({profile:selectedVoiceProfile,volume:speechVolume}))}catch(e){}
+}
+
+function getSpanishVoice(){
+  return voiceAssignments[selectedVoiceProfile]||preferredSpanishVoice||availableSpanishVoices[0]||null;
+}
+
+function renderVoiceSettings(){
+  const grid=$('voiceGrid'); if(!grid)return;
+  grid.innerHTML='';
+  voiceProfiles.forEach((profile,i)=>{
+    const v=voiceAssignments[i];
+    const b=document.createElement('button');
+    b.type='button';b.className='voice-option'+(i===selectedVoiceProfile?' selected':'');
+    const engine=v?`${v.name} · ${v.lang}`:'Mejor voz española disponible';
+    b.innerHTML=`<strong>${profile.label} · ${profile.tone}</strong><span>${engine}</span>`;
+    b.addEventListener('click',()=>{
+      selectedVoiceProfile=i;preferredSpanishVoice=voiceAssignments[i]||availableSpanishVoices[0]||null;saveAudioSettings();renderVoiceSettings();testSelectedVoice();
+    });
+    grid.appendChild(b);
+  });
+  if($('volumeSlider')){$('volumeSlider').value=String(Math.round(speechVolume*100));$('volumeValue').textContent=`${Math.round(speechVolume*100)}%`;}
+}
+
+function openVoiceSettings(){renderVoiceSettings();$('voiceOverlay').classList.add('open')}
+function closeVoiceSettings(){stopSpeech();$('voiceOverlay').classList.remove('open')}
+
+function stopSpeech(){
+  speechSequenceId++;
+  if('speechSynthesis' in window){try{window.speechSynthesis.cancel();}catch(e){}}
+}
+
+function speakSequence(chunks,onDone,profileIndex=selectedVoiceProfile){
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+    if(onDone)onDone();return;
+  }
+  stopSpeech();
+  const seq=++speechSequenceId;
+  const items=chunks.filter(x=>x&&x.text);
+  const profile=voiceProfiles[profileIndex]||voiceProfiles[0];
+  let i=0;
+  const next=()=>{
+    if(seq!==speechSequenceId)return;
+    if(i>=items.length){if(onDone)onDone();return;}
+    const item=items[i++];
+    const u=new SpeechSynthesisUtterance(item.text);
+    u.lang='es-ES';
+    u.rate=Math.max(.48,Math.min(.95,(item.rate||.74)*profile.rate));
+    u.pitch=Math.max(.8,Math.min(1.15,(item.pitch||1)*profile.pitch));
+    u.volume=Math.max(0,Math.min(1,speechVolume)); // Web Speech API admite 0..1
+    const voice=voiceAssignments[profileIndex]||getSpanishVoice(); if(voice)u.voice=voice;
+    u.onend=()=>{if(seq===speechSequenceId)setTimeout(next,item.pause||260)};
+    u.onerror=()=>{if(seq===speechSequenceId)setTimeout(next,item.pause||180)};
+    try{window.speechSynthesis.resume();window.speechSynthesis.speak(u)}catch(e){next()}
+  };
+  next();
+}
+
+function testSelectedVoice(){
+  const p=voiceProfiles[selectedVoiceProfile];
+  speakSequence([
+    {text:'Hola. Esta es mi voz para el juego de la letra eme.',rate:.74,pause:450},
+    {text:'Escucha con calma.',rate:.70,pause:320}
+  ],null,selectedVoiceProfile);
+}
+
+function speakLevelInstruction(continueWithAudio=false){
+  if(currentPlayerId===null)return;
+  const a=animals[currentPlayerId];
+  const def=levelDefs[a.level-1];
+  if(!def)return;
+  $('instructionText').textContent=def.instruction;
+  levelInstructionSpokenFor=a.level;
+  // Nivel 4 se lee más lento para facilitar la comprensión de frases.
+  const instructionRate = a.level===4 ? .64 : .72;
+  const instructionPause = a.level===4 ? 980 : 760;
+  speakSequence([{text:def.instruction,rate:instructionRate,pitch:1,pause:instructionPause}],()=>{
+    if(continueWithAudio&&currentQuestion&&currentQuestion.audio){setTimeout(()=>speakTarget(currentQuestion.sound,currentQuestion.audioType||'sílaba'),420);}
+  });
+}
+
+function speakTarget(text,type='sílaba'){
+  const status=$('audioStatus');
+  if(!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance==='undefined'){
+    status.textContent='No se puede reproducir la voz. Usa Chrome o Edge.';return;
+  }
+  const kind=String(type||'sílaba').toLowerCase();
+  const noun=kind==='palabra'?'palabra':kind==='frase'?'frase':'sílaba';
+  status.textContent=`Escucha la ${noun} con atención...`;
+  const targetRate=noun==='frase'?.56:(noun==='palabra'?.66:.58);
+  const intro=noun==='frase'?'Escucha la frase.':noun==='palabra'?'Escucha la palabra.':'Escucha.';
+  const introRate=noun==='frase'?.64:.72;
+  const targetPause=noun==='frase'?620:380;
+  speakSequence([
+    {text:intro,rate:introRate,pitch:1,pause:noun==='frase'?760:560},
+    {text:String(text),rate:targetRate,pitch:1,pause:targetPause}
+  ],()=>{status.textContent=`Ahora toca la ${noun} que has oído.`});
+}
+function playCurrentAudio(){if(currentQuestion&&currentQuestion.audio)speakTarget(currentQuestion.sound,currentQuestion.audioType||'sílaba')}
+
+function showQuestion(){
+  if(currentPlayerId===null)return;
+  const a=animals[currentPlayerId];
+  if(questionIndex>=currentQuestions.length){levelPassed();return}
+  const q=currentQuestions[questionIndex];currentQuestion=q;questionLocked=false;
+  $('questionKicker').textContent=q.audio?`ESCUCHA ${questionIndex+1} DE ${currentQuestions.length}`:`PREGUNTA ${questionIndex+1} DE ${currentQuestions.length}`;
+  const def=levelDefs[a.level-1];
+  $('instructionText').textContent=def&&def.instruction?def.instruction:'Escucha o lee con calma y elige la respuesta correcta.';
+  $('questionPrompt').textContent=q.prompt;
+  $('feedback').textContent='';$('feedback').className='feedback';
+  $('audioZone').classList.toggle('show',!!q.audio);
+  $('questionMain').style.display=q.audio?'none':'block';
+  $('questionMain').textContent=q.main||'';
+  $('questionMain').className='question-main'+(q.sentence?' sentence':'');
+  if(q.audio){const noun=q.audioType==='palabra'?'palabra':q.audioType==='frase'?'frase':'sílaba';$('audioStatus').textContent=`Escucha y después toca la ${noun}.`;}
+  const ch=$('questionChoices');ch.innerHTML='';
+  shuffle(q.options).forEach(opt=>{
+    const b=document.createElement('button');b.type='button';b.className='choice'+(q.longOptions?' long':'');b.textContent=opt;
+    b.addEventListener('click',()=>answerQuestion(opt,b,q.answer));ch.appendChild(b);
+  });
+  // En la primera pregunta de cada nivel, la explicación hablada va primero.
+  // Después, todas las preguntas reproducen automáticamente el objetivo sonoro.
+  if(q.audio && levelInstructionSpokenFor===a.level)setTimeout(playCurrentAudio,300);
+}
+
+// Efectos sonoros del juego: cortinilla brillante al acertar y aviso estridente al fallar.
+let sfxContext=null;
+function getSfxContext(){
+  try{
+    if(!sfxContext){
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx)return null;
+      sfxContext=new Ctx();
+    }
+    if(sfxContext.state==='suspended')sfxContext.resume();
+    return sfxContext;
+  }catch(e){return null}
+}
+function sfxMasterGain(ctx,peak=.26){
+  const g=ctx.createGain();
+  const now=ctx.currentTime;
+  const boost=Math.max(.15,Math.min(1.35,speechVolume||1));
+  g.gain.setValueAtTime(Math.min(.9,peak*boost),now);
+  g.connect(ctx.destination);
+  return g;
+}
+function playCorrectSound(){
+  const ctx=getSfxContext(); if(!ctx)return;
+  const now=ctx.currentTime;
+  const master=sfxMasterGain(ctx,.24);
+  const notes=[659.25,783.99,987.77,1318.51];
+  notes.forEach((freq,i)=>{
+    const start=now+i*.085;
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type=i<2?'sine':'triangle';
+    osc.frequency.setValueAtTime(freq,start);
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.exponentialRampToValueAtTime(.22,start+.025);
+    gain.gain.exponentialRampToValueAtTime(.0001,start+.34);
+    osc.connect(gain); gain.connect(master);
+    osc.start(start); osc.stop(start+.36);
+  });
+  // pequeño brillo final
+  const sparkle=ctx.createOscillator();
+  const sg=ctx.createGain();
+  sparkle.type='sine'; sparkle.frequency.setValueAtTime(1760,now+.30);
+  sg.gain.setValueAtTime(.0001,now+.30);
+  sg.gain.exponentialRampToValueAtTime(.12,now+.325);
+  sg.gain.exponentialRampToValueAtTime(.0001,now+.55);
+  sparkle.connect(sg); sg.connect(master); sparkle.start(now+.30); sparkle.stop(now+.56);
+}
+function playWrongSound(){
+  const ctx=getSfxContext(); if(!ctx)return;
+  const now=ctx.currentTime;
+  const master=sfxMasterGain(ctx,.34);
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+  osc.type='sawtooth';
+  osc.frequency.setValueAtTime(210,now);
+  osc.frequency.exponentialRampToValueAtTime(95,now+.34);
+  gain.gain.setValueAtTime(.0001,now);
+  gain.gain.exponentialRampToValueAtTime(.30,now+.018);
+  gain.gain.exponentialRampToValueAtTime(.0001,now+.38);
+  osc.connect(gain); gain.connect(master);
+  osc.start(now); osc.stop(now+.40);
+  const osc2=ctx.createOscillator();
+  const gain2=ctx.createGain();
+  osc2.type='square'; osc2.frequency.setValueAtTime(330,now+.04);
+  osc2.frequency.exponentialRampToValueAtTime(145,now+.28);
+  gain2.gain.setValueAtTime(.0001,now+.04);
+  gain2.gain.exponentialRampToValueAtTime(.13,now+.06);
+  gain2.gain.exponentialRampToValueAtTime(.0001,now+.31);
+  osc2.connect(gain2); gain2.connect(master);
+  osc2.start(now+.04); osc2.stop(now+.32);
+}
+function playAdvanceSound(){
+  const ctx=getSfxContext(); if(!ctx)return;
+  const now=ctx.currentTime;
+  const master=sfxMasterGain(ctx,.28);
+  [523.25,659.25,783.99,1046.5].forEach((freq,i)=>{
+    const start=now+i*.12;
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type=i<2?'triangle':'sine';
+    osc.frequency.setValueAtTime(freq,start);
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.exponentialRampToValueAtTime(.18,start+.03);
+    gain.gain.exponentialRampToValueAtTime(.0001,start+.28);
+    osc.connect(gain); gain.connect(master);
+    osc.start(start); osc.stop(start+.30);
+  });
+}
+function playGoalSound(){
+  const ctx=getSfxContext(); if(!ctx)return;
+  const now=ctx.currentTime;
+  const master=sfxMasterGain(ctx,.30);
+
+  // 1) FANFARRIA BRILLANTE · aprox. 1,5 s
+  const chords=[
+    {t:0.00,notes:[523.25,659.25,783.99]},
+    {t:0.28,notes:[659.25,783.99,987.77]},
+    {t:0.56,notes:[783.99,987.77,1174.66]},
+    {t:0.86,notes:[1046.50,1318.51,1567.98]}
+  ];
+  chords.forEach((ch,ci)=>{
+    ch.notes.forEach((freq,ni)=>{
+      const start=now+ch.t;
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type=ni===0?'triangle':'sine';
+      osc.frequency.setValueAtTime(freq,start);
+      gain.gain.setValueAtTime(.0001,start);
+      gain.gain.exponentialRampToValueAtTime(ci===3?.13:.10,start+.025);
+      gain.gain.exponentialRampToValueAtTime(.0001,start+(ci===3?.62:.30));
+      osc.connect(gain); gain.connect(master);
+      osc.start(start); osc.stop(start+(ci===3?.66:.34));
+    });
+  });
+
+  // 2) VÍTORES · pequeñas voces ascendentes sintetizadas
+  [0.70,1.15,1.62,2.05,2.55].forEach((offset,i)=>{
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    const start=now+offset;
+    osc.type='sine';
+    const base=[310,360,330,390,350][i];
+    osc.frequency.setValueAtTime(base,start);
+    osc.frequency.exponentialRampToValueAtTime(base*1.75,start+.32);
+    osc.frequency.exponentialRampToValueAtTime(base*1.45,start+.52);
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.exponentialRampToValueAtTime(.055,start+.055);
+    gain.gain.exponentialRampToValueAtTime(.0001,start+.56);
+    osc.connect(gain); gain.connect(master);
+    osc.start(start); osc.stop(start+.58);
+  });
+
+  // 3) APLAUSOS · ráfagas de ruido filtrado durante unos 3 segundos
+  const sr=ctx.sampleRate;
+  const noiseBuffer=ctx.createBuffer(1,Math.floor(sr*.16),sr);
+  const data=noiseBuffer.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*(1-i/data.length);
+  for(let i=0;i<28;i++){
+    const start=now+.55+i*.105+(Math.random()*.035);
+    const src=ctx.createBufferSource();
+    src.buffer=noiseBuffer;
+    const band=ctx.createBiquadFilter();
+    band.type='bandpass';
+    band.frequency.value=1300+Math.random()*1700;
+    band.Q.value=.7+Math.random()*.9;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(.0001,start);
+    g.gain.exponentialRampToValueAtTime(.035+Math.random()*.035,start+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,start+.13);
+    src.connect(band); band.connect(g); g.connect(master);
+    src.start(start); src.stop(start+.15);
+  }
+
+  // Brillo final para cerrar la celebración cerca de los 4 segundos
+  [1318.51,1567.98,2093.00].forEach((freq,i)=>{
+    const start=now+3.18+i*.10;
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type='sine'; osc.frequency.setValueAtTime(freq,start);
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.exponentialRampToValueAtTime(.075,start+.025);
+    gain.gain.exponentialRampToValueAtTime(.0001,start+.42);
+    osc.connect(gain); gain.connect(master);
+    osc.start(start); osc.stop(start+.44);
+  });
+}
+
+function answerQuestion(opt,btn,correct){
+  if(questionLocked||currentPlayerId===null)return;
+  questionLocked=true;
+  const buttons=[...$('questionChoices').querySelectorAll('.choice')];buttons.forEach(b=>b.disabled=true);
+  const fb=$('feedback');
+  if(opt===correct){
+    playCorrectSound();
+    btn.classList.add('correct');fb.textContent='¡Correcto!';fb.className='feedback good';
+    questionIndex++;
+    setTimeout(showQuestion,720);
+  }else{
+    playWrongSound();
+    btn.classList.add('wrong');const right=buttons.find(b=>b.textContent===correct);if(right)right.classList.add('correct');
+    turnMistakes++;renderActivityHeader();
+    if(turnMistakes>=2){
+      fb.textContent='Segundo fallo. El turno termina.';fb.className='feedback bad';
+      setTimeout(()=>endTurn('mistakes'),900);
+    }else{
+      fb.textContent='Primer fallo. Continúa.';fb.className='feedback bad';
+      questionIndex++;
+      setTimeout(showQuestion,850);
+    }
+  }
+}
+
+function levelPassed(){
+  if(currentPlayerId===null)return;
+  const a=animals[currentPlayerId];
+  if(a.level<4){
+    const old=a.level; a.level++; save();
+    renderActivityHeader();
+    animateJourneyAdvance(old,a.level,()=>{
+      showTurnMessage(`${animalSpecs[a.id].name} supera el nivel ${old}.`,`Continúa en el nivel ${a.level}. Los fallos vuelven a cero.`,()=>startLevel(a.level),'SIGUIENTE NIVEL');
+    });
+  }else{
+    a.finished=true; save(); renderActivityHeader(); playGoalSound(); endTurn('finished');
+  }
+}
+
+function showTurnMessage(title,text,after,label){
+  const a=animals[currentPlayerId];
+  $('turnCard').innerHTML=`${animalSVG(a.id)}<h2>${title}</h2><p>${text}</p><button class="btn good" id="continueTurnBtn" type="button">${label||'CONTINUAR'}</button>`;
+  $('turnOverlay').classList.add('open');
+  $('continueTurnBtn').addEventListener('click',()=>{$('turnOverlay').classList.remove('open');after()},{once:true});
+}
+
+function clearTurnState(){
+  stopSpeech();
+  currentPlayerId=null;selectedByWheelId=null;currentQuestion=null;currentQuestions=[];questionIndex=0;turnMistakes=0;questionLocked=false;
+  $('levelView').hidden=true;$('waitingView').hidden=false;
+}
+
+function endTurn(reason){
+  if(currentPlayerId===null)return;
+  const id=currentPlayerId,a=animals[id];
+  const title=reason==='finished'?`${animalSpecs[id].name} ha llegado al final`:`Turno de ${animalSpecs[id].name} terminado`;
+  const text=reason==='finished'?'Ha completado los cuatro niveles.':`Ha llegado a 2 fallos. La próxima vez continuará en el nivel ${a.level}.`;
+  clearTurnState();save();renderAll();
+  $('turnCard').innerHTML=`${animalSVG(id)}<h2>${title}</h2><p>${text}</p><button class="btn primary" id="nextWheelBtn" type="button">IR A LA RULETA</button>`;
+  $('turnOverlay').classList.add('open');
+  $('nextWheelBtn').addEventListener('click',()=>{
+    $('turnOverlay').classList.remove('open');showPage('players');
+    $('wheelResult').innerHTML='<div><strong>Siguiente turno</strong><span>La ruleta da prioridad a quienes han jugado menos.</span></div>';
+    renderAll();
+  },{once:true});
+}
+
+function returnToRoulette(){
+  // Volver a la ruleta siempre libera el turno actual y permite elegir a otro niño.
+  let message='Puedes girar para elegir al siguiente jugador.';
+  if(currentPlayerId!==null){
+    const name=animalSpecs[currentPlayerId].name;
+    stopSpeech();
+    currentPlayerId=null;currentQuestion=null;currentQuestions=[];questionIndex=0;turnMistakes=0;questionLocked=false;
+    message=`${name} cede el turno. La ruleta puede elegir a otro jugador.`;
+  }
+  if(selectedByWheelId!==null){selectedByWheelId=null;message='Selección cancelada. Gira de nuevo para elegir a otro jugador.'}
+  $('turnOverlay').classList.remove('open');
+  $('levelView').hidden=true;$('waitingView').hidden=false;
+  save();renderAll();showPage('players');
+  $('wheelResult').innerHTML=`<div><strong>Ruleta lista</strong><span>${message}</span></div>`;
+}
+
+function resetGame(){
+  if(!confirm('¿Empezar una partida nueva? Se borrarán niveles y turnos.'))return;
+  stopSpeech();
+  animals=animalSpecs.map((_,i)=>({id:i,active:false,level:1,turns:0,finished:false}));
+  currentPlayerId=null;selectedByWheelId=null;spinning=false;wheelRotation=0;turnMistakes=0;questionIndex=0;currentQuestions=[];currentQuestion=null;questionLocked=false;
+  try{localStorage.removeItem(STORAGE_KEY)}catch(e){}
+  $('levelView').hidden=true;$('waitingView').hidden=false;$('turnOverlay').classList.remove('open');
+  $('wheelResult').innerHTML='<div><strong>Preparados</strong><span>Primero juegan quienes todavía no han participado.</span></div>';
+  renderAll();showPage('players');
+}
+
+async function toggleFullscreen(){
+  try{
+    if(!document.fullscreenElement)await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){}
+}
+function updateFullscreenLabel(){$('fullscreenBtn').textContent=document.fullscreenElement?'SALIR DE PANTALLA COMPLETA':'PANTALLA COMPLETA'}
+
+$('playersTab').addEventListener('click',returnToRoulette);
+$('activityTab').addEventListener('click',()=>showPage('activity'));
+$('spinBtn').addEventListener('click',spinWheel);
+$('startTurnBtn').addEventListener('click',startSelectedTurn);
+$('waitingStartBtn').addEventListener('click',startSelectedTurn);
+$('waitingBackBtn').addEventListener('click',returnToRoulette);
+$('goPlayersBtn').addEventListener('click',returnToRoulette);
+$('changePlayerBtn').addEventListener('click',returnToRoulette);
+$('listenBtn').addEventListener('click',playCurrentAudio);
+$('instructionListenBtn').addEventListener('click',()=>speakLevelInstruction(false));
+$('voiceSettingsBtn').addEventListener('click',openVoiceSettings);
+$('closeVoiceBtn').addEventListener('click',closeVoiceSettings);
+$('testVoiceBtn').addEventListener('click',testSelectedVoice);
+$('volumeSlider').addEventListener('input',e=>{speechVolume=Math.max(0,Math.min(2,Number(e.target.value)/100));$('volumeValue').textContent=`${Math.round(speechVolume*100)}%`;saveAudioSettings();});
+$('voiceOverlay').addEventListener('click',e=>{if(e.target===$('voiceOverlay'))closeVoiceSettings()});
+$('resetBtn').addEventListener('click',resetGame);
+$('fullscreenBtn').addEventListener('click',toggleFullscreen);
+document.addEventListener('fullscreenchange',updateFullscreenLabel);
+
+if(!document.documentElement.requestFullscreen){$('fullscreenBtn').disabled=true;$('fullscreenBtn').textContent='PANTALLA COMPLETA NO DISPONIBLE'}
+loadAudioSettings();
+if('speechSynthesis' in window){
+  assignVoiceProfiles();
+  window.speechSynthesis.addEventListener?.('voiceschanged',assignVoiceProfiles);
+}
+renderVoiceSettings();
+load();renderAll();showPage('players');
+</script>
+
+
+<script id="zurron-local-nav">
+(() => {
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+
+  function normalizeInternal(href) {
+    if (!href) return null;
+    href = String(href).trim();
+
+    // Solo rutas internas absolutas del proyecto.
+    if (!href.startsWith('/')) return null;
+
+    let path = href.split('?')[0].split('#')[0];
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+
+    return ROUTES.has(path) ? path : null;
+  }
+
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[href]');
+    if (!a) return;
+
+    const path = normalizeInternal(a.getAttribute('href'));
+    if (!path) return;
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'zurron:navigate', path}, '*');
+    }
+  }, true);
+})();
+</script>
+
+
+<script id="zurron-responsive-viewport">
+(() => {
+  const applyViewport = () => {
+    const h = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight)
+    );
+    const w = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.width : window.innerWidth)
+    );
+    document.documentElement.style.setProperty('--zurron-view-h', h + 'px');
+    document.documentElement.style.setProperty('--zurron-view-w', w + 'px');
+  };
+  applyViewport();
+  window.addEventListener('resize', applyViewport, {passive:true});
+  window.addEventListener('orientationchange', applyViewport, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', applyViewport, {passive:true});
+  }
+})();
+</script>
+
+
+<script id="cartilla-real-height-v4">
+(() => {
+  const setRealHeight = () => {
+    /* clientHeight pertenece al documento del iframe y evita usar
+       accidentalmente la altura del navegador exterior. */
+    const h = Math.max(
+      320,
+      document.documentElement.clientHeight || window.innerHeight || 600
+    );
+    document.documentElement.style.setProperty('--cartilla-real-h', h + 'px');
+  };
+
+  setRealHeight();
+  window.addEventListener('resize', setRealHeight, {passive:true});
+  window.addEventListener('orientationchange', setRealHeight, {passive:true});
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(setRealHeight);
+    ro.observe(document.documentElement);
+  }
+})();
+</script>
+
+</body>
+</html>

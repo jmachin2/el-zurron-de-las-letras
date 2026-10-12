@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Letra M · El Zurrón de las Letras</title>
+<style>
+:root{--ink:#17324d;--muted:#5c7184;--m:#2f80ed;--s:#df4b53}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef5f9}
+body{overflow:hidden}
+a{text-decoration:none;color:inherit}
+.page{width:100%;height:100dvh;padding:8px}
+.shell{
+  position:relative;width:100%;height:100%;overflow:hidden;isolation:isolate;
+  border-radius:24px;border:1px solid rgba(216,228,237,.9);
+  box-shadow:0 14px 34px rgba(30,70,105,.12)
+}
+.shell::before{
+  content:"";position:absolute;inset:-20px;background-image:var(--letter-bg);
+  background-size:cover;background-position:center;filter:blur(16px) saturate(1.02);
+  transform:scale(1.07);z-index:-3
+}
+.shell::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.5));
+  z-index:-2
+}
+.content{
+  width:min(1560px,100%);height:100%;margin:auto;
+  padding:12px 20px 84px;
+  display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:10px
+}
+.back{
+  justify-self:start;display:inline-flex;align-items:center;min-height:38px;
+  padding:6px 11px;border-radius:13px;border:2px solid rgba(255,255,255,.76);
+  background:rgba(255,255,255,.91);font-weight:950
+}
+.heroTop{display:flex;align-items:center;gap:12px}
+.mark{
+  width:58px;height:58px;border-radius:18px;display:grid;place-items:center;
+  color:white;font-size:37px;font-weight:950
+}
+.mpage .mark{background:var(--m)} .spage .mark{background:var(--s)}
+.kicker{font-size:11px;font-weight:950;letter-spacing:.08em;color:#31536d}
+h1{margin:2px 0 0;font-size:36px;line-height:1}
+.sub{margin:4px 0 0;font-size:14px;font-weight:750;color:#355a75}
+.cardsWrap{min-height:0;display:flex;align-items:flex-start}
+.grid.games{width:100%;display:grid;gap:16px}
+.mpage .grid.games{grid-template-columns:repeat(2,minmax(0,1fr))}
+.spage .grid.games{grid-template-columns:repeat(3,minmax(0,1fr))}
+.gameCard{
+  height:360px;min-height:0;padding:20px;border-radius:24px;
+  border:3px solid rgba(255,255,255,.86);background:rgba(255,255,255,.93);
+  backdrop-filter:blur(9px);box-shadow:0 13px 28px rgba(30,60,90,.11);
+  display:flex;flex-direction:column;overflow:hidden
+}
+.gameCard h2{margin:0 0 8px;font-size:27px;line-height:1.08}
+.gameCard p{margin:0 0 11px;color:var(--muted);font-size:14px;line-height:1.35}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.chip{padding:4px 8px;border:1px solid rgba(23,50,77,.13);border-radius:999px;background:white;font-size:11px;font-weight:900}
+.open{
+  margin-top:auto;min-height:52px;border-radius:16px;display:grid;place-items:center;
+  padding:8px 11px;color:white;font-size:15px;font-weight:950;text-align:center
+}
+.mpage .open{background:var(--m)}
+.spage .open{background:var(--s)}
+#fullscreenBtn,[data-page-fullscreen],.s-page-fullscreen,.cuento-fullscreen{display:none!important}
+
+@media(max-height:700px) and (min-width:901px){
+  .content{padding:6px 14px 76px;gap:5px}
+  .back{min-height:31px;font-size:10px;padding:4px 8px}
+  .mark{width:42px;height:42px;font-size:26px;border-radius:13px}
+  .kicker{font-size:9px} h1{font-size:26px}.sub{font-size:11px}
+  .gameCard{height:300px;padding:12px}
+  .gameCard h2{font-size:19px}.gameCard p{font-size:11px}
+  .chip{font-size:9px;padding:3px 6px}.open{min-height:40px;font-size:11px}
+}
+@media(max-width:1050px) and (min-width:721px){
+  body{overflow:auto}.page{height:auto;min-height:100dvh}
+  .shell{height:auto;min-height:calc(100dvh - 16px)}
+  .content{height:auto;min-height:calc(100dvh - 16px)}
+  .spage .grid.games{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .spage .gameCard:last-child{grid-column:1/-1}
+  .gameCard{height:auto;min-height:285px}
+}
+@media(max-width:720px){
+  html,body{height:auto}body{overflow:auto}.page{height:auto;min-height:100dvh;padding:5px}
+  .shell{height:auto;min-height:calc(100dvh - 10px)}
+  .content{height:auto;min-height:calc(100dvh - 10px);padding:10px 10px 84px;display:flex;flex-direction:column}
+  .grid.games,.mpage .grid.games,.spage .grid.games{grid-template-columns:1fr}
+  .spage .gameCard:last-child{grid-column:auto}
+  .gameCard{height:auto;min-height:270px}
+}
+.shell{--letter-bg:url('/assets/letra_m_fondo.jpg')}
+/* ==========================================================
+   ZURRÓN · AJUSTE GLOBAL RESPONSIVE v3
+   La altura útil se calcula con JS y corresponde al viewport
+   REAL de cada pantalla interna.
+   ========================================================== */
+:root{
+  --zurron-view-h:100dvh;
+  --zurron-view-w:100vw;
+}
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+body{
+  overflow:hidden!important;
+}
+
+/* Contenedores principales: nunca deben sobrepasar el viewport */
+.page,
+.app{
+  width:100%!important;
+  height:var(--zurron-view-h)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:var(--zurron-view-h)!important;
+}
+.shell{
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Cualquier imagen funcional debe entrar COMPLETA en su contenedor */
+img{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Pictogramas de las misiones */
+.picture{
+  width:min(40vw,46vh,420px)!important;
+  height:min(40vw,46vh,420px)!important;
+  max-width:88vw!important;
+  max-height:46vh!important;
+  object-fit:contain!important;
+}
+.picture.small{
+  width:min(28vw,30vh,285px)!important;
+  height:min(28vw,30vh,285px)!important;
+  max-width:72vw!important;
+  max-height:30vh!important;
+  object-fit:contain!important;
+}
+
+/* Portada: siempre se ve la ilustración completa */
+.hero{
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Cuento: página completa dentro del área disponible */
+.storyImageWrap{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Ilustraciones de las canciones */
+.audioIllu{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:min(42vh,390px)!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Canvas/ruletas: nunca salen de pantalla */
+canvas{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* SVG y vídeo, por seguridad */
+svg,video{
+  max-width:100%;
+  max-height:100%;
+}
+
+/* Evitar que grids/flex fuerzen anchuras superiores al viewport */
+.stage,
+.storyStage,
+.storyLayout,
+.audioGrid,
+.quizWrap,
+.quizCard,
+.question-card,
+.activity,
+.activity-body,
+.activity-panel,
+.main,
+.content,
+.cardsWrap,
+.grid,
+.levels,
+.players-layout,
+.roulette-stage{
+  min-width:0!important;
+  min-height:0!important;
+}
+
+/* Ordenador/PDI: todo debe caber, sin scroll */
+@media (min-width:761px){
+  html,body{
+    overflow:hidden!important;
+  }
+  .page,.app{
+    overflow:hidden!important;
+  }
+}
+
+/* Pantallas de poca altura: reducir automáticamente elementos visuales */
+@media (max-height:760px) and (min-width:761px){
+  .picture{
+    width:min(34vw,40vh,340px)!important;
+    height:min(34vw,40vh,340px)!important;
+    max-height:40vh!important;
+  }
+  .picture.small{
+    width:min(23vw,25vh,230px)!important;
+    height:min(23vw,25vh,230px)!important;
+    max-height:25vh!important;
+  }
+  .audioIllu{
+    max-height:32vh!important;
+  }
+}
+
+/* Pantalla especialmente baja */
+@media (max-height:620px) and (min-width:761px){
+  .picture{
+    width:min(29vw,34vh,290px)!important;
+    height:min(29vw,34vh,290px)!important;
+    max-height:34vh!important;
+  }
+  .picture.small{
+    width:min(20vw,21vh,190px)!important;
+    height:min(20vw,21vh,190px)!important;
+    max-height:21vh!important;
+  }
+  .audioIllu{
+    max-height:26vh!important;
+  }
+}
+
+/* Móvil/tablet vertical: se prioriza legibilidad y se permite flujo vertical */
+@media (max-width:760px){
+  html,body{
+    height:auto!important;
+    min-height:100%!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .page,.app{
+    height:auto!important;
+    min-height:var(--zurron-view-h)!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .picture{
+    width:min(86vw,390px)!important;
+    height:min(86vw,390px)!important;
+    max-height:none!important;
+  }
+  .picture.small{
+    width:min(70vw,270px)!important;
+    height:min(70vw,270px)!important;
+    max-height:none!important;
+  }
+  .audioIllu{
+    max-height:340px!important;
+  }
+}
+
+
+/* === ZURRÓN · LIMPIEZA VISUAL v5 === */
+.content{gap:8px!important}
+.back{border-width:1px!important;box-shadow:none!important}
+.sub{font-size:15px!important;color:#355a75!important}
+.grid{gap:14px!important}
+.card{border-width:2px!important;box-shadow:none!important;background:rgba(255,255,255,.95)!important}
+.card h2{font-size:clamp(24px,2.4vw,30px)!important;line-height:1.08!important}
+.card p{font-size:15px!important;line-height:1.35!important}.chip{font-size:12px!important;padding:5px 9px!important}
+.open{min-height:50px!important;font-size:15px!important;box-shadow:none!important}
+
+</style>
+</head>
+<body>
+<main class="page">
+<section class="shell mpage">
+<div class="content">
+<a class="back" href="/">← EL ZURRÓN DE LAS LETRAS</a>
+
+<div class="heroTop">
+  <div class="mark">M</div>
+  <div>
+    <div class="kicker">EL ZURRÓN DE LAS LETRAS</div>
+    <h1>Letra M</h1>
+    <p class="sub">Elige una actividad para seguir jugando y aprendiendo.</p>
+  </div>
+</div>
+
+<div class="cardsWrap">
+<div class="grid games">
+<a class="gameCard center" href="/m/centro/">
+  <h2>Juego con la CARTILLA DE LECTURA de la M</h2>
+  <p>Práctica progresiva basada en la cartilla de lectura de la M, con jugadores, ruleta, niveles y turnos.</p>
+  <div class="chips">
+    <span class="chip">Lectura</span><span class="chip">Sílabas</span>
+    <span class="chip">Palabras</span><span class="chip">Frases</span><span class="chip">Ruleta</span>
+  </div>
+  <div class="open">ABRIR JUEGO DE CARTILLA</div>
+</a>
+
+<a class="gameCard mission" href="/m/mision/">
+  <h2>Misión M (Conciencia Fonémica y Fonológica.)</h2>
+  <p>Identifica pictogramas, cuenta sílabas, encuentra dónde suena el fonema /m/ y crea una oración.</p>
+  <div class="chips">
+    <span class="chip">Pictogramas</span><span class="chip">Sílabas</span>
+    <span class="chip">Fonema /m/</span><span class="chip">Expresión oral</span>
+  </div>
+  <div class="open">ABRIR MISIÓN M</div>
+</a>
+
+
+</div>
+</div>
+</div>
+</section>
+</main>
+
+
+<script id="zurron-local-nav">
+(() => {
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+
+  function normalizeInternal(href) {
+    if (!href) return null;
+    href = String(href).trim();
+
+    // Solo rutas internas absolutas del proyecto.
+    if (!href.startsWith('/')) return null;
+
+    let path = href.split('?')[0].split('#')[0];
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+
+    return ROUTES.has(path) ? path : null;
+  }
+
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[href]');
+    if (!a) return;
+
+    const path = normalizeInternal(a.getAttribute('href'));
+    if (!path) return;
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'zurron:navigate', path}, '*');
+    }
+  }, true);
+})();
+</script>
+
+
+<script id="zurron-responsive-viewport">
+(() => {
+  const applyViewport = () => {
+    const h = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight)
+    );
+    const w = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.width : window.innerWidth)
+    );
+    document.documentElement.style.setProperty('--zurron-view-h', h + 'px');
+    document.documentElement.style.setProperty('--zurron-view-w', w + 'px');
+  };
+  applyViewport();
+  window.addEventListener('resize', applyViewport, {passive:true});
+  window.addEventListener('orientationchange', applyViewport, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', applyViewport, {passive:true});
+  }
+})();
+</script>
+
+</body>
+</html>

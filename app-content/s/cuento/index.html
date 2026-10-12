@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cuento · Letra S · El Zurrón de las Letras</title>
+<meta name="description" content="Cuento del sirinoque, canciones, comprensión y vocabulario de la letra S.">
+<style>
+:root{
+  --ink:#17324d;
+  --muted:#5f7182;
+  --paper:#fffdf8;
+  --line:#d8e4ed;
+  --s:#df4b53;
+  --s2:#f07a81;
+  --blue:#2f80ed;
+  --green:#2f9e5b;
+  --yellow:#f3b52b;
+  --violet:#8058c7;
+  --shadow:0 14px 36px rgba(30,70,105,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef5f9}
+body{min-height:100vh;background:linear-gradient(145deg,#eef7fb,#f9fbfc)}
+button{font:inherit}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+.page{min-height:100vh;padding:9px}
+.shell{
+  width:100%;
+  min-height:calc(100vh - 18px);
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:23px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.header{
+  padding:12px 16px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.96);
+}
+.headerLeft{display:flex;align-items:center;gap:12px;min-width:0}
+.back{
+  min-height:40px;
+  padding:7px 12px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  background:white;
+  font-weight:900;
+  white-space:nowrap;
+}
+.mark{
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;
+  background:var(--s);color:white;
+  font-size:29px;font-weight:950;
+}
+.titleWrap{min-width:0}
+.kicker{font-size:11px;font-weight:900;letter-spacing:.07em;color:var(--muted)}
+h1{margin:2px 0 0;font-size:clamp(23px,2.8vw,38px);line-height:1}
+.tabs{
+  padding:10px 12px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  border-bottom:1px solid var(--line);
+  background:#f8fbfd;
+}
+.tab{
+  min-height:47px;
+  border:2px solid var(--line);
+  border-radius:14px;
+  background:white;
+  color:var(--ink);
+  font-weight:950;
+  cursor:pointer;
+}
+.tab.active{
+  background:var(--s);
+  border-color:var(--s);
+  color:white;
+}
+.panel{padding:14px;min-height:calc(100vh - 145px)}
+
+/* CUENTO */
+.storyLayout{
+  min-height:calc(100vh - 180px);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 165px;
+  gap:12px;
+}
+.storyStage{
+  min-height:0;
+  border:2px solid var(--line);
+  border-radius:20px;
+  background:#eef5f9;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  overflow:hidden;
+}
+.storyImageWrap{
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px;
+}
+.storyImage{
+  max-width:100%;
+  max-height:calc(100vh - 260px);
+  object-fit:contain;
+  border-radius:12px;
+  box-shadow:0 8px 22px rgba(30,60,90,.10);
+  background:white;
+}
+.storyControls{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  gap:9px;
+  align-items:center;
+  padding:9px;
+  border-top:1px solid var(--line);
+  background:white;
+}
+.storyBtn{
+  min-height:46px;
+  min-width:110px;
+  border:0;
+  border-radius:13px;
+  background:var(--s);
+  color:white;
+  font-weight:950;
+  cursor:pointer;
+}
+.storyBtn:disabled{opacity:.38;cursor:not-allowed}
+.pageCounter{text-align:center;font-weight:900;color:var(--muted)}
+.thumbs{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  overflow:auto;
+  padding-right:3px;
+}
+.thumb{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  border:3px solid transparent;
+  border-radius:12px;
+  cursor:pointer;
+  background:white;
+}
+.thumb.active{border-color:var(--s)}
+
+/* CANCIONES */
+.audioGrid{
+  min-height:calc(100vh - 185px);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  align-items:stretch;
+}
+.audioCard{
+  border:3px solid var(--line);
+  border-radius:24px;
+  background:white;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  box-shadow:0 10px 24px rgba(30,60,90,.08);
+}
+.audioCard h2{margin:0 0 8px;font-size:clamp(24px,2.4vw,36px)}
+.audioCard p{color:var(--muted);font-size:17px;line-height:1.45;margin:0 0 20px}
+audio{width:100%}
+.audioTag{
+  display:inline-block;
+  align-self:flex-start;
+  margin-bottom:16px;
+  padding:7px 11px;
+  border-radius:999px;
+  background:#fff0f1;
+  color:#a43b41;
+  font-size:12px;
+  font-weight:950;
+}
+
+/* KAHOOT */
+.quizWrap{
+  min-height:calc(100vh - 185px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.quizCard{
+  width:min(920px,100%);
+  border:3px solid var(--line);
+  border-radius:24px;
+  background:white;
+  padding:clamp(18px,3vw,34px);
+  box-shadow:0 10px 26px rgba(30,60,90,.08);
+}
+.quizTop{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+  margin-bottom:16px;
+}
+.quizCount,.quizScore{font-weight:950;color:var(--muted)}
+.quizQuestion{
+  font-size:clamp(25px,3.1vw,42px);
+  font-weight:950;
+  line-height:1.12;
+  text-align:center;
+  margin:18px auto 26px;
+}
+.answers{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.answer{
+  min-height:92px;
+  border:0;
+  border-radius:18px;
+  color:white;
+  font-weight:950;
+  font-size:clamp(17px,1.8vw,24px);
+  cursor:pointer;
+  padding:14px;
+}
+.answer:nth-child(1){background:#d94848}
+.answer:nth-child(2){background:#2f80ed}
+.answer:nth-child(3){background:#e4a61d}
+.answer:nth-child(4){background:#2d9d55}
+.answer.correct{outline:7px solid rgba(47,157,85,.22);filter:brightness(1.06)}
+.answer.wrong{opacity:.45}
+.quizFeedback{min-height:32px;text-align:center;font-weight:950;font-size:19px;margin:16px 0 8px}
+.nextQuiz{
+  width:100%;min-height:54px;border:0;border-radius:16px;background:var(--ink);color:white;font-weight:950;font-size:18px;cursor:pointer
+}
+.result{text-align:center}
+.result h2{font-size:clamp(32px,4vw,50px);margin:0 0 10px}
+.resultScore{font-size:clamp(42px,6vw,74px);font-weight:950;color:var(--s);margin:10px 0 20px}
+
+/* VOCABULARIO */
+.vocabIntro{margin:0 0 12px;color:var(--muted);font-size:16px}
+.vocabGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:13px;
+}
+.vocabCard{
+  min-height:190px;
+  border:3px solid var(--line);
+  border-radius:20px;
+  background:white;
+  padding:18px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  text-align:left;
+}
+.vocabWord{font-size:clamp(24px,2.2vw,34px);font-weight:950;color:var(--s);margin-bottom:10px}
+.vocabPrompt{font-size:13px;font-weight:900;color:var(--muted);letter-spacing:.03em}
+.vocabDefinition{
+  margin-top:14px;
+  font-size:17px;
+  line-height:1.42;
+  color:var(--ink);
+  opacity:0;
+  transform:translateY(8px);
+  transition:.18s ease;
+}
+.vocabClue{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.35;
+  opacity:0;
+  transition:.18s ease;
+}
+.vocabCard.open .vocabDefinition,
+.vocabCard.open .vocabClue{opacity:1;transform:none}
+.vocabCard.open .vocabPrompt{display:none}
+.vocabChallenge{
+  margin-top:16px;
+  border:3px solid #f1d0d2;
+  border-radius:20px;
+  background:#fff7f7;
+  padding:18px;
+}
+.challengeTitle{font-size:23px;font-weight:950;margin-bottom:8px}
+.challengeQuestion{font-size:19px;font-weight:850;margin-bottom:12px}
+.challengeChoices{display:flex;flex-wrap:wrap;gap:9px}
+.challengeBtn{
+  min-height:44px;
+  padding:8px 14px;
+  border:2px solid var(--line);
+  border-radius:13px;
+  background:white;
+  font-weight:900;
+  cursor:pointer;
+}
+.challengeBtn.ok{background:#e9f8ef;border-color:#57a873}
+.challengeBtn.bad{background:#fff0f0;border-color:#d66a6a}
+.challengeFeedback{min-height:25px;margin-top:10px;font-weight:900}
+
+.originals{
+  margin-top:18px;
+  border-top:1px solid var(--line);
+  padding-top:14px;
+}
+.originals summary{cursor:pointer;font-weight:900;color:var(--muted)}
+.originalGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.originalGrid img{width:100%;border:1px solid var(--line);border-radius:14px}
+
+@media(max-width:850px){
+  .tabs{grid-template-columns:repeat(2,1fr)}
+  .storyLayout{grid-template-columns:1fr}
+  .thumbs{flex-direction:row}
+  .thumb{width:95px;flex:0 0 95px}
+  .audioGrid{grid-template-columns:1fr}
+  .vocabGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+  .page{padding:4px}
+  .shell{border-radius:16px}
+  .header{padding:9px}
+  .back{padding:6px 9px;font-size:12px}
+  .mark{width:39px;height:39px;font-size:24px}
+  .tabs{padding:7px;gap:6px}
+  .tab{min-height:43px;font-size:13px}
+  .panel{padding:8px}
+  .storyImage{max-height:65vh}
+  .storyBtn{min-width:84px}
+  .answers{grid-template-columns:1fr}
+  .answer{min-height:65px}
+  .vocabGrid{grid-template-columns:1fr}
+  .originalGrid{grid-template-columns:1fr}
+}
+
+/* =======================================================
+   RESPONSIVE DE PANTALLA COMPLETA · CUENTO S
+   ======================================================= */
+html,body{
+  width:100%;
+  height:100%;
+  min-height:0;
+}
+body{overflow:hidden}
+.page{
+  width:100%;
+  height:100dvh;
+  min-height:0;
+  padding:clamp(4px,.7vw,8px);
+}
+.shell{
+  width:100%;
+  height:100%;
+  min-height:0;
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  overflow:hidden;
+}
+.header{
+  min-height:0;
+  padding:clamp(7px,1vh,11px) clamp(9px,1vw,14px);
+}
+.headerLeft{min-width:0}
+.mark{
+  width:clamp(38px,4vw,46px);
+  height:clamp(38px,4vw,46px);
+  font-size:clamp(23px,2.5vw,29px);
+}
+h1{font-size:clamp(20px,2.4vw,32px)}
+.tabs{
+  min-height:0;
+  padding:clamp(5px,.7vh,8px) clamp(7px,.8vw,11px);
+  gap:clamp(5px,.7vw,8px);
+}
+.tab{
+  min-height:clamp(38px,6vh,47px);
+  font-size:clamp(11px,.95vw,14px);
+}
+.panel{
+  min-height:0!important;
+  height:100%!important;
+  padding:clamp(6px,.8vw,10px);
+  overflow:hidden;
+}
+
+/* Botón fullscreen de la página */
+.cuento-fullscreen{
+  min-height:40px;
+  padding:7px 11px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  background:white;
+  color:var(--ink);
+  font-weight:950;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+/* CUENTO: imagen usa todo el espacio disponible */
+.storyLayout{
+  width:100%;
+  height:100%;
+  min-height:0!important;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) 68px;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+.storyStage{
+  width:100%;
+  height:100%;
+  min-height:0;
+}
+.storyImageWrap{
+  width:100%;
+  height:100%;
+  min-height:0;
+  padding:5px;
+}
+.storyImage{
+  width:100%;
+  height:100%;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain;
+}
+.storyControls{
+  min-height:52px;
+  grid-template-columns:auto minmax(0,1fr) auto auto;
+  padding:6px 8px;
+}
+.storyBtn{
+  min-height:40px;
+  min-width:96px;
+  padding:6px 10px;
+  font-size:13px;
+}
+.imageFullscreenBtn{
+  min-height:40px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  padding:6px 10px;
+  background:white;
+  color:var(--ink);
+  font-weight:950;
+  cursor:pointer;
+}
+.thumbs{
+  min-height:0;
+  display:flex;
+  flex-direction:row;
+  gap:6px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:0 2px 3px;
+}
+.thumb{
+  width:62px;
+  height:62px;
+  flex:0 0 62px;
+  aspect-ratio:1;
+}
+
+/* Al ampliar SOLO la imagen */
+#storyStage:fullscreen{
+  width:100vw;
+  height:100vh;
+  border:0;
+  border-radius:0;
+  background:#101820;
+  padding:0;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+}
+#storyStage:fullscreen .storyImageWrap{padding:0}
+#storyStage:fullscreen .storyImage{
+  width:100vw;
+  height:calc(100vh - 58px);
+  object-fit:contain;
+  border-radius:0;
+  box-shadow:none;
+  background:#101820;
+}
+#storyStage:fullscreen .storyControls{
+  min-height:58px;
+}
+
+/* CANCIONES: ilustradas con imágenes del PDF */
+.audioGrid{
+  width:100%;
+  height:100%;
+  min-height:0!important;
+  gap:clamp(10px,1.2vw,18px);
+}
+.audioCard{
+  height:100%;
+  min-height:0;
+  padding:clamp(10px,1.4vw,18px);
+  justify-content:flex-start;
+  overflow:hidden;
+}
+.audioIllu{
+  width:100%;
+  flex:1 1 auto;
+  min-height:0;
+  max-height:calc(100vh - 330px);
+  object-fit:contain;
+  border-radius:16px;
+  background:#f3f7fa;
+  margin-bottom:10px;
+}
+.audioCard h2{
+  font-size:clamp(18px,2vw,28px);
+  margin-bottom:4px;
+}
+.audioCard p{
+  font-size:clamp(12px,1vw,15px);
+  margin-bottom:8px;
+}
+.audioTag{margin-bottom:7px;padding:5px 9px}
+audio{flex:0 0 auto;height:42px}
+
+/* KAHOOT: todo en una sola pantalla sin scroll */
+.quizWrap{
+  width:100%;
+  height:100%;
+  min-height:0!important;
+  align-items:stretch;
+}
+.quizCard{
+  width:min(1000px,100%);
+  height:100%;
+  max-height:100%;
+  min-height:0;
+  margin:auto;
+  padding:clamp(9px,1.4vh,18px) clamp(12px,1.6vw,22px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  overflow:hidden;
+}
+#quizPlay{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.quizTop{margin-bottom:clamp(5px,.8vh,10px)}
+.quizCount,.quizScore{font-size:clamp(12px,1vw,15px)}
+.quizQuestion{
+  font-size:clamp(22px,3.5vh,38px);
+  line-height:1.08;
+  margin:clamp(7px,1.3vh,14px) auto clamp(9px,1.5vh,16px);
+}
+.answers{
+  min-height:0;
+  gap:clamp(7px,1vh,10px);
+}
+.answer{
+  min-height:clamp(58px,10vh,82px);
+  padding:clamp(7px,1vh,12px);
+  font-size:clamp(15px,2.2vh,21px);
+}
+.quizFeedback{
+  min-height:25px;
+  font-size:clamp(14px,2vh,18px);
+  margin:clamp(5px,.8vh,9px) 0 4px;
+}
+.nextQuiz{
+  min-height:clamp(42px,6.5vh,50px);
+  font-size:clamp(14px,2vh,17px);
+}
+.result h2{font-size:clamp(28px,4.5vh,44px)}
+.resultScore{font-size:clamp(42px,8vh,68px);margin:6px 0 14px}
+.originals{display:none!important}
+
+/* VOCABULARIO: también adaptado al viewport */
+#vocab{
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  gap:7px;
+}
+#vocab.hidden{display:none!important}
+.vocabIntro{margin:0;font-size:13px}
+.vocabGrid{
+  min-height:0;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.vocabCard{
+  min-height:0;
+  padding:clamp(8px,1vw,13px);
+}
+.vocabWord{font-size:clamp(19px,2vw,28px);margin-bottom:5px}
+.vocabPrompt{font-size:10px}
+.vocabDefinition{margin-top:6px;font-size:clamp(12px,1vw,15px);line-height:1.28}
+.vocabClue{margin-top:5px;font-size:11px}
+.vocabChallenge{
+  margin:0;
+  padding:9px 12px;
+}
+.challengeTitle{font-size:17px;margin-bottom:3px}
+.challengeQuestion{font-size:14px;margin-bottom:6px}
+.challengeChoices{gap:5px}
+.challengeBtn{min-height:34px;padding:5px 9px;font-size:12px}
+.challengeFeedback{min-height:18px;margin-top:4px;font-size:12px}
+
+/* Pantallas de ordenador con poca altura */
+@media(max-height:720px) and (min-width:761px){
+  .header{padding:5px 8px}
+  .back{min-height:32px;font-size:10px;padding:4px 7px}
+  .mark{width:34px;height:34px;font-size:21px}
+  .kicker{font-size:9px}
+  h1{font-size:19px}
+  .cuento-fullscreen{min-height:32px;font-size:10px;padding:4px 7px}
+  .tabs{padding:4px 6px}
+  .tab{min-height:34px;font-size:10px}
+  .panel{padding:5px}
+  .storyLayout{grid-template-rows:minmax(0,1fr) 52px}
+  .thumb{width:48px;height:48px;flex-basis:48px}
+  .storyControls{min-height:43px}
+  .storyBtn,.imageFullscreenBtn{min-height:34px;font-size:10px}
+  .audioIllu{max-height:calc(100vh - 280px)}
+  .audioCard h2{font-size:18px}
+  .audioCard p{font-size:11px}
+  audio{height:36px}
+}
+
+/* Tablet/móvil: se permite scroll cuando es físicamente necesario */
+@media(max-width:760px){
+  html,body{height:auto;min-height:100%}
+  body{overflow:auto}
+  .page{height:auto;min-height:100dvh}
+  .shell{height:auto;min-height:calc(100dvh - 8px);display:block}
+  .panel{height:auto!important;overflow:visible}
+  .storyLayout{height:auto;display:block}
+  .storyStage{height:72vh}
+  .thumbs{margin-top:7px}
+  .audioGrid{height:auto;grid-template-columns:1fr}
+  .audioCard{height:auto;min-height:520px}
+  .audioIllu{max-height:340px}
+  .quizWrap{height:auto;min-height:70vh}
+  .quizCard{height:auto}
+  .vocabGrid{grid-template-columns:1fr;grid-template-rows:none}
+}
+
+
+/* La pantalla completa la controla EXCLUSIVAMENTE la consola superior. */
+#fullscreenBtn,
+[data-page-fullscreen],
+.s-page-fullscreen,
+.cuento-fullscreen{
+  display:none!important;
+}
+html,body{
+  max-width:100%;
+}
+
+
+/* Zoom interno de la página del cuento: no activa Fullscreen API. */
+.storyStage.image-expanded{
+  position:fixed!important;
+  inset:0!important;
+  z-index:99990!important;
+  width:100vw!important;
+  height:100dvh!important;
+  max-width:none!important;
+  max-height:none!important;
+  border:0!important;
+  border-radius:0!important;
+  background:#101820!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+}
+.storyStage.image-expanded .storyImageWrap{
+  min-height:0!important;
+  padding:0!important;
+}
+.storyStage.image-expanded .storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:#101820!important;
+}
+.storyStage.image-expanded .storyControls{
+  min-height:56px!important;
+  background:white!important;
+}
+
+
+/* ==========================================================
+   ZURRÓN · AJUSTE GLOBAL RESPONSIVE v3
+   La altura útil se calcula con JS y corresponde al viewport
+   REAL de cada pantalla interna.
+   ========================================================== */
+:root{
+  --zurron-view-h:100dvh;
+  --zurron-view-w:100vw;
+}
+html,body{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+body{
+  overflow:hidden!important;
+}
+
+/* Contenedores principales: nunca deben sobrepasar el viewport */
+.page,
+.app{
+  width:100%!important;
+  height:var(--zurron-view-h)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:var(--zurron-view-h)!important;
+}
+.shell{
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Cualquier imagen funcional debe entrar COMPLETA en su contenedor */
+img{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* Pictogramas de las misiones */
+.picture{
+  width:min(40vw,46vh,420px)!important;
+  height:min(40vw,46vh,420px)!important;
+  max-width:88vw!important;
+  max-height:46vh!important;
+  object-fit:contain!important;
+}
+.picture.small{
+  width:min(28vw,30vh,285px)!important;
+  height:min(28vw,30vh,285px)!important;
+  max-width:72vw!important;
+  max-height:30vh!important;
+  object-fit:contain!important;
+}
+
+/* Portada: siempre se ve la ilustración completa */
+.hero{
+  min-height:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Cuento: página completa dentro del área disponible */
+.storyImageWrap{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.storyImage{
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+
+/* Ilustraciones de las canciones */
+.audioIllu{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:min(42vh,390px)!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Canvas/ruletas: nunca salen de pantalla */
+canvas{
+  max-width:100%!important;
+  max-height:100%!important;
+}
+
+/* SVG y vídeo, por seguridad */
+svg,video{
+  max-width:100%;
+  max-height:100%;
+}
+
+/* Evitar que grids/flex fuerzen anchuras superiores al viewport */
+.stage,
+.storyStage,
+.storyLayout,
+.audioGrid,
+.quizWrap,
+.quizCard,
+.question-card,
+.activity,
+.activity-body,
+.activity-panel,
+.main,
+.content,
+.cardsWrap,
+.grid,
+.levels,
+.players-layout,
+.roulette-stage{
+  min-width:0!important;
+  min-height:0!important;
+}
+
+/* Ordenador/PDI: todo debe caber, sin scroll */
+@media (min-width:761px){
+  html,body{
+    overflow:hidden!important;
+  }
+  .page,.app{
+    overflow:hidden!important;
+  }
+}
+
+/* Pantallas de poca altura: reducir automáticamente elementos visuales */
+@media (max-height:760px) and (min-width:761px){
+  .picture{
+    width:min(34vw,40vh,340px)!important;
+    height:min(34vw,40vh,340px)!important;
+    max-height:40vh!important;
+  }
+  .picture.small{
+    width:min(23vw,25vh,230px)!important;
+    height:min(23vw,25vh,230px)!important;
+    max-height:25vh!important;
+  }
+  .audioIllu{
+    max-height:32vh!important;
+  }
+}
+
+/* Pantalla especialmente baja */
+@media (max-height:620px) and (min-width:761px){
+  .picture{
+    width:min(29vw,34vh,290px)!important;
+    height:min(29vw,34vh,290px)!important;
+    max-height:34vh!important;
+  }
+  .picture.small{
+    width:min(20vw,21vh,190px)!important;
+    height:min(20vw,21vh,190px)!important;
+    max-height:21vh!important;
+  }
+  .audioIllu{
+    max-height:26vh!important;
+  }
+}
+
+/* Móvil/tablet vertical: se prioriza legibilidad y se permite flujo vertical */
+@media (max-width:760px){
+  html,body{
+    height:auto!important;
+    min-height:100%!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .page,.app{
+    height:auto!important;
+    min-height:var(--zurron-view-h)!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .picture{
+    width:min(86vw,390px)!important;
+    height:min(86vw,390px)!important;
+    max-height:none!important;
+  }
+  .picture.small{
+    width:min(70vw,270px)!important;
+    height:min(70vw,270px)!important;
+    max-height:none!important;
+  }
+  .audioIllu{
+    max-height:340px!important;
+  }
+}
+
+
+/* === ZURRÓN · LIMPIEZA VISUAL v5 === */
+html,body{background:#f4f7fa!important}
+:root{--line:#d7e1eb!important;--muted:#6e8294!important;--shadow:0 5px 14px rgba(30,70,105,.06)!important}
+.shell,.storyStage,.audioCard,.quizCard{box-shadow:none!important}
+.header{padding:8px 14px!important}.kicker{display:none!important}
+h1{font-size:clamp(22px,2.5vw,32px)!important}.tabs{padding:8px 12px!important;gap:8px!important;background:#fbfcfd!important}
+.tab{min-height:44px!important;border-width:1px!important;color:#38526c!important;background:#fff!important}.tab.active{background:var(--s)!important;color:#fff!important}
+.panel{padding:10px!important}
+.storyLayout{grid-template-columns:minmax(0,1fr) 110px!important;gap:10px!important;min-height:calc(100vh - 165px)!important}
+.storyStage{border-width:1px!important;background:#fff!important}
+.storyImageWrap{padding:6px!important;background:#fbfcfd!important}
+.storyImage{max-height:calc(100vh - 230px)!important;box-shadow:none!important;border-radius:10px!important}
+.storyControls{padding:8px!important;background:#fbfcfd!important}.storyBtn{min-height:42px!important;min-width:102px!important}
+.pageCounter{font-size:14px!important}.thumb{border-width:2px!important;border-radius:10px!important}
+.audioGrid{gap:14px!important}.audioCard{border-width:2px!important;padding:18px!important}.audioCard h2{font-size:clamp(22px,2.2vw,30px)!important}.audioCard p{font-size:15px!important;line-height:1.35!important}
+.quizCard{border-width:2px!important;padding:18px!important}.quizQuestion{font-size:clamp(28px,3.3vw,42px)!important;line-height:1.15!important}
+.answers .answer,.vocabCard,.vocabBtn,.flipCard{box-shadow:none!important}
+
+</style>
+</head>
+<body>
+<main class="page">
+<section class="shell">
+  <header class="header">
+    <div class="headerLeft">
+      <a class="back" href="/s/">← LETRA S</a>
+      <div class="mark">S</div>
+      <div class="titleWrap">
+        <div class="kicker">EL ZURRÓN DE LAS LETRAS</div>
+        <h1>Cuento · El sirinoque</h1>
+      </div>
+    </div>
+    <button class="cuento-fullscreen" type="button" data-page-fullscreen>PANTALLA COMPLETA</button>
+  </header>
+
+  <nav class="tabs" aria-label="Secciones del cuento">
+    <button class="tab active" data-panel="story" type="button">CUENTO</button>
+    <button class="tab" data-panel="songs" type="button">CANCIONES</button>
+    <button class="tab" data-panel="quiz" type="button">KAHOOT · COMPRENSIÓN</button>
+    <button class="tab" data-panel="vocab" type="button">VOCABULARIO</button>
+  </nav>
+
+  <section id="story" class="panel">
+    <div class="storyLayout">
+      <div class="storyStage">
+        <div class="storyImageWrap">
+          <img id="storyImage" class="storyImage" src="assets/pagina_05.png" alt="Página 5 del cuento">
+        </div>
+        <div class="storyControls">
+          <button id="prevStory" class="storyBtn" type="button">ANTERIOR</button>
+          <div id="storyCounter" class="pageCounter">Página 5 de 12</div>
+          <button id="imageFullscreenBtn" class="imageFullscreenBtn" type="button">AMPLIAR IMAGEN</button>
+          <button id="nextStory" class="storyBtn" type="button">SIGUIENTE</button>
+        </div>
+      </div>
+      <div id="thumbs" class="thumbs"></div>
+    </div>
+  </section>
+
+  <section id="songs" class="panel hidden">
+    <div class="audioGrid">
+      <article class="audioCard">
+        <span class="audioTag">CANCIÓN</span>
+        <img class="audioIllu" src="assets/pagina_12.png" alt="Olegario tocando el tambor y la flauta en el sirinoque">
+        <h2>El sirinoque · versión 2</h2>
+        <p>Escucha la canción del sirinoque.</p>
+        <audio controls preload="metadata">
+          <source src="assets/elsirinoque_version_2.mp3" type="audio/mpeg">
+        </audio>
+      </article>
+
+      <article class="audioCard">
+        <span class="audioTag">BASE MUSICAL</span>
+        <img class="audioIllu" src="assets/pagina_05.png" alt="Olegario y el zurrón de los sonidos">
+        <h2>El sirinoque del zurrón</h2>
+        <p>Base musical para cantar o acompañar el cuento en clase.</p>
+        <audio controls preload="metadata">
+          <source src="assets/sirinoque_base_musical.mp3" type="audio/mpeg">
+        </audio>
+      </article>
+    </div>
+  </section>
+
+  <section id="quiz" class="panel hidden">
+    <div class="quizWrap">
+      <div id="quizCard" class="quizCard">
+        <div id="quizPlay">
+          <div class="quizTop">
+            <div id="quizCount" class="quizCount"></div>
+            <div id="quizScore" class="quizScore"></div>
+          </div>
+          <div id="quizQuestion" class="quizQuestion"></div>
+          <div id="answers" class="answers"></div>
+          <div id="quizFeedback" class="quizFeedback" aria-live="polite"></div>
+          <button id="nextQuiz" class="nextQuiz hidden" type="button">SIGUIENTE PREGUNTA</button>
+        </div>
+        <div id="quizResult" class="result hidden">
+          <h2>Comprensión completada</h2>
+          <div id="resultScore" class="resultScore"></div>
+          <button id="restartQuiz" class="nextQuiz" type="button">VOLVER A JUGAR</button>
+        </div>
+      </div>
+    </div>
+
+    <details class="originals">
+      <summary>Ver las fichas originales de comprensión (páginas 13 y 14)</summary>
+      <div class="originalGrid">
+        <img src="assets/pagina_13.png" alt="Preguntas de comprensión originales, página 13">
+        <img src="assets/pagina_14.png" alt="Actividad visual de comprensión original, página 14">
+      </div>
+    </details>
+  </section>
+
+  <section id="vocab" class="panel hidden">
+    <p class="vocabIntro">Toca una palabra para descubrir qué significa dentro del cuento.</p>
+    <div id="vocabGrid" class="vocabGrid"></div>
+
+    <div class="vocabChallenge">
+      <div class="challengeTitle">Reto de vocabulario</div>
+      <div id="challengeQuestion" class="challengeQuestion"></div>
+      <div id="challengeChoices" class="challengeChoices"></div>
+      <div id="challengeFeedback" class="challengeFeedback" aria-live="polite"></div>
+    </div>
+  </section>
+</section>
+</main>
+
+<script>
+const storyPages=["assets/pagina_05.png", "assets/pagina_06.png", "assets/pagina_07.png", "assets/pagina_08.png", "assets/pagina_09.png", "assets/pagina_10.png", "assets/pagina_11.png", "assets/pagina_12.png"];
+let storyIndex=0;
+
+const tabs=[...document.querySelectorAll('.tab')];
+const panels=['story','songs','quiz','vocab'];
+
+function showPanel(id){
+  panels.forEach(p=>document.getElementById(p).classList.toggle('hidden',p!==id));
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.panel===id));
+}
+
+tabs.forEach(t=>t.addEventListener('click',()=>showPanel(t.dataset.panel)));
+
+function renderStory(){
+  const img=document.getElementById('storyImage');
+  img.src=storyPages[storyIndex];
+  img.alt=`Página ${storyIndex+5} del cuento`;
+  document.getElementById('storyCounter').textContent=`Página ${storyIndex+5} de 12`;
+  document.getElementById('prevStory').disabled=storyIndex===0;
+  document.getElementById('nextStory').disabled=storyIndex===storyPages.length-1;
+  [...document.querySelectorAll('.thumb')].forEach((el,i)=>el.classList.toggle('active',i===storyIndex));
+}
+
+const thumbs=document.getElementById('thumbs');
+storyPages.forEach((src,i)=>{
+  const im=document.createElement('img');
+  im.src=src;
+  im.className='thumb';
+  im.alt=`Miniatura página ${i+5}`;
+  im.addEventListener('click',()=>{storyIndex=i;renderStory()});
+  thumbs.appendChild(im);
+});
+document.getElementById('prevStory').addEventListener('click',()=>{if(storyIndex>0){storyIndex--;renderStory()}});
+document.getElementById('nextStory').addEventListener('click',()=>{if(storyIndex<storyPages.length-1){storyIndex++;renderStory()}});
+renderStory();
+
+/* KAHOOT DE COMPRENSIÓN */
+const quizData=[{"q": "¿De qué isla es el sirinoque?", "options": ["La Palma", "Tenerife", "Gran Canaria", "La Gomera"], "answer": 0}, {"q": "¿Qué instrumento toca Olegario con una mano?", "options": ["Tambor", "Guitarra", "Maracas", "Acordeón"], "answer": 0}, {"q": "¿Qué instrumento toca Olegario con la otra mano?", "options": ["Flauta", "Trompeta", "Acordeón", "Guitarra"], "answer": 0}, {"q": "¿El sirinoque se canta, se baila o las dos cosas?", "options": ["Se canta", "Se baila", "Las dos cosas", "Solo se escucha"], "answer": 2}, {"q": "¿Cuántos agujeros tiene la flauta del sirinoque?", "options": ["1", "2", "3", "4"], "answer": 2}, {"q": "¿Cómo es la música del sirinoque?", "options": ["Alegre", "Triste", "Silenciosa", "Muy lenta"], "answer": 0}];
+let qi=0, score=0, locked=false;
+
+function renderQuiz(){
+  locked=false;
+  const q=quizData[qi];
+  document.getElementById('quizCount').textContent=`Pregunta ${qi+1} de ${quizData.length}`;
+  document.getElementById('quizScore').textContent=`Puntos: ${score}`;
+  document.getElementById('quizQuestion').textContent=q.q;
+  document.getElementById('quizFeedback').textContent='';
+  document.getElementById('nextQuiz').classList.add('hidden');
+  const box=document.getElementById('answers');
+  box.innerHTML='';
+  q.options.forEach((op,i)=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='answer';
+    b.textContent=op;
+    b.addEventListener('click',()=>answerQuiz(b,i));
+    box.appendChild(b);
+  });
+}
+
+function answerQuiz(btn,idx){
+  if(locked)return;
+  locked=true;
+  const q=quizData[qi];
+  const buttons=[...document.querySelectorAll('.answer')];
+  buttons.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.answer)b.classList.add('correct');
+    else if(i===idx)b.classList.add('wrong');
+  });
+  if(idx===q.answer){
+    score++;
+    document.getElementById('quizFeedback').textContent='¡Correcto!';
+  }else{
+    document.getElementById('quizFeedback').textContent=`La respuesta correcta es: ${q.options[q.answer]}.`;
+  }
+  document.getElementById('quizScore').textContent=`Puntos: ${score}`;
+  document.getElementById('nextQuiz').classList.remove('hidden');
+}
+
+document.getElementById('nextQuiz').addEventListener('click',()=>{
+  qi++;
+  if(qi>=quizData.length){
+    document.getElementById('quizPlay').classList.add('hidden');
+    document.getElementById('quizResult').classList.remove('hidden');
+    document.getElementById('resultScore').textContent=`${score} / ${quizData.length}`;
+  }else renderQuiz();
+});
+
+document.getElementById('restartQuiz').addEventListener('click',()=>{
+  qi=0;score=0;
+  document.getElementById('quizResult').classList.add('hidden');
+  document.getElementById('quizPlay').classList.remove('hidden');
+  renderQuiz();
+});
+renderQuiz();
+
+/* VOCABULARIO */
+const vocabData=[{"word": "sirinoque", "definition": "Un ritmo de La Palma que se puede cantar y bailar.", "clue": "Es el ritmo que sale del zurrón y que Olegario enseña a los niños."}, {"word": "zurrón", "definition": "El zurrón de Olegario guarda sonidos de las islas.", "clue": "Es la bolsa especial de Olegario."}, {"word": "siote", "definition": "En el cuento es un sonido saltarín y juguetón.", "clue": "Los niños lo ayudan a volver bailando con pequeños saltos."}, {"word": "sorondongo", "definition": "En el cuento es un sonido suave y tranquilo.", "clue": "Olegario y los niños guardan silencio para escucharlo."}, {"word": "tambor", "definition": "Instrumento que acompaña al sirinoque.", "clue": "Olegario lo toca con una mano."}, {"word": "flauta de tres agujeros", "definition": "Instrumento que acompaña al tambor en el sirinoque.", "clue": "Olegario la toca con la otra mano."}];
+const vocabGrid=document.getElementById('vocabGrid');
+
+vocabData.forEach(v=>{
+  const card=document.createElement('button');
+  card.type='button';
+  card.className='vocabCard';
+  card.innerHTML=`
+    <div class="vocabWord">${v.word}</div>
+    <div class="vocabPrompt">TOCA PARA DESCUBRIR</div>
+    <div class="vocabDefinition">${v.definition}</div>
+    <div class="vocabClue">${v.clue}</div>`;
+  card.addEventListener('click',()=>card.classList.toggle('open'));
+  vocabGrid.appendChild(card);
+});
+
+let challengeIndex=0;
+function renderChallenge(){
+  const v=vocabData[challengeIndex % vocabData.length];
+  document.getElementById('challengeQuestion').textContent=`¿Qué palabra corresponde? ${v.definition}`;
+  document.getElementById('challengeFeedback').textContent='';
+  const other=vocabData.filter(x=>x.word!==v.word).slice(0,3).map(x=>x.word);
+  const choices=[v.word,...other].sort(()=>Math.random()-.5);
+  const box=document.getElementById('challengeChoices');
+  box.innerHTML='';
+  choices.forEach(word=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='challengeBtn';
+    b.textContent=word;
+    b.addEventListener('click',()=>{
+      [...box.children].forEach(x=>x.disabled=true);
+      if(word===v.word){
+        b.classList.add('ok');
+        document.getElementById('challengeFeedback').textContent='¡Muy bien!';
+      }else{
+        b.classList.add('bad');
+        document.getElementById('challengeFeedback').textContent=`Era: ${v.word}.`;
+      }
+      setTimeout(()=>{challengeIndex++;renderChallenge()},1100);
+    });
+    box.appendChild(b);
+  });
+}
+renderChallenge();
+</script>
+<script>
+async function togglePageFullscreen(btn){
+  try{
+    if(!document.fullscreenElement){
+      await document.documentElement.requestFullscreen();
+    }else{
+      await document.exitFullscreen();
+    }
+  }catch(e){}
+}
+function updatePageFullscreenButtons(){
+  document.querySelectorAll('[data-page-fullscreen]').forEach(btn=>{
+    btn.textContent=document.fullscreenElement?'SALIR DE PANTALLA COMPLETA':'PANTALLA COMPLETA';
+  });
+}
+document.querySelectorAll('[data-page-fullscreen]').forEach(btn=>{
+  btn.addEventListener('click',()=>togglePageFullscreen(btn));
+});
+document.addEventListener('fullscreenchange',updatePageFullscreenButtons);
+
+const imageFullscreenBtn=document.getElementById('imageFullscreenBtn');
+const storyStage=document.querySelector('.storyStage');
+if(imageFullscreenBtn && storyStage){
+  imageFullscreenBtn.addEventListener('click',()=>{
+    const expanded=storyStage.classList.toggle('image-expanded');
+    imageFullscreenBtn.textContent=expanded?'VOLVER AL CUENTO':'AMPLIAR IMAGEN';
+  });
+}
+</script>
+
+
+<script id="zurron-local-nav">
+(() => {
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+
+  function normalizeInternal(href) {
+    if (!href) return null;
+    href = String(href).trim();
+
+    // Solo rutas internas absolutas del proyecto.
+    if (!href.startsWith('/')) return null;
+
+    let path = href.split('?')[0].split('#')[0];
+    if (path !== '/' && !path.endsWith('/')) path += '/';
+
+    return ROUTES.has(path) ? path : null;
+  }
+
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('a[href]');
+    if (!a) return;
+
+    const path = normalizeInternal(a.getAttribute('href'));
+    if (!path) return;
+
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({type:'zurron:navigate', path}, '*');
+    }
+  }, true);
+})();
+</script>
+
+
+<script id="zurron-responsive-viewport">
+(() => {
+  const applyViewport = () => {
+    const h = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight)
+    );
+    const w = Math.max(
+      320,
+      Math.round(window.visualViewport ? window.visualViewport.width : window.innerWidth)
+    );
+    document.documentElement.style.setProperty('--zurron-view-h', h + 'px');
+    document.documentElement.style.setProperty('--zurron-view-w', w + 'px');
+  };
+  applyViewport();
+  window.addEventListener('resize', applyViewport, {passive:true});
+  window.addEventListener('orientationchange', applyViewport, {passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', applyViewport, {passive:true});
+  }
+})();
+</script>
+
+</body>
+</html>
+

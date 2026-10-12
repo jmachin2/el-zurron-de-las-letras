@@ -290,6 +290,7 @@ svg,video{
 .card p{font-size:15px!important;line-height:1.35!important}.chip{font-size:12px!important;padding:5px 9px!important}
 .open{min-height:50px!important;font-size:15px!important;box-shadow:none!important}
 
+@media(min-width:761px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 </style>
 </head>
 <body>
@@ -326,7 +327,12 @@ svg,video{
       </div>
       <div class="open">ABRIR MISIÓN L</div>
     </a>
-  </div>
+  <a class="card" href="/l/trazo/">
+      <h2>La contraseña del Zurrón · Trazo de la L</h2>
+      <p>Practica el trazo de la l minúscula y la L mayúscula sin cambiar las actividades que ya existen.</p>
+      <div class="chips"><span class="chip">l minúscula</span><span class="chip">L mayúscula</span><span class="chip">Dirección</span><span class="chip">Recorrido</span></div>
+      <div class="open">ABRIR ACTIVIDAD DE TRAZO</div>
+    </a></div>
 </div>
 </section>
 </main>
@@ -334,7 +340,7 @@ svg,video{
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+  const ROUTES = new Set(["/","/a/","/a/trazo/","/e/","/e/trazo/","/i/","/i/trazo/","/o/","/o/trazo/","/u/","/u/trazo/","/m/","/m/centro/","/m/mision/","/s/","/s/centro/","/s/mision/","/s/cuento/","/l/","/l/centro/","/l/mision/","/l/trazo/"]);
 
   function normalizeInternal(href) {
     if (!href) return null;

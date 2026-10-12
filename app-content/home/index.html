@@ -481,6 +481,15 @@ svg,video{
 .card,.tile,.letter-card{box-shadow:none!important}
 .hero h1,.title,h1{letter-spacing:0!important}
 
+
+/* V8 · nuevas letras, misma estética */
+.card.a{border-color:#efb17b}.card.e{border-color:#80cfc2}.card.i{border-color:#b1a7e8}
+.card.o{border-color:#e7b56c}.card.u{border-color:#c8a0d7}
+.a .mark,.a .open{background:#e9822b}.e .mark,.e .open{background:#1b9b8a}
+.i .mark,.i .open{background:#7467c8}.o .mark,.o .open{background:#dc9130}
+.u .mark,.u .open{background:#9c5fb5}
+@media(min-width:761px){.grid.letters{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+
 </style>
 </head>
 <body>
@@ -502,6 +511,36 @@ svg,video{
     <p class="sub">Elige una letra para abrir sus actividades.</p>
 
     <div class="grid letters">
+      <a class="card a" href="/a/">
+        <div class="mark">A</div>
+        <div class="cardCopy"><h2>Letra A</h2><p>Trazo de a minúscula y A mayúscula.</p></div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+      <a class="card e" href="/e/">
+        <div class="mark">E</div>
+        <div class="cardCopy"><h2>Letra E</h2><p>Trazo de e minúscula y E mayúscula.</p></div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+      <a class="card i" href="/i/">
+        <div class="mark">I</div>
+        <div class="cardCopy"><h2>Letra I</h2><p>Trazo de i minúscula y I mayúscula.</p></div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+      <a class="card o" href="/o/">
+        <div class="mark">O</div>
+        <div class="cardCopy"><h2>Letra O</h2><p>Trazo de o minúscula y O mayúscula.</p></div>
+        <div class="open">ENTRAR</div>
+      </a>
+
+      <a class="card u" href="/u/">
+        <div class="mark">U</div>
+        <div class="cardCopy"><h2>Letra U</h2><p>Trazo de u minúscula y U mayúscula.</p></div>
+        <div class="open">ENTRAR</div>
+      </a>
+
       <a class="card m" href="/m/">
         <div class="mark">M</div>
         <div class="cardCopy">
@@ -523,7 +562,7 @@ svg,video{
         <div class="mark">L</div>
         <div class="cardCopy">
           <h2>Letra L</h2>
-          <p>Lectura progresiva y conciencia fonológica.</p>
+          <p>Lectura progresiva, conciencia fonológica y trazo.</p>
         </div>
         <div class="open">ENTRAR</div>
       </a>
@@ -614,7 +653,7 @@ svg,video{
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/s/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/"]);
+  const ROUTES = new Set(["/","/a/","/a/trazo/","/e/","/e/trazo/","/i/","/i/trazo/","/o/","/o/trazo/","/u/","/u/trazo/","/m/","/m/centro/","/m/mision/","/s/","/s/centro/","/s/mision/","/s/cuento/","/l/","/l/centro/","/l/mision/","/l/trazo/"]);
 
   function normalizeInternal(href) {
     if (!href) return null;

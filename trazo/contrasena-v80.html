@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La contraseña del Zurrón · Trazo ajustable</title><style>
+:root{font-family:system-ui,sans-serif;color:#17384b;background:#f6f9fc}*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;padding:14px 16px 80px;background:linear-gradient(140deg,#fff7df,#eaf7fc)}
+main{max-width:1600px;margin:auto}header{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{font-size:clamp(22px,2.8vw,34px);margin:4px 0}.small{color:#547282;font-size:13px}
+a,button{font:inherit}a.home{padding:10px 15px;border-radius:12px;color:#075e78;background:white;border:1px solid #ccdfe7;text-decoration:none;font-weight:750}
+.letters{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0}.letters button{background:white;border:2px solid #d3e4ec;color:#086780;font-size:24px;font-weight:800;min-width:54px;height:54px;border-radius:13px;cursor:pointer}.letters button[aria-pressed=true]{background:#087d98;color:#fff;border-color:#087d98}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0 12px;background:#fff;border:1px solid #d4e4ea;padding:10px 12px;border-radius:14px}
+.controls button{min-width:42px;padding:7px 13px;background:#f0f8fb;border:1px solid #c1d9e4;border-radius:10px;cursor:pointer;font-weight:800}
+.controls input{width:clamp(130px,25vw,300px);accent-color:#087d98}.controls output{font-weight:850;min-width:55px}
+.frame{position:relative;border:2px solid #c4dbe6;background:#fff;border-radius:15px;overflow:hidden;min-height:300px}
+.frame iframe{display:block;border:0;transform-origin:top left;background:#fff}
+.tip{font-size:12px;color:#58788a;padding-top:6px}
+@media(max-width:700px){body{padding:9px 8px 86px}.letters button{height:45px;min-width:45px;font-size:22px}.controls{gap:6px}}
+</style></head><body><main>
+<header><div><div class="small">EL ZURRÓN DE LAS LETRAS · CONSOLA DE TRAZO</div><h1>La contraseña del Zurrón</h1><div class="small">12 grafías · tres niveles por letra · tamaño adaptable a la pizarra digital</div></div><a class="home" href="../index.html">Volver a la web principal</a></header>
+<nav class="letters" id="letters" aria-label="Seleccionar grafía"></nav>
+<section class="controls" aria-label="Tamaño de escritura"><strong>Tamaño de la actividad</strong><button id="minus" aria-label="Reducir tamaño">−</button><input id="scale" type="range" min="50" max="100" step="5" value="100" aria-label="Tamaño de la actividad"><button id="plus" aria-label="Aumentar tamaño">+</button><output id="percent" for="scale">100 %</output><button id="reset">Restablecer</button></section>
+<div class="frame" id="frame"><iframe id="lesson" title="Actividad de trazo" loading="eager" allow="fullscreen"></iframe></div>
+<p class="tip">El tamaño cambia de forma proporcional: se mantiene la correspondencia entre el trazo y su evaluación. Si necesitas ampliar más, utiliza la pantalla completa de la propia letra. La selección se guarda en este dispositivo.</p>
+</main><script>
+(()=>{"use strict";const symbols=["a","A","e","E","i","I","o","O","u","U","l","L"];
+const $=x=>document.getElementById(x),nav=$("letters"),frame=$("frame"),lesson=$("lesson"),scale=$("scale");
+let current="a";try{const s=localStorage.getItem("zurron-contrasena-letter");if(symbols.includes(s))current=s}catch(e){}
+symbols.forEach(c=>{const b=document.createElement("button");b.type="button";b.textContent=c;b.title="Letra "+c;b.setAttribute("aria-label","Abrir letra "+c);b.onclick=()=>select(c);b.dataset.letter=c;nav.append(b)});
+function select(c){current=c;lesson.src=encodeURIComponent(c)+".html";for(const b of nav.children)b.setAttribute("aria-pressed",String(b.dataset.letter===c));try{localStorage.setItem("zurron-contrasena-letter",c)}catch(e){}}
+function size(){const pct=Number(scale.value);$("percent").textContent=pct+" %";const s=pct/100;const fw=frame.clientWidth,fh=Math.max(330,window.innerHeight-235);frame.style.height=fh+"px";lesson.style.width=(fw/s)+"px";lesson.style.height=(fh/s)+"px";lesson.style.transform="scale("+s+")";try{localStorage.setItem("zurron-contrasena-scale",String(pct))}catch(e){}}
+scale.addEventListener("input",size);$("minus").onclick=()=>{scale.value=Math.max(50,Number(scale.value)-5);size()};$("plus").onclick=()=>{scale.value=Math.min(100,Number(scale.value)+5);size()};$("reset").onclick=()=>{scale.value=100;size()};
+window.addEventListener("resize",size);try{const s=Number(localStorage.getItem("zurron-contrasena-scale"));if(s>=50&&s<=100)scale.value=s}catch(e){}
+select(current);size();
+})();
+</script></body></html>

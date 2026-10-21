@@ -1,259 +1,75 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>La contraseña del Zurrón · D mayúscula</title>
-<style>
-:root{--ink:#17324d;--muted:#60768a;--accent:#9b5338;--good:#198754;--bad:#a33b30;--line:#d8e4ed}
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>D mayúscula · La contraseña del Zurrón</title><style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;background:#eef5f9;color:var(--ink)}
-body{overflow:hidden}
-button,a{font:inherit}
-a{color:inherit;text-decoration:none}
-.app{height:100dvh;padding:8px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px}
-header{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px 10px}
-.brand small{display:block;font-weight:900;color:var(--muted);letter-spacing:.08em}
-.brand h1{margin:2px 0 0;font-size:clamp(22px,2.5vw,34px)}
-.buttons{display:flex;gap:7px;flex-wrap:wrap}
-.btn,button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 11px;font-weight:900;cursor:pointer}
-.btn:hover,button:hover{border-color:#b89383}
-main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(285px,.65fr);gap:10px;min-height:0}
-.stage,.side{background:#fff;border:1px solid var(--line);border-radius:20px;min-height:0}
-.stage{display:grid;grid-template-rows:auto minmax(0,1fr);padding:10px}
-.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
-.levels button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.board{min-height:0;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:16px;background:#fff}
-canvas{width:100%;height:100%;max-width:100%;max-height:100%;touch-action:none;transform:scale(.82);transform-origin:center center}
-.side{padding:12px;display:flex;flex-direction:column;gap:9px;overflow:auto}
-.side h2{margin:0;font-size:20px} .muted{color:var(--muted);font-size:13px;line-height:1.38;margin:0}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.actions .wide{grid-column:1/-1}
-.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.result{min-height:52px;border-radius:14px;background:#f6fafc;border:1px solid var(--line);padding:10px;font-weight:900;line-height:1.25}
-details{border:1px solid var(--line);border-radius:13px;padding:8px} summary{font-weight:900;cursor:pointer}
-label{display:block;font-size:12px;font-weight:900;margin-top:8px} input[type=range]{width:100%}
-.celebrate{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;display:none}
-.celebrate.show{display:block}
-.flying{position:absolute;top:60%;font-size:31px;color:#f0b322;animation:fly 1.5s ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,.16)}
-@keyframes fly{to{transform:translateY(-62vh) rotate(250deg) scale(1.35);opacity:0}}
-.intro{position:fixed;inset:0;background:rgba(238,245,249,.97);z-index:1000;display:grid;place-items:center;padding:18px}
-.hero{max-width:760px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;text-align:center}
-.hero img{width:min(500px,74vw);height:38vh;object-fit:contain;transform:scale(.90);transform-origin:center center}
-.hero h2{font-size:30px;margin:8px 0} .hero p{font-size:16px;color:var(--muted);line-height:1.4}
-.hero button{background:var(--accent);color:#fff;border-color:var(--accent);min-width:220px;font-size:17px}
-@media(max-height:700px) and (min-width:761px){
-  .app{padding:4px;gap:4px} header{padding:5px 8px} .brand h1{font-size:23px}
-  .side{padding:8px;gap:6px} .muted{font-size:11px} .result{min-height:40px;padding:7px}
-}
-@media(max-width:760px){
- html,body{height:auto;overflow:auto} body{overflow:auto} .app{height:auto;min-height:100dvh}
- main{grid-template-columns:1fr} .stage{min-height:66vh} .side{overflow:visible}
-}
-</style>
-</head>
+html,body{height:100%;height:100dvh;margin:0;overflow:hidden}
+body{font-family:system-ui,Arial,sans-serif;background:#fff8eb;color:#173b52;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 12px;background:#fff;border-bottom:2px solid #e5edf0}
+header h1{font-size:clamp(17px,2vw,23px);margin:0}
+header small{font-size:11px;color:#467389;font-weight:800;letter-spacing:.04em}
+.buttons{display:flex;flex-wrap:wrap;gap:5px}
+button,a.btn{cursor:pointer;text-decoration:none;border:1px solid #bfdae2;border-radius:10px;padding:8px 9px;background:#fff;color:#16566c;font-size:clamp(11px,1.2vw,14px);font-weight:800}
+button.active,.primary{background:#087d98!important;color:#fff!important;border-color:#087d98!important}
+.layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);gap:8px;padding:8px 8px max(8px,env(safe-area-inset-bottom))}
+.stage,.panel{background:#fff;border:1px solid #dce5e9;border-radius:15px;min-width:0;min-height:0;padding:9px}
+.stage{display:flex;flex-direction:column}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;flex:none}
+.board{flex:1;min-height:0;position:relative;margin-top:7px;border-radius:12px;overflow:hidden;background:#fff}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+.panel{display:flex;flex-direction:column;gap:8px;overflow:auto}
+.panel h2{font-size:18px;margin:0}.desc,.hint,.muted{font-size:12px;line-height:1.38;color:#567383;margin:0}
+.result{min-height:48px;border:1px solid #dce5e9;border-radius:11px;background:#f8fbfc;padding:9px;font-weight:850}
+.result.good{background:#eef9f3;color:#13754c;border-color:#a9dbc0}.result.bad{background:#fff2ed;color:#9a3d1d;border-color:#efc4b2}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.actions .wide{grid-column:1/-1}
+details{border:1px solid #dce5e9;border-radius:10px;padding:7px;background:#fcfefe}
+summary{font-size:12px;font-weight:800;cursor:pointer}
+label{display:block;font-size:11px;font-weight:750;margin-top:7px}input[type=range]{width:100%}
+.intro{position:fixed;inset:0;background:rgba(255,248,235,.98);z-index:50;display:grid;place-items:center;padding:15px}
+.intro.off{display:none}.hero{width:min(760px,94vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dce5e9;border-radius:18px;padding:16px;text-align:center;box-shadow:0 14px 40px rgba(23,59,82,.12)}
+.hero h2{margin:8px 0 5px;font-size:clamp(22px,3vw,32px)}.hero p{margin:5px auto 12px;color:#567383;max-width:610px;line-height:1.42}
+.hero button{background:#087d98;color:#fff;border-color:#087d98;min-width:210px}
+.modelPreview{display:block;width:min(520px,82vw);height:min(44vh,360px);margin:0 auto;background:#fff}
+.celebrate{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden;display:none}.celebrate.show{display:block}
+.celebrate span{position:absolute;bottom:10%;font-size:26px;animation:fly 1.8s ease-out forwards}@keyframes fly{to{transform:translateY(-80vh) rotate(240deg);opacity:0}}
+@media(max-height:700px) and (min-width:761px){header{padding:5px 9px}.layout{padding:5px;gap:5px}.stage,.panel{padding:6px}.panel{gap:5px}.result{min-height:39px;padding:6px}.hint{font-size:10px}}
+@media(max-width:760px){html,body{height:auto;min-height:100%;overflow:auto}body{display:block}.layout{display:block;padding:6px}.stage{height:70vh;min-height:480px}.panel{margin-top:7px;overflow:visible}.buttons{justify-content:flex-end}.levels button{font-size:10px;padding:7px 4px}.modelPreview{height:35vh}}
+</style></head>
 <body>
-<div id="intro" class="intro">
-  <div class="hero">
-    <svg class="modelSvg" viewBox="185 65 455 500" role="img" aria-label="D mayúscula completa"><path d="M 260 115 C 260.0 127.5 260.0 164.2 260 190 C 260.0 215.8 260.0 243.3 260 270 C 260.0 296.7 260.0 323.3 260 350 C 260.0 376.7 260.0 403.3 260 430 C 260.0 456.7 260.0 496.7 260 510" fill="none" stroke="#111" stroke-width="18" stroke-linecap="round"/><path d="M 278 115 C 290.0 115.0 326.3 113.3 350 115 C 373.7 116.7 398.7 118.0 420 125 C 441.3 132.0 461.3 143.7 478 157 C 494.7 170.3 508.8 187.0 520 205 C 531.2 223.0 539.5 244.2 545 265 C 550.5 285.8 552.8 308.3 553 330 C 553.2 351.7 551.2 375.3 546 395 C 540.8 414.7 533.0 433.0 522 448 C 511.0 463.0 496.2 475.2 480 485 C 463.8 494.8 445.8 502.8 425 507 C 404.2 511.2 379.5 509.5 355 510 C 330.5 510.5 290.8 510.0 278 510" fill="none" stroke="#111" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/><circle cx="260" cy="115" r="14" fill="#f4c430"/><circle cx="278" cy="115" r="10" fill="#e33"/><text x="230" y="92" font-family="Arial" font-size="19" font-weight="700" fill="#17324d">1º</text><text x="295" y="96" font-family="Arial" font-size="19" font-weight="700" fill="#17324d">2º</text></svg>
-    <h2>D mayúscula</h2>
-    <p>La D mayúscula se realiza en dos trazos, levantando el lápiz entre el palo vertical y la curva.</p>
-    <button id="start">COMENZAR</button>
-  </div>
-</div>
-
+<a class="btn" style="position:fixed;left:8px;bottom:8px;z-index:20" href="../d/trazo/">← VOLVER A LA LETRA D</a>
+<div class="intro" id="intro"><div class="hero"><svg class="modelPreview" viewBox="0 0 1185 871" role="img" aria-label="Modelo de D mayúscula"><path d="M 380 148.75 C 380.0 166.9 380.0 220.0 380 257.5 C 380.0 295.0 380.0 334.8 380 373.5 C 380.0 412.2 380.0 450.8 380 489.5 C 380.0 528.2 380.0 566.8 380 605.5 C 380.0 644.2 380.0 702.2 380 721.5" fill="none" stroke="#111" stroke-width="38" stroke-linecap="round"/><path d="M 380 148.75 C 380.0 166.9 380.0 220.0 380 257.5 C 380.0 295.0 380.0 334.8 380 373.5 C 380.0 412.2 380.0 450.8 380 489.5 C 380.0 528.2 380.0 566.8 380 605.5 C 380.0 644.2 380.0 702.2 380 721.5" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round"/><path d="M 406.1 148.75 C 423.5 148.8 476.2 146.3 510.5 148.75 C 544.8 151.2 581.1 153.1 612 163.25 C 642.9 173.4 671.9 190.3 696.1 209.65 C 720.3 229.0 740.8 253.2 757 279.25 C 773.2 305.4 785.3 336.0 793.25 366.25 C 801.2 396.5 804.6 429.1 804.85 460.5 C 805.1 491.9 802.2 526.2 794.7 554.75 C 787.2 583.3 775.9 609.9 759.9 631.6 C 743.9 653.4 722.4 671.0 699 685.25 C 675.6 699.5 649.5 711.1 619.25 717.15 C 589.0 723.2 553.3 720.8 517.75 721.5 C 482.2 722.2 424.7 721.5 406.1 721.5" fill="none" stroke="#111" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M 406.1 148.75 C 423.5 148.8 476.2 146.3 510.5 148.75 C 544.8 151.2 581.1 153.1 612 163.25 C 642.9 173.4 671.9 190.3 696.1 209.65 C 720.3 229.0 740.8 253.2 757 279.25 C 773.2 305.4 785.3 336.0 793.25 366.25 C 801.2 396.5 804.6 429.1 804.85 460.5 C 805.1 491.9 802.2 526.2 794.7 554.75 C 787.2 583.3 775.9 609.9 759.9 631.6 C 743.9 653.4 722.4 671.0 699 685.25 C 675.6 699.5 649.5 711.1 619.25 717.15 C 589.0 723.2 553.3 720.8 517.75 721.5 C 482.2 722.2 424.7 721.5 406.1 721.5" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><polygon points="335.0,120.8 342.4,138.6 361.6,140.1 347.0,152.6 351.5,171.4 335.0,161.3 318.5,171.4 323.0,152.6 308.4,140.1 327.6,138.6" fill="#ffd95a" stroke="#e6ad16" stroke-width="3"/><circle cx="406.1" cy="148.75" r="13" fill="#e33"/><text x="358" y="118.75" font-size="18" font-weight="800">1º</text><text x="428.1" y="133.75" font-size="18" font-weight="800">2º</text></svg><h2>D mayúscula · 2 trazos</h2><p>Primer trazo: baja el palo vertical desde CIELO hasta SUELO. Segundo trazo: vuelve arriba y dibuja la curva de la D hasta llegar de nuevo a SUELO.</p><button id="start">COMENZAR</button></div></div>
 <div class="celebrate" id="celebrate"></div>
-
-<div class="app">
-<header>
-  <div class="brand"><small>EL ZURRÓN DE LAS LETRAS · LA CONTRASEÑA</small><h1>D mayúscula</h1></div>
-  <div class="buttons"><a class="btn" href="../d/trazo/">← LETRA D</a></div>
-</header>
-<main>
-<section class="stage">
-  <nav class="levels">
-    <button class="active" data-level="1">1 · Sigo el camino</button>
-    <button data-level="2">2 · Recuerdo el camino</button>
-    <button data-level="3">3 · Escribo yo solo</button>
-  </nav>
-  <div class="board"><canvas id="pad" width="900" height="620"></canvas></div>
-</section>
-
-<aside class="side">
-  <h2>Practica el recorrido</h2>
-  <p class="muted">La D mayúscula se realiza en dos trazos, levantando el lápiz entre el palo vertical y la curva.</p>
-  <details id="adjust" hidden>
-    <summary>📏 Ajustar pauta Montessori</summary>
-    <label>Altura de banda: <span id="bandValue">135</span></label>
-    <input id="band" type="range" min="95" max="155" step="5" value="135">
-    <label>Anchura: <span id="widthValue">760</span></label>
-    <input id="width" type="range" min="560" max="840" step="20" value="760">
-    <button id="reset" type="button">Restablecer</button>
-  </details>
-  <div class="result" id="result">Preparado para escribir.</div>
-  <div class="actions">
-    <button id="check" class="wide primary">✓ COMPROBAR RECORRIDO</button>
-    <button id="undo">↶ Deshacer</button>
-    <button id="clear">Limpiar</button>
-    <button id="demo" class="wide">▶ Ver demostración</button>
-  </div>
-</aside>
+<header><div><small>EL ZURRÓN DE LAS LETRAS · LA CONTRASEÑA</small><h1>D mayúscula</h1></div><div class="buttons"><a class="btn" href="../d/trazo/">← Letras</a><button id="full">⛶ Pantalla completa</button></div></header>
+<main class="layout">
+<section class="stage"><nav class="levels"><button class="active" data-level="1">1 · Sigo el camino</button><button data-level="2">2 · Recuerdo el camino</button><button data-level="3">3 · Escribo yo solo</button></nav><div class="board"><canvas id="pad" width="1185" height="871"></canvas></div></section>
+<aside class="panel"><h2 id="levTitle">1 · Sigo el camino</h2><p class="desc" id="desc">Repasa los dos trazos en orden.</p>
+<details id="adjust" hidden><summary>📏 Ajustar pauta Montessori</summary><label>Altura de cada banda: <span id="bLabel">135</span></label><input id="band" type="range" min="75" max="155" step="5" value="135"><label>Anchura de la pauta: <span id="wLabel">900</span></label><input id="width" type="range" min="500" max="1100" step="20" value="900"><button id="reset">Restablecer</button></details>
+<div class="result" id="result">Preparado para escribir.</div><div class="actions"><button id="check" class="primary wide">✓ Comprobar recorrido</button><button id="undo">↶ Deshacer</button><button id="clear">Limpiar</button><button id="demo" class="wide">▶ Ver cómo se escribe</button><button id="sound" class="wide">🔊 Celebración con sonido</button></div><p class="hint">La D mayúscula se hace en 2 trazos. En el nivel 3 debe tocar CIELO y SUELO.</p></aside>
 </main>
-</div>
-
 <script>
-(() => {
-'use strict';
-const RAW_SOURCE_PATHS=[[[260, 115], [260, 190], [260, 270], [260, 350], [260, 430], [260, 510]], [[278, 115], [350, 115], [420, 125], [478, 157], [520, 205], [545, 265], [553, 330], [546, 395], [522, 448], [480, 485], [425, 507], [355, 510], [278, 510]]];
-const pad=document.getElementById('pad'),ctx=pad.getContext('2d'),W=pad.width,H=pad.height;
-function fitSourcePaths(paths){
-  const pts=paths.flat();
-  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
-  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
-  const safe={left:185,top:78,right:715,bottom:542};
-  const bw=Math.max(1,maxX-minX), bh=Math.max(1,maxY-minY);
-  const aw=safe.right-safe.left, ah=safe.bottom-safe.top;
-  const sc=Math.min(aw/bw,ah/bh);
-  const ox=safe.left+(aw-bw*sc)/2-minX*sc;
-  const oy=safe.top+(ah-bh*sc)/2-minY*sc;
-  return paths.map(stroke=>stroke.map(([x,y])=>[x*sc+ox,y*sc+oy]));
-}
-const SOURCE_PATHS=fitSourcePaths(RAW_SOURCE_PATHS);
-let level=1,strokes=[],active=null,pointerId=null,demonstrating=false;
-let band=135,width=760;
-const result=document.getElementById('result'),celebrate=document.getElementById('celebrate'),adjust=document.getElementById('adjust');
-const bandInput=document.getElementById('band'),widthInput=document.getElementById('width');
-const bandValue=document.getElementById('bandValue'),widthValue=document.getElementById('widthValue');
-const levelButtons=[...document.querySelectorAll('.levels button')];
-
-function line(seq,color,w){if(!seq||!seq.length)return;ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineJoin=ctx.lineCap='round';ctx.beginPath();ctx.moveTo(seq[0][0],seq[0][1]);for(let i=1;i<seq.length;i++)ctx.lineTo(seq[i][0],seq[i][1]);ctx.stroke()}
-function smooth(points){
-  if(points.length<3)return points;
-  const out=[];
-  for(let i=0;i<points.length-1;i++){
-    const a=points[Math.max(0,i-1)],b=points[i],c=points[i+1],d=points[Math.min(points.length-1,i+2)];
-    for(let j=0;j<18;j++){const t=j/18,t2=t*t,t3=t2*t;
-      out.push([.5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),
-                .5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3)]);}
-  }
-  out.push(points.at(-1)); return out;
-}
-const GUIDE_SOURCE=SOURCE_PATHS.map(s=>smooth(s));
-
-function level3Guides(){
-  const R=ruling();
-  const x=360, yTop=R.sky+12, yBottom=R.ground-4, w=290;
-  const s1=[[x,yTop],[x,yTop+90],[x,yTop+190],[x,yTop+300],[x,yBottom]];
-  const s2=[[x+12,yTop],[x+100,yTop],[x+190,yTop+25],[x+245,yTop+80],[x+275,yTop+150],
-            [x+282,(yTop+yBottom)/2],[x+268,yBottom-120],[x+225,yBottom-55],[x+165,yBottom-15],[x+80,yBottom],[x+12,yBottom]];
-  return [s1,s2];
-}
-
-
-function ruling(){return {sky:277.5-band*1.5,house:277.5-band*.5,ground:277.5+band*.5,below:277.5+band*1.5,left:(W-width)/2,right:(W+width)/2}}
-function activeGuides(){return level===3?fitSourcePaths(level3Guides()).map(s=>smooth(s)):GUIDE_SOURCE}
-
-function drawStartMarkers(guides){
-  guides.forEach((g,i)=>{
-    if(!g.length)return;
-    const p=g[0];
-    ctx.beginPath();
-    ctx.fillStyle=i===0?'#f4c430':'#e33';
-    ctx.arc(p[0],p[1],i===0?13:9,0,Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle='#17324d';
-    ctx.font='bold 15px Arial';
-    ctx.fillText((i+1)+'º',p[0]+18,p[1]-10);
-  });
-}
-function bg(){
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  if(level===1){
-    const guides=activeGuides();
-    guides.forEach(s=>{line(s,'#111',30);line(s,'#fff',20)});
-    drawStartMarkers(guides);
-  } else if(level===2){
-    activeGuides().forEach(s=>{line(s,'#d2eaf5',36);line(s,'#fff',10)});
-  } else {
-    const R=ruling(),ys=[R.sky,R.house,R.ground,R.below],cs=['#91c6e8','#edb56e','#83bc96','#a4c7db'];
-    ['CIELO','CASITA','SUELO','SÓTANO'].forEach((t,i)=>{
-      line([[R.left,ys[i]],[R.right,ys[i]]],cs[i],i===1||i===2?2.5:1.8);
-      ctx.fillStyle='#597180';ctx.font='bold 14px Arial';ctx.fillText(t,R.left+6,ys[i]-8);
-    });
-  }
-}
-function draw(){bg();strokes.forEach(s=>line(s,'#069bd2',8));if(active)line(active,'#069bd2',8)}
-
+(()=>{'use strict';
+const groups=[[{"x":380,"y":148.75,"r":44,"type":"start"},{"x":380,"y":257.5,"r":44,"type":"pass"},{"x":380,"y":373.5,"r":44,"type":"pass"},{"x":380,"y":489.5,"r":44,"type":"pass"},{"x":380,"y":605.5,"r":44,"type":"pass"},{"x":380,"y":721.5,"r":44,"type":"end"}],[{"x":406.1,"y":148.75,"r":44,"type":"start"},{"x":510.5,"y":148.75,"r":44,"type":"pass"},{"x":612,"y":163.25,"r":44,"type":"pass"},{"x":696.1,"y":209.65,"r":44,"type":"pass"},{"x":757,"y":279.25,"r":44,"type":"pass"},{"x":793.25,"y":366.25,"r":44,"type":"pass"},{"x":804.85,"y":460.5,"r":44,"type":"pass"},{"x":794.7,"y":554.75,"r":44,"type":"pass"},{"x":759.9,"y":631.6,"r":44,"type":"pass"},{"x":699,"y":685.25,"r":44,"type":"pass"},{"x":619.25,"y":717.15,"r":44,"type":"pass"},{"x":517.75,"y":721.5,"r":44,"type":"pass"},{"x":406.1,"y":721.5,"r":44,"type":"end"}]].map(g=>g.map(p=>({...p}))),pad=document.getElementById('pad'),ctx=pad.getContext('2d'),W=pad.width,H=pad.height,el=id=>document.getElementById(id);
+let level=1,strokes=[],active=null,pointer=null,demonstrating=false,soundOn=true,audio=null,band=135,width=900;
+try{const s=JSON.parse(localStorage.getItem('zurron-D-pauta-v70')||'{}');if(Number.isFinite(s.band))band=Math.max(75,Math.min(155,s.band));if(Number.isFinite(s.width))width=Math.max(500,Math.min(1100,s.width))}catch(_){}
+function smooth(g){const pts=g.map(p=>[p.x,p.y]);if(pts.length<3)return pts;const out=[];for(let i=0;i<pts.length-1;i++){const a=pts[Math.max(0,i-1)],b=pts[i],c=pts[i+1],d=pts[Math.min(pts.length-1,i+2)];for(let j=0;j<18;j++){let t=j/18,t2=t*t,t3=t2*t;out.push([.5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),.5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3)])}}out.push(pts.at(-1));return out}
+const guides=groups.map(smooth);
+function ruling(){return {sky:H/2-band*1.5,house:H/2-band*.5,ground:H/2+band*.5,below:H/2+band*1.5,left:(W-width)/2,right:(W+width)/2}}
+function line(seq,color,w){if(!seq?.length)return;ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineJoin=ctx.lineCap='round';ctx.beginPath();ctx.moveTo(seq[0][0],seq[0][1]);for(let i=1;i<seq.length;i++)ctx.lineTo(seq[i][0],seq[i][1]);ctx.stroke()}
+function star(x,y,r){ctx.save();ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?r:r*.45,px=x+Math.cos(a)*rr,py=y+Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fillStyle='#ffd95a';ctx.strokeStyle='#e6ad16';ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.restore()}
+function bg(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(level===1){guides.forEach(g=>{line(g,'#111',42);line(g,'#fff',24)});star(groups[0][0].x-48,groups[0][0].y,28);ctx.fillStyle='#e33';ctx.beginPath();ctx.arc(groups[1][0].x,groups[1][0].y,13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#173b52';ctx.font='bold 18px system-ui';ctx.fillText('1º',groups[0][0].x-24,groups[0][0].y-32);ctx.fillText('2º',groups[1][0].x+22,groups[1][0].y-15)}else if(level===2){guides.forEach(g=>{line(g,'#d2eaf5',72);line(g,'#fcfefe',18)})}else{const r=ruling();for(const [y,c,t] of [[r.sky,'#91c6e8','CIELO'],[r.house,'#edb56e','CASITA'],[r.ground,'#83bc96','SUELO'],[r.below,'#a4c7db','SÓTANO']]){line([[r.left,y],[r.right,y]],c,2.5);ctx.fillStyle='#597180';ctx.font='bold 17px system-ui';ctx.fillText(t,r.left+7,y-12)}}}
+function draw(){bg();strokes.forEach(s=>line(s,'#069bd2',9));if(active)line(active,'#069bd2',9)}
 function pos(e){const r=pad.getBoundingClientRect();return [Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width)),Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))]}
-pad.addEventListener('pointerdown',e=>{if(demonstrating||active||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();active=[pos(e)];pointerId=e.pointerId;try{pad.setPointerCapture(pointerId)}catch(_){};draw()});
-pad.addEventListener('pointermove',e=>{if(!active||e.pointerId!==pointerId)return;e.preventDefault();const p=pos(e),q=active.at(-1);if(Math.hypot(p[0]-q[0],p[1]-q[1])>.4){active.push(p);draw()}});
-function end(e){if(!active||e.pointerId!==pointerId)return;if(active.length===1)active.push(active[0]);strokes.push(active);active=null;pointerId=null;draw()}
-pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
-
-function distSeg(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],dd=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/dd));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
-function sampleGuide(g,n=18){const out=[];for(let i=0;i<n;i++){const k=Math.floor(i*(g.length-1)/(n-1));out.push(g[k])}return out}
-function pathTouchesOrdered(path,checkpoints,tol){
-  let idx=0;
-  for(let i=0;i<path.length&&idx<checkpoints.length;i++){if(Math.hypot(path[i][0]-checkpoints[idx][0],path[i][1]-checkpoints[idx][1])<=tol)idx++}
-  return idx>=checkpoints.length;
-}
-function coverage(path,guide,tol){
-  const sample=sampleGuide(guide,24);let ok=0;
-  for(const gp of sample){
-    let best=Infinity;
-    for(let i=0;i<path.length-1;i++)best=Math.min(best,distSeg(gp,path[i],path[i+1]));
-    if(best<=tol)ok++;
-  }
-  return ok/sample.length;
-}
-function evalStroke(path,guide){
-  const tol=level===1?58:level===2?48:44;
-  const checkpoints=sampleGuide(guide,lowercase=false?14:12);
-  const startOk=Math.hypot(path[0][0]-guide[0][0],path[0][1]-guide[0][1])<=tol*1.25;
-  const endOk=Math.hypot(path.at(-1)[0]-guide.at(-1)[0],path.at(-1)[1]-guide.at(-1)[1])<=tol*1.35;
-  const orderOk=pathTouchesOrdered(path,checkpoints,tol);
-  const cov=coverage(path,guide,tol);
-  return {ok:startOk&&endOk&&orderOk&&cov>=.72,startOk,endOk,orderOk,cov};
-}
-function celebrateNow(){
-  celebrate.innerHTML='';celebrate.classList.add('show');
-  for(let i=0;i<18;i++){const s=document.createElement('span');s.className='flying';s.textContent='★';s.style.left=(4+(i*17)%92)+'%';s.style.animationDelay=(i%6*.13)+'s';celebrate.appendChild(s)}
-  setTimeout(()=>celebrate.classList.remove('show'),1900);
-}
-function evaluate(){
-  const guides=activeGuides();
-  if(strokes.length!==guides.length){result.textContent=`Necesitas ${guides.length} trazo${guides.length>1?'s':''}.`;result.style.color='var(--bad)';return}
-  const ev=guides.map((g,i)=>evalStroke(strokes[i],g));
-  const all=ev.every(x=>x.ok);
-  if(all){result.textContent='¡Muy bien! Recorrido correcto.';result.style.color='var(--good)';celebrateNow()}
-  else {
-    const details=ev.map((x,i)=>`T${i+1}: ${x.ok?'bien':'revisa'}`).join(' · ');
-    result.textContent='Todavía no: '+details;result.style.color='var(--bad)';
-  }
-}
-function clearAll(){strokes=[];active=null;pointerId=null;result.textContent='Preparado para escribir.';result.style.color='';draw()}
-function undo(){strokes.pop();active=null;result.textContent='Último trazo eliminado.';draw()}
-async function demo(){
-  if(demonstrating)return;demonstrating=true;clearAll();
-  for(const guide of activeGuides()){
-    await new Promise(res=>{let i=1,current=[guide[0]];active=current;
-      const tick=()=>{if(i>=guide.length){strokes.push(current.slice());active=null;draw();setTimeout(res,180);return}current.push(guide[i++]);active=current;draw();requestAnimationFrame(tick)};tick();
-    });
-  }
-  demonstrating=false;
-}
-function setLevel(n){level=n;levelButtons.forEach(b=>b.classList.toggle('active',Number(b.dataset.level)===n));adjust.hidden=n!==3;clearAll()}
-levelButtons.forEach(b=>b.addEventListener('click',()=>setLevel(Number(b.dataset.level)||1)));
-document.getElementById('check').addEventListener('click',evaluate);
-document.getElementById('undo').addEventListener('click',undo);
-document.getElementById('clear').addEventListener('click',clearAll);
-document.getElementById('demo').addEventListener('click',demo);
-document.getElementById('start').addEventListener('click',()=>document.getElementById('intro').style.display='none');
-
-function syncRuling(){band=Number(bandInput.value)||135;width=Number(widthInput.value)||760;bandValue.textContent=band;widthValue.textContent=width;clearAll()}
-bandInput.addEventListener('input',syncRuling);widthInput.addEventListener('input',syncRuling);
-document.getElementById('reset').addEventListener('click',()=>{bandInput.value=135;widthInput.value=760;syncRuling()});
-draw();
+pad.addEventListener('pointerdown',e=>{if(demonstrating||active||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();active=[pos(e)];pointer=e.pointerId;try{pad.setPointerCapture(pointer)}catch(_){};draw()});pad.addEventListener('pointermove',e=>{if(!active||e.pointerId!==pointer)return;e.preventDefault();const p=pos(e),q=active.at(-1);if(Math.hypot(p[0]-q[0],p[1]-q[1])>.4){active.push(p);draw()}});
+function end(e){if(!active||e.pointerId!==pointer)return;if(active.length>1)strokes.push(active);active=null;pointer=null;status('Trazo registrado. Pulsa Comprobar recorrido.');draw()}pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}function status(t,ok=null){const r=el('result');r.textContent=t;r.className='result'+(ok===true?' good':ok===false?' bad':'')}
+function ordered(path,req,tol){let k=0;for(const p of path){if(k<req.length&&dist(p,[req[k].x,req[k].y])<=tol)k++}return k===req.length}
+function evalDirect(path,req,tol){if(path.length<6)return false;if(dist(path[0],[req[0].x,req[0].y])>tol*1.2)return false;if(dist(path.at(-1),[req.at(-1).x,req.at(-1).y])>tol*1.3)return false;return ordered(path,req,tol)}
+function validate(){if(strokes.length!==2)return {ok:false,reason:'La D mayúscula necesita 2 trazos.'};if(level<3){const tol=level===1?80:95;if(!evalDirect(strokes[0],groups[0],tol))return {ok:false,reason:'Revisa el primer trazo vertical.'};if(!evalDirect(strokes[1],groups[1],tol))return {ok:false,reason:'Revisa el segundo trazo curvo.'};return {ok:true,reason:'Has completado los dos trazos en orden.'}}
+const r=ruling(),a=strokes[0],b=strokes[1],ax=a.map(p=>p[0]),ay=a.map(p=>p[1]),bx=b.map(p=>p[0]),by=b.map(p=>p[1]),aminX=Math.min(...ax),amaxX=Math.max(...ax),aminY=Math.min(...ay),amaxY=Math.max(...ay),bminX=Math.min(...bx),bmaxX=Math.max(...bx),bminY=Math.min(...by),bmaxY=Math.max(...by),tt=Math.max(16,band*.18);
+if(aminY>r.sky+tt||amaxY<r.ground-tt)return {ok:false,reason:'El primer trazo debe bajar de CIELO a SUELO.'};if(amaxX-aminX>band*.55)return {ok:false,reason:'El primer trazo debe ser casi vertical.'};if(bminY>r.sky+tt||bmaxY<r.ground-tt)return {ok:false,reason:'La curva debe comenzar en CIELO y terminar en SUELO.'};if(bmaxX-bminX<band*.85)return {ok:false,reason:'Abre más la curva de la D.'};if(Math.abs(a[0][0]-b[0][0])>band*.7)return {ok:false,reason:'El segundo trazo debe empezar junto a la parte alta del palo.'};return {ok:true,reason:'Has completado la D mayúscula en dos trazos.'}}
+function celebrate(){const box=el('celebrate');box.innerHTML='';box.classList.add('show');for(let i=0;i<24;i++){const s=document.createElement('span');s.textContent=['★','✦','●'][i%3];s.style.left=(4+(i*19)%92)+'%';s.style.animationDelay=(i%6*.12)+'s';box.appendChild(s)}setTimeout(()=>box.classList.remove('show'),1900);playSound()}
+function playSound(){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext,a=audio||(audio=new AC()),n=a.currentTime;[392,523,659,784].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(a.destination);let at=n+i*.13;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.05,at+.03);g.gain.exponentialRampToValueAtTime(.0001,at+.2);o.start(at);o.stop(at+.23)})}catch(_){}}
+function clearAll(){strokes=[];active=null;draw();status('Preparado para escribir.')}function undo(){if(active)active=null;else strokes.pop();draw();status('Último trazo deshecho.')}
+async function demo(){if(demonstrating)return;demonstrating=true;clearAll();for(const guide of guides){await new Promise(res=>{let i=1,cur=[guide[0]];active=cur;const tick=()=>{if(i>=guide.length){strokes.push(cur.slice());active=null;draw();setTimeout(res,180);return}cur.push(guide[i++]);draw();requestAnimationFrame(tick)};tick()})}demonstrating=false}
+function setLevel(n){level=n;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('active',Number(b.dataset.level)===n));el('adjust').hidden=n!==3;strokes=[];active=null;el('levTitle').textContent=document.querySelector('[data-level="'+n+'"]').textContent;el('desc').textContent=n===1?'Repasa los dos trazos de la D en orden.':n===2?'Sigue las dos zonas azules, primero el palo y después la curva.':'Escribe una D libremente en dos trazos entre CIELO y SUELO.';status('Preparado para escribir.');draw()}
+document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>setLevel(Number(b.dataset.level)));el('check').onclick=()=>{if(demonstrating)return;const x=validate();status((x.ok?'✓ CORRECTO. ':'↻ REPETIR. ')+x.reason,x.ok);if(x.ok)celebrate()};el('undo').onclick=undo;el('clear').onclick=clearAll;el('demo').onclick=demo;el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'🔊 Celebración con sonido':'🔇 Celebración silenciada'};el('start').onclick=()=>el('intro').classList.add('off');el('full').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+function sync(){band=Number(el('band').value)||135;width=Number(el('width').value)||900;el('bLabel').textContent=band;el('wLabel').textContent=width;localStorage.setItem('zurron-D-pauta-v70',JSON.stringify({band,width}));draw()}el('band').oninput=sync;el('width').oninput=sync;el('reset').onclick=()=>{el('band').value=135;el('width').value=900;sync()};el('band').value=band;el('width').value=width;sync();draw();
 })();
-</script>
-</body></html>
+</script></body></html>

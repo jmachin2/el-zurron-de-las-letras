@@ -234,7 +234,7 @@ function loadRoute(path){
 
   if(route && route.direct){
     frame.removeAttribute('srcdoc');
-    const clean=route.src.replace(/^\\/+/, '');
+    const clean=route.src.startsWith('/') ? route.src.slice(1) : route.src;
     frame.src=new URL(clean,siteRootURL()).href;
     return;
   }

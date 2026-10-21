@@ -1,266 +1,76 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>La contraseña del Zurrón · d minúscula</title>
-<style>
-:root{--ink:#17324d;--muted:#60768a;--accent:#9b5338;--good:#198754;--bad:#a33b30;--line:#d8e4ed}
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>d minúscula · La contraseña del Zurrón</title><style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;background:#eef5f9;color:var(--ink)}
-body{overflow:hidden}
-button,a{font:inherit}
-a{color:inherit;text-decoration:none}
-.app{height:100dvh;padding:8px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px}
-header{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px 10px}
-.brand small{display:block;font-weight:900;color:var(--muted);letter-spacing:.08em}
-.brand h1{margin:2px 0 0;font-size:clamp(22px,2.5vw,34px)}
-.buttons{display:flex;gap:7px;flex-wrap:wrap}
-.btn,button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 11px;font-weight:900;cursor:pointer}
-.btn:hover,button:hover{border-color:#b89383}
-main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(285px,.65fr);gap:10px;min-height:0}
-.stage,.side{background:#fff;border:1px solid var(--line);border-radius:20px;min-height:0}
-.stage{display:grid;grid-template-rows:auto minmax(0,1fr);padding:10px}
-.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
-.levels button.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.board{min-height:0;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:16px;background:#fff}
-canvas{width:100%;height:100%;max-width:100%;max-height:100%;touch-action:none;transform:scale(.82);transform-origin:center center}
-.side{padding:12px;display:flex;flex-direction:column;gap:9px;overflow:auto}
-.side h2{margin:0;font-size:20px} .muted{color:var(--muted);font-size:13px;line-height:1.38;margin:0}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.actions .wide{grid-column:1/-1}
-.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.result{min-height:52px;border-radius:14px;background:#f6fafc;border:1px solid var(--line);padding:10px;font-weight:900;line-height:1.25}
-details{border:1px solid var(--line);border-radius:13px;padding:8px} summary{font-weight:900;cursor:pointer}
-label{display:block;font-size:12px;font-weight:900;margin-top:8px} input[type=range]{width:100%}
-.celebrate{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;display:none}
-.celebrate.show{display:block}
-.flying{position:absolute;top:60%;font-size:31px;color:#f0b322;animation:fly 1.5s ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,.16)}
-@keyframes fly{to{transform:translateY(-62vh) rotate(250deg) scale(1.35);opacity:0}}
-.intro{position:fixed;inset:0;background:rgba(238,245,249,.97);z-index:1000;display:grid;place-items:center;padding:18px}
-.hero{max-width:760px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;text-align:center}
-.hero img{width:min(500px,74vw);height:38vh;object-fit:contain;transform:scale(.90);transform-origin:center center}
-.hero h2{font-size:30px;margin:8px 0} .hero p{font-size:16px;color:var(--muted);line-height:1.4}
-.hero button{background:var(--accent);color:#fff;border-color:var(--accent);min-width:220px;font-size:17px}
-@media(max-height:700px) and (min-width:761px){
-  .app{padding:4px;gap:4px} header{padding:5px 8px} .brand h1{font-size:23px}
-  .side{padding:8px;gap:6px} .muted{font-size:11px} .result{min-height:40px;padding:7px}
-}
-@media(max-width:760px){
- html,body{height:auto;overflow:auto} body{overflow:auto} .app{height:auto;min-height:100dvh}
- main{grid-template-columns:1fr} .stage{min-height:66vh} .side{overflow:visible}
-}
-</style>
-</head>
+html,body{height:100%;height:100dvh;margin:0;overflow:hidden}
+body{font-family:system-ui,Arial,sans-serif;background:#fff8eb;color:#173b52;display:flex;flex-direction:column}
+header{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 12px;background:#fff;border-bottom:2px solid #e5edf0}
+header h1{font-size:clamp(17px,2vw,23px);margin:0}
+header small{font-size:11px;color:#467389;font-weight:800;letter-spacing:.04em}
+.buttons{display:flex;flex-wrap:wrap;gap:5px}
+button,a.btn{cursor:pointer;text-decoration:none;border:1px solid #bfdae2;border-radius:10px;padding:8px 9px;background:#fff;color:#16566c;font-size:clamp(11px,1.2vw,14px);font-weight:800}
+button.active,.primary{background:#087d98!important;color:#fff!important;border-color:#087d98!important}
+.layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);gap:8px;padding:8px 8px max(8px,env(safe-area-inset-bottom))}
+.stage,.panel{background:#fff;border:1px solid #dce5e9;border-radius:15px;min-width:0;min-height:0;padding:9px}
+.stage{display:flex;flex-direction:column}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;flex:none}
+.board{flex:1;min-height:0;position:relative;margin-top:7px;border-radius:12px;overflow:hidden;background:#fff}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+.panel{display:flex;flex-direction:column;gap:8px;overflow:auto}
+.panel h2{font-size:18px;margin:0}.desc,.hint,.muted{font-size:12px;line-height:1.38;color:#567383;margin:0}
+.result{min-height:48px;border:1px solid #dce5e9;border-radius:11px;background:#f8fbfc;padding:9px;font-weight:850}
+.result.good{background:#eef9f3;color:#13754c;border-color:#a9dbc0}.result.bad{background:#fff2ed;color:#9a3d1d;border-color:#efc4b2}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.actions .wide{grid-column:1/-1}
+details{border:1px solid #dce5e9;border-radius:10px;padding:7px;background:#fcfefe}
+summary{font-size:12px;font-weight:800;cursor:pointer}
+label{display:block;font-size:11px;font-weight:750;margin-top:7px}input[type=range]{width:100%}
+.intro{position:fixed;inset:0;background:rgba(255,248,235,.98);z-index:50;display:grid;place-items:center;padding:15px}
+.intro.off{display:none}.hero{width:min(760px,94vw);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dce5e9;border-radius:18px;padding:16px;text-align:center;box-shadow:0 14px 40px rgba(23,59,82,.12)}
+.hero h2{margin:8px 0 5px;font-size:clamp(22px,3vw,32px)}.hero p{margin:5px auto 12px;color:#567383;max-width:610px;line-height:1.42}
+.hero button{background:#087d98;color:#fff;border-color:#087d98;min-width:210px}
+.modelPreview{display:block;width:min(520px,82vw);height:min(44vh,360px);margin:0 auto;background:#fff}
+.celebrate{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden;display:none}.celebrate.show{display:block}
+.celebrate span{position:absolute;bottom:10%;font-size:26px;animation:fly 1.8s ease-out forwards}@keyframes fly{to{transform:translateY(-80vh) rotate(240deg);opacity:0}}
+@media(max-height:700px) and (min-width:761px){header{padding:5px 9px}.layout{padding:5px;gap:5px}.stage,.panel{padding:6px}.panel{gap:5px}.result{min-height:39px;padding:6px}.hint{font-size:10px}}
+@media(max-width:760px){html,body{height:auto;min-height:100%;overflow:auto}body{display:block}.layout{display:block;padding:6px}.stage{height:70vh;min-height:480px}.panel{margin-top:7px;overflow:visible}.buttons{justify-content:flex-end}.levels button{font-size:10px;padding:7px 4px}.modelPreview{height:35vh}}
+</style></head>
 <body>
-<div id="intro" class="intro">
-  <div class="hero">
-    <svg class="modelSvg" viewBox="150 45 500 525" role="img" aria-label="d minúscula completa"><path d="M 212 355 C 214.3 348.3 218.8 327.2 226 315 C 233.2 302.8 243.5 290.8 255 282 C 266.5 273.2 281.2 266.5 295 262 C 308.8 257.5 324.2 255.7 338 255 C 351.8 254.3 365.3 255.5 378 258 C 390.7 260.5 402.7 264.2 414 270 C 425.3 275.8 446.0 292.5 446 293 C 446.0 293.5 425.3 278.5 414 273 C 402.7 267.5 390.7 263.0 378 260 C 365.3 257.0 351.0 254.0 338 255 C 325.0 256.0 312.2 260.2 300 266 C 287.8 271.8 275.3 279.8 265 290 C 254.7 300.2 245.2 313.7 238 327 C 230.8 340.3 225.0 355.2 222 370 C 219.0 384.8 218.3 401.5 220 416 C 221.7 430.5 225.5 444.7 232 457 C 238.5 469.3 248.3 481.2 259 490 C 269.7 498.8 282.8 506.0 296 510 C 309.2 514.0 324.3 515.0 338 514 C 351.7 513.0 365.7 509.3 378 504 C 390.3 498.7 402.0 491.5 412 482 C 422.0 472.5 431.5 459.8 438 447 C 444.5 434.2 448.5 420.3 451 405 C 453.5 389.7 452.8 372.0 453 355 C 453.2 338.0 452.2 321.3 452 303 C 451.8 284.7 452.0 264.7 452 245 C 452.0 225.3 452.0 205.0 452 185 C 452.0 165.0 452.0 142.5 452 125 C 452.0 107.5 452.0 80.0 452 80 C 452.0 80.0 452.0 106.7 452 125 C 452.0 143.3 452.0 168.3 452 190 C 452.0 211.7 452.0 233.3 452 255 C 452.0 276.7 452.0 298.3 452 320 C 452.0 341.7 451.7 364.0 452 385 C 452.3 406.0 452.2 429.2 454 446 C 455.8 462.8 457.8 476.2 463 486 C 468.2 495.8 476.3 502.7 485 505 C 493.7 507.3 505.5 504.8 515 500 C 524.5 495.2 533.7 486.3 542 476 C 550.3 465.7 561.2 444.3 565 438" fill="none" stroke="#111" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/><circle cx="212" cy="355" r="15" fill="#f4c430"/><text x="236" y="346" font-family="Arial" font-size="20" font-weight="700" fill="#17324d">inicio</text></svg>
-    <h2>d minúscula</h2>
-    <p>La d minúscula usa una sola direccionalidad: entrada, retroceso, óvalo, ascendente, bajada y salida enlazada.</p>
-    <button id="start">COMENZAR</button>
-  </div>
-</div>
-
+<a class="btn" style="position:fixed;left:8px;bottom:8px;z-index:20" href="../d/trazo/">← VOLVER A LA LETRA D</a>
+<div class="intro" id="intro"><div class="hero"><svg class="modelPreview" viewBox="0 0 1185 871" role="img" aria-label="Modelo de d minúscula"><path d="M 354.7 513.75 C 357.9 504.8 363.9 476.2 373.6 459.75 C 383.3 443.3 397.2 427.1 412.75 415.2 C 428.3 403.3 448.1 394.3 466.75 388.2 C 485.4 382.1 506.1 379.6 524.8 378.75 C 543.5 377.9 561.7 379.4 578.8 382.8 C 595.9 386.2 612.1 391.1 627.4 399 C 642.7 406.9 670.6 429.4 670.6 430.05 C 670.6 430.7 642.7 410.5 627.4 403.05 C 612.1 395.6 595.9 389.6 578.8 385.5 C 561.7 381.4 542.3 377.4 524.8 378.75 C 507.2 380.1 489.9 385.7 473.5 393.6 C 457.1 401.5 440.2 412.3 426.25 426 C 412.3 439.7 399.5 457.9 389.8 475.95 C 380.1 493.9 372.3 514.0 368.2 534 C 364.1 554.0 363.3 576.5 365.5 596.1 C 367.8 615.7 372.9 634.8 381.7 651.45 C 390.5 668.1 403.8 684.1 418.15 696 C 432.5 707.9 450.3 717.6 468.1 723 C 485.9 728.4 506.3 729.8 524.8 728.4 C 543.3 727.0 562.1 722.1 578.8 714.9 C 595.4 707.7 611.2 698.0 624.7 685.2 C 638.2 672.4 651.0 655.3 659.8 637.95 C 668.6 620.6 674.0 602.0 677.35 581.25 C 680.7 560.5 679.8 536.7 680.05 513.75 C 680.3 490.8 678.9 468.3 678.7 443.55 C 678.5 418.8 678.7 391.8 678.7 365.25 C 678.7 338.7 678.7 311.3 678.7 284.25 C 678.7 257.3 678.7 226.9 678.7 203.25 C 678.7 179.6 678.7 142.5 678.7 142.5 C 678.7 142.5 678.7 178.5 678.7 203.25 C 678.7 228.0 678.7 261.8 678.7 291 C 678.7 320.3 678.7 349.5 678.7 378.75 C 678.7 408.0 678.7 437.3 678.7 466.5 C 678.7 495.8 678.3 525.9 678.7 554.25 C 679.2 582.6 678.9 613.9 681.4 636.6 C 683.9 659.3 686.6 677.3 693.55 690.6 C 700.5 703.9 711.5 713.1 723.25 716.25 C 735.0 719.4 750.9 716.0 763.75 709.5 C 776.6 703.0 789.0 691.1 800.2 677.1 C 811.5 663.1 826.1 634.3 831.25 625.8" fill="none" stroke="#111" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M 354.7 513.75 C 357.9 504.8 363.9 476.2 373.6 459.75 C 383.3 443.3 397.2 427.1 412.75 415.2 C 428.3 403.3 448.1 394.3 466.75 388.2 C 485.4 382.1 506.1 379.6 524.8 378.75 C 543.5 377.9 561.7 379.4 578.8 382.8 C 595.9 386.2 612.1 391.1 627.4 399 C 642.7 406.9 670.6 429.4 670.6 430.05 C 670.6 430.7 642.7 410.5 627.4 403.05 C 612.1 395.6 595.9 389.6 578.8 385.5 C 561.7 381.4 542.3 377.4 524.8 378.75 C 507.2 380.1 489.9 385.7 473.5 393.6 C 457.1 401.5 440.2 412.3 426.25 426 C 412.3 439.7 399.5 457.9 389.8 475.95 C 380.1 493.9 372.3 514.0 368.2 534 C 364.1 554.0 363.3 576.5 365.5 596.1 C 367.8 615.7 372.9 634.8 381.7 651.45 C 390.5 668.1 403.8 684.1 418.15 696 C 432.5 707.9 450.3 717.6 468.1 723 C 485.9 728.4 506.3 729.8 524.8 728.4 C 543.3 727.0 562.1 722.1 578.8 714.9 C 595.4 707.7 611.2 698.0 624.7 685.2 C 638.2 672.4 651.0 655.3 659.8 637.95 C 668.6 620.6 674.0 602.0 677.35 581.25 C 680.7 560.5 679.8 536.7 680.05 513.75 C 680.3 490.8 678.9 468.3 678.7 443.55 C 678.5 418.8 678.7 391.8 678.7 365.25 C 678.7 338.7 678.7 311.3 678.7 284.25 C 678.7 257.3 678.7 226.9 678.7 203.25 C 678.7 179.6 678.7 142.5 678.7 142.5 C 678.7 142.5 678.7 178.5 678.7 203.25 C 678.7 228.0 678.7 261.8 678.7 291 C 678.7 320.3 678.7 349.5 678.7 378.75 C 678.7 408.0 678.7 437.3 678.7 466.5 C 678.7 495.8 678.3 525.9 678.7 554.25 C 679.2 582.6 678.9 613.9 681.4 636.6 C 683.9 659.3 686.6 677.3 693.55 690.6 C 700.5 703.9 711.5 713.1 723.25 716.25 C 735.0 719.4 750.9 716.0 763.75 709.5 C 776.6 703.0 789.0 691.1 800.2 677.1 C 811.5 663.1 826.1 634.3 831.25 625.8" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/><polygon points="309.7,513.8 317.1,531.6 336.3,533.1 321.7,545.6 326.2,564.4 309.7,554.4 293.2,564.4 297.7,545.6 283.1,533.1 302.3,531.6" fill="#ffd95a" stroke="#e6ad16" stroke-width="3"/><text x="332.7" y="551.75" font-size="18" font-weight="800" fill="#173b52">1º</text></svg><h2>d minúscula · con retroceso</h2><p>Empieza en la estrella. Sube el redondel de izquierda a derecha, vuelve hacia atrás, completa el redondel, sube hasta CIELO, baja hasta SUELO y termina con la curva hacia la derecha.</p><button id="start">COMENZAR</button></div></div>
 <div class="celebrate" id="celebrate"></div>
-
-<div class="app">
-<header>
-  <div class="brand"><small>EL ZURRÓN DE LAS LETRAS · LA CONTRASEÑA</small><h1>d minúscula</h1></div>
-  <div class="buttons"><a class="btn" href="../d/trazo/">← LETRA D</a></div>
-</header>
-<main>
-<section class="stage">
-  <nav class="levels">
-    <button class="active" data-level="1">1 · Sigo el camino</button>
-    <button data-level="2">2 · Recuerdo el camino</button>
-    <button data-level="3">3 · Escribo yo solo</button>
-  </nav>
-  <div class="board"><canvas id="pad" width="900" height="620"></canvas></div>
-</section>
-
-<aside class="side">
-  <h2>Practica el recorrido</h2>
-  <p class="muted">La d minúscula usa una sola direccionalidad: entrada, retroceso, óvalo, ascendente, bajada y salida enlazada.</p>
-  <details id="adjust" hidden>
-    <summary>📏 Ajustar pauta Montessori</summary>
-    <label>Altura de banda: <span id="bandValue">135</span></label>
-    <input id="band" type="range" min="95" max="155" step="5" value="135">
-    <label>Anchura: <span id="widthValue">760</span></label>
-    <input id="width" type="range" min="560" max="840" step="20" value="760">
-    <button id="reset" type="button">Restablecer</button>
-  </details>
-  <div class="result" id="result">Preparado para escribir.</div>
-  <div class="actions">
-    <button id="check" class="wide primary">✓ COMPROBAR RECORRIDO</button>
-    <button id="undo">↶ Deshacer</button>
-    <button id="clear">Limpiar</button>
-    <button id="demo" class="wide">▶ Ver demostración</button>
-  </div>
-</aside>
+<header><div><small>EL ZURRÓN DE LAS LETRAS · LA CONTRASEÑA</small><h1>d minúscula</h1></div><div class="buttons"><a class="btn" href="../d/trazo/">← Letras</a><button id="full">⛶ Pantalla completa</button></div></header>
+<main class="layout">
+<section class="stage"><nav class="levels"><button class="active" data-level="1">1 · Sigo el camino</button><button data-level="2">2 · Recuerdo el camino</button><button data-level="3">3 · Escribo yo solo</button></nav><div class="board"><canvas id="pad" width="1185" height="871"></canvas></div></section>
+<aside class="panel"><h2 id="levTitle">1 · Sigo el camino</h2><p class="desc" id="desc">Repasa la d siguiendo la estrella y el recorrido.</p>
+<details id="adjust" hidden><summary>📏 Ajustar pauta Montessori</summary><label>Altura de cada banda: <span id="bLabel">135</span></label><input id="band" type="range" min="75" max="155" step="5" value="135"><label>Anchura de la pauta: <span id="wLabel">900</span></label><input id="width" type="range" min="500" max="1100" step="20" value="900"><button id="reset">Restablecer</button></details>
+<div class="result" id="result">Preparado para escribir.</div><div class="actions"><button id="check" class="primary wide">✓ Comprobar recorrido</button><button id="undo">↶ Deshacer</button><button id="clear">Limpiar</button><button id="demo" class="wide">▶ Ver cómo se escribe</button><button id="sound" class="wide">🔊 Celebración con sonido</button></div><p class="hint">Nivel 3: la d toca CIELO y SUELO. El redondel queda entre CASITA y SUELO y el palo asciende hasta CIELO.</p></aside>
 </main>
-</div>
-
 <script>
-(() => {
-'use strict';
-const RAW_SOURCE_PATHS=[[[212, 355], [226, 315], [255, 282], [295, 262], [338, 255], [378, 258], [414, 270], [446, 293], [414, 273], [378, 260], [338, 255], [300, 266], [265, 290], [238, 327], [222, 370], [220, 416], [232, 457], [259, 490], [296, 510], [338, 514], [378, 504], [412, 482], [438, 447], [451, 405], [453, 355], [452, 303], [452, 245], [452, 185], [452, 125], [452, 80], [452, 125], [452, 190], [452, 255], [452, 320], [452, 385], [454, 446], [463, 486], [485, 505], [515, 500], [542, 476], [565, 438]]];
-const pad=document.getElementById('pad'),ctx=pad.getContext('2d'),W=pad.width,H=pad.height;
-function fitSourcePaths(paths){
-  const pts=paths.flat();
-  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
-  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
-  const safe={left:185,top:78,right:715,bottom:542};
-  const bw=Math.max(1,maxX-minX), bh=Math.max(1,maxY-minY);
-  const aw=safe.right-safe.left, ah=safe.bottom-safe.top;
-  const sc=Math.min(aw/bw,ah/bh);
-  const ox=safe.left+(aw-bw*sc)/2-minX*sc;
-  const oy=safe.top+(ah-bh*sc)/2-minY*sc;
-  return paths.map(stroke=>stroke.map(([x,y])=>[x*sc+ox,y*sc+oy]));
-}
-const SOURCE_PATHS=fitSourcePaths(RAW_SOURCE_PATHS);
-let level=1,strokes=[],active=null,pointerId=null,demonstrating=false;
-let band=135,width=760;
-const result=document.getElementById('result'),celebrate=document.getElementById('celebrate'),adjust=document.getElementById('adjust');
-const bandInput=document.getElementById('band'),widthInput=document.getElementById('width');
-const bandValue=document.getElementById('bandValue'),widthValue=document.getElementById('widthValue');
-const levelButtons=[...document.querySelectorAll('.levels button')];
-
-function line(seq,color,w){if(!seq||!seq.length)return;ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineJoin=ctx.lineCap='round';ctx.beginPath();ctx.moveTo(seq[0][0],seq[0][1]);for(let i=1;i<seq.length;i++)ctx.lineTo(seq[i][0],seq[i][1]);ctx.stroke()}
-function smooth(points){
-  if(points.length<3)return points;
-  const out=[];
-  for(let i=0;i<points.length-1;i++){
-    const a=points[Math.max(0,i-1)],b=points[i],c=points[i+1],d=points[Math.min(points.length-1,i+2)];
-    for(let j=0;j<18;j++){const t=j/18,t2=t*t,t3=t2*t;
-      out.push([.5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),
-                .5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3)]);}
-  }
-  out.push(points.at(-1)); return out;
-}
-const GUIDE_SOURCE=SOURCE_PATHS.map(s=>smooth(s));
-
-function level3Guides(){
-  const R=ruling();
-  const house=R.house, ground=R.ground, sky=R.sky;
-  const left=330, right=610;
-  const midY=(house+ground)/2;
-  // d cursiva con retroceso: una sola línea continua.
-  return [[
-    [left+10,midY+10],[left+18,midY-18],[left+38,house+22],[left+72,house+4],[left+112,house],
-    [left+150,house+4],[left+185,house+20],[left+150,house+5],[left+112,house],
-    [left+72,house+6],[left+40,house+26],[left+20,midY],[left+18,ground-35],[left+34,ground-10],
-    [left+70,ground],[left+112,ground-1],[left+150,ground-14],[left+180,ground-40],[left+190,midY],
-    [left+188,house+18],[left+188,sky+28],[left+188,sky+8],[left+188,house+18],[left+188,midY],
-    [left+188,ground-28],[left+198,ground-7],[left+218,ground],[left+240,ground-12],[right,house+78]
-  ]];
-}
-
-
-function ruling(){return {sky:277.5-band*1.5,house:277.5-band*.5,ground:277.5+band*.5,below:277.5+band*1.5,left:(W-width)/2,right:(W+width)/2}}
-function activeGuides(){return level===3?fitSourcePaths(level3Guides()).map(s=>smooth(s)):GUIDE_SOURCE}
-
-function drawStartMarkers(guides){
-  guides.forEach((g,i)=>{
-    if(!g.length)return;
-    const p=g[0];
-    ctx.beginPath();
-    ctx.fillStyle=i===0?'#f4c430':'#e33';
-    ctx.arc(p[0],p[1],i===0?13:9,0,Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle='#17324d';
-    ctx.font='bold 15px Arial';
-    ctx.fillText((i+1)+'º',p[0]+18,p[1]-10);
-  });
-}
-function bg(){
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  if(level===1){
-    const guides=activeGuides();
-    guides.forEach(s=>{line(s,'#111',30);line(s,'#fff',20)});
-    drawStartMarkers(guides);
-  } else if(level===2){
-    activeGuides().forEach(s=>{line(s,'#d2eaf5',36);line(s,'#fff',10)});
-  } else {
-    const R=ruling(),ys=[R.sky,R.house,R.ground,R.below],cs=['#91c6e8','#edb56e','#83bc96','#a4c7db'];
-    ['CIELO','CASITA','SUELO','SÓTANO'].forEach((t,i)=>{
-      line([[R.left,ys[i]],[R.right,ys[i]]],cs[i],i===1||i===2?2.5:1.8);
-      ctx.fillStyle='#597180';ctx.font='bold 14px Arial';ctx.fillText(t,R.left+6,ys[i]-8);
-    });
-  }
-}
-function draw(){bg();strokes.forEach(s=>line(s,'#069bd2',8));if(active)line(active,'#069bd2',8)}
-
+(()=>{'use strict';
+const points=[{"x":354.7,"y":513.75,"r":46},{"x":373.6,"y":459.75,"r":46},{"x":412.75,"y":415.2,"r":46},{"x":466.75,"y":388.2,"r":46},{"x":524.8,"y":378.75,"r":46},{"x":578.8,"y":382.8,"r":46},{"x":627.4,"y":399,"r":46},{"x":670.6,"y":430.05,"r":46},{"x":627.4,"y":403.05,"r":46},{"x":578.8,"y":385.5,"r":46},{"x":524.8,"y":378.75,"r":46},{"x":473.5,"y":393.6,"r":46},{"x":426.25,"y":426,"r":46},{"x":389.8,"y":475.95,"r":46},{"x":368.2,"y":534,"r":46},{"x":365.5,"y":596.1,"r":46},{"x":381.7,"y":651.45,"r":46},{"x":418.15,"y":696,"r":46},{"x":468.1,"y":723,"r":46},{"x":524.8,"y":728.4,"r":46},{"x":578.8,"y":714.9,"r":46},{"x":624.7,"y":685.2,"r":46},{"x":659.8,"y":637.95,"r":46},{"x":677.35,"y":581.25,"r":46},{"x":680.05,"y":513.75,"r":46},{"x":678.7,"y":443.55,"r":46},{"x":678.7,"y":365.25,"r":46},{"x":678.7,"y":284.25,"r":46},{"x":678.7,"y":203.25,"r":46},{"x":678.7,"y":142.5,"r":46},{"x":678.7,"y":203.25,"r":46},{"x":678.7,"y":291,"r":46},{"x":678.7,"y":378.75,"r":46},{"x":678.7,"y":466.5,"r":46},{"x":678.7,"y":554.25,"r":46},{"x":681.4,"y":636.6,"r":46},{"x":693.55,"y":690.6,"r":46},{"x":723.25,"y":716.25,"r":46},{"x":763.75,"y":709.5,"r":46},{"x":800.2,"y":677.1,"r":46},{"x":831.25,"y":625.8,"r":46}],pts=points.map(p=>[p.x,p.y]),pad=document.getElementById('pad'),ctx=pad.getContext('2d'),W=pad.width,H=pad.height;
+const el=id=>document.getElementById(id);let level=1,strokes=[],active=null,pointer=null,demonstrating=false,soundOn=true,audio=null,band=135,width=900;
+try{const s=JSON.parse(localStorage.getItem('zurron-d-pauta-v70')||'{}');if(Number.isFinite(s.band))band=Math.max(75,Math.min(155,s.band));if(Number.isFinite(s.width))width=Math.max(500,Math.min(1100,s.width))}catch(_){}
+const center=[];for(let i=0;i<pts.length-1;i++){const a=pts[Math.max(0,i-1)],b=pts[i],c=pts[i+1],d=pts[Math.min(pts.length-1,i+2)];for(let j=0;j<22;j++){let t=j/22,t2=t*t,t3=t2*t;center.push([.5*((2*b[0])+(-a[0]+c[0])*t+(2*a[0]-5*b[0]+4*c[0]-d[0])*t2+(-a[0]+3*b[0]-3*c[0]+d[0])*t3),.5*((2*b[1])+(-a[1]+c[1])*t+(2*a[1]-5*b[1]+4*c[1]-d[1])*t2+(-a[1]+3*b[1]-3*c[1]+d[1])*t3)])}}center.push(pts.at(-1));
+function ruling(){return {sky:H/2-band*1.5,house:H/2-band*.5,ground:H/2+band*.5,below:H/2+band*1.5,left:(W-width)/2,right:(W+width)/2}}
+function line(seq,color,w){if(!seq?.length)return;ctx.strokeStyle=color;ctx.lineWidth=w;ctx.lineJoin=ctx.lineCap='round';ctx.beginPath();ctx.moveTo(seq[0][0],seq[0][1]);for(let i=1;i<seq.length;i++)ctx.lineTo(seq[i][0],seq[i][1]);ctx.stroke()}
+function star(x,y,r){ctx.save();ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?r:r*.45,px=x+Math.cos(a)*rr,py=y+Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fillStyle='#ffd95a';ctx.strokeStyle='#e6ad16';ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.restore()}
+function bg(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(level===1){line(center,'#111',42);line(center,'#fff',24);star(pts[0][0]-48,pts[0][1]+30,28);ctx.fillStyle='#173b52';ctx.font='bold 18px system-ui';ctx.fillText('1º',pts[0][0]-24,pts[0][1]+41)}else if(level===2){line(center,'#d2eaf5',84);line(center,'#fcfefe',20)}else{const r=ruling();for(const [y,c,t] of [[r.sky,'#91c6e8','CIELO'],[r.house,'#edb56e','CASITA'],[r.ground,'#83bc96','SUELO'],[r.below,'#a4c7db','SÓTANO']]){line([[r.left,y],[r.right,y]],c,2.5);ctx.fillStyle='#597180';ctx.font='bold 17px system-ui';ctx.fillText(t,r.left+7,y-12)}}}
+function draw(){bg();strokes.forEach(s=>line(s,'#069bd2',9));if(active)line(active,'#069bd2',9)}
 function pos(e){const r=pad.getBoundingClientRect();return [Math.max(0,Math.min(W,(e.clientX-r.left)*W/r.width)),Math.max(0,Math.min(H,(e.clientY-r.top)*H/r.height))]}
-pad.addEventListener('pointerdown',e=>{if(demonstrating||active||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();active=[pos(e)];pointerId=e.pointerId;try{pad.setPointerCapture(pointerId)}catch(_){};draw()});
-pad.addEventListener('pointermove',e=>{if(!active||e.pointerId!==pointerId)return;e.preventDefault();const p=pos(e),q=active.at(-1);if(Math.hypot(p[0]-q[0],p[1]-q[1])>.4){active.push(p);draw()}});
-function end(e){if(!active||e.pointerId!==pointerId)return;if(active.length===1)active.push(active[0]);strokes.push(active);active=null;pointerId=null;draw()}
-pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
-
-function distSeg(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],dd=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/dd));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
-function sampleGuide(g,n=18){const out=[];for(let i=0;i<n;i++){const k=Math.floor(i*(g.length-1)/(n-1));out.push(g[k])}return out}
-function pathTouchesOrdered(path,checkpoints,tol){
-  let idx=0;
-  for(let i=0;i<path.length&&idx<checkpoints.length;i++){if(Math.hypot(path[i][0]-checkpoints[idx][0],path[i][1]-checkpoints[idx][1])<=tol)idx++}
-  return idx>=checkpoints.length;
-}
-function coverage(path,guide,tol){
-  const sample=sampleGuide(guide,24);let ok=0;
-  for(const gp of sample){
-    let best=Infinity;
-    for(let i=0;i<path.length-1;i++)best=Math.min(best,distSeg(gp,path[i],path[i+1]));
-    if(best<=tol)ok++;
-  }
-  return ok/sample.length;
-}
-function evalStroke(path,guide){
-  const tol=level===1?58:level===2?48:44;
-  const checkpoints=sampleGuide(guide,lowercase=true?14:12);
-  const startOk=Math.hypot(path[0][0]-guide[0][0],path[0][1]-guide[0][1])<=tol*1.25;
-  const endOk=Math.hypot(path.at(-1)[0]-guide.at(-1)[0],path.at(-1)[1]-guide.at(-1)[1])<=tol*1.35;
-  const orderOk=pathTouchesOrdered(path,checkpoints,tol);
-  const cov=coverage(path,guide,tol);
-  return {ok:startOk&&endOk&&orderOk&&cov>=.72,startOk,endOk,orderOk,cov};
-}
-function celebrateNow(){
-  celebrate.innerHTML='';celebrate.classList.add('show');
-  for(let i=0;i<18;i++){const s=document.createElement('span');s.className='flying';s.textContent='★';s.style.left=(4+(i*17)%92)+'%';s.style.animationDelay=(i%6*.13)+'s';celebrate.appendChild(s)}
-  setTimeout(()=>celebrate.classList.remove('show'),1900);
-}
-function evaluate(){
-  const guides=activeGuides();
-  if(strokes.length!==guides.length){result.textContent=`Necesitas ${guides.length} trazo${guides.length>1?'s':''}.`;result.style.color='var(--bad)';return}
-  const ev=guides.map((g,i)=>evalStroke(strokes[i],g));
-  const all=ev.every(x=>x.ok);
-  if(all){result.textContent='¡Muy bien! Recorrido correcto.';result.style.color='var(--good)';celebrateNow()}
-  else {
-    const details=ev.map((x,i)=>`T${i+1}: ${x.ok?'bien':'revisa'}`).join(' · ');
-    result.textContent='Todavía no: '+details;result.style.color='var(--bad)';
-  }
-}
-function clearAll(){strokes=[];active=null;pointerId=null;result.textContent='Preparado para escribir.';result.style.color='';draw()}
-function undo(){strokes.pop();active=null;result.textContent='Último trazo eliminado.';draw()}
-async function demo(){
-  if(demonstrating)return;demonstrating=true;clearAll();
-  for(const guide of activeGuides()){
-    await new Promise(res=>{let i=1,current=[guide[0]];active=current;
-      const tick=()=>{if(i>=guide.length){strokes.push(current.slice());active=null;draw();setTimeout(res,180);return}current.push(guide[i++]);active=current;draw();requestAnimationFrame(tick)};tick();
-    });
-  }
-  demonstrating=false;
-}
-function setLevel(n){level=n;levelButtons.forEach(b=>b.classList.toggle('active',Number(b.dataset.level)===n));adjust.hidden=n!==3;clearAll()}
-levelButtons.forEach(b=>b.addEventListener('click',()=>setLevel(Number(b.dataset.level)||1)));
-document.getElementById('check').addEventListener('click',evaluate);
-document.getElementById('undo').addEventListener('click',undo);
-document.getElementById('clear').addEventListener('click',clearAll);
-document.getElementById('demo').addEventListener('click',demo);
-document.getElementById('start').addEventListener('click',()=>document.getElementById('intro').style.display='none');
-
-function syncRuling(){band=Number(bandInput.value)||135;width=Number(widthInput.value)||760;bandValue.textContent=band;widthValue.textContent=width;clearAll()}
-bandInput.addEventListener('input',syncRuling);widthInput.addEventListener('input',syncRuling);
-document.getElementById('reset').addEventListener('click',()=>{bandInput.value=135;widthInput.value=760;syncRuling()});
-draw();
+pad.addEventListener('pointerdown',e=>{if(demonstrating||active||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();active=[pos(e)];pointer=e.pointerId;try{pad.setPointerCapture(pointer)}catch(_){};draw()});
+pad.addEventListener('pointermove',e=>{if(!active||e.pointerId!==pointer)return;e.preventDefault();const p=pos(e),q=active.at(-1);if(Math.hypot(p[0]-q[0],p[1]-q[1])>.4){active.push(p);draw()}});
+function end(e){if(!active||e.pointerId!==pointer)return;if(active.length>1)strokes.push(active);active=null;pointer=null;status('Trazo registrado. Pulsa Comprobar recorrido.');draw()}pad.addEventListener('pointerup',end);pad.addEventListener('pointercancel',end);
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}function segD(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],dd=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/dd));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)}
+function status(t,ok=null){const r=el('result');r.textContent=t;r.className='result'+(ok===true?' good':ok===false?' bad':'')}
+function validate(){if(strokes.length!==1)return {ok:false,reason:'La d se escribe con un solo trazo continuo.'};let raw=strokes[0];if(raw.length<12)return {ok:false,reason:'El recorrido es demasiado corto.'};let xs=raw.map(p=>p[0]),ys=raw.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),w=maxX-minX,h=maxY-minY;
+if(level===3){const r=ruling(),tt=Math.max(15,band*.16);if(minY>r.sky+tt)return {ok:false,reason:'El palo de la d debe subir hasta CIELO.'};if(maxY<r.ground-tt)return {ok:false,reason:'La d debe llegar hasta SUELO.'};if(minY<r.sky-band*.32||maxY>r.ground+band*.32)return {ok:false,reason:'Mantén la d entre CIELO y SUELO.'};if(w<band*.8||w>width*.86||h<band*1.55||h>band*2.65)return {ok:false,reason:'Revisa el tamaño y las proporciones de la d.'};const px=Math.min(...pts.map(p=>p[0])),py=Math.min(...pts.map(p=>p[1])),pw=Math.max(...pts.map(p=>p[0]))-px,ph=Math.max(...pts.map(p=>p[1]))-py;raw=raw.map(p=>[px+(p[0]-minX)/Math.max(1,w)*pw,py+(p[1]-minY)/Math.max(1,h)*ph]);}
+else{const tol=level===2?86:70;if(dist(raw[0],pts[0])>tol)return {ok:false,reason:'Comienza en la estrella.'};if(dist(raw.at(-1),pts.at(-1))>tol*1.25)return {ok:false,reason:'Termina la curva de salida hacia la derecha.'}}
+const tol=level===3?100:level===2?92:78;let cursor=0;for(let k=0;k<pts.length;k++){let found=false;for(let j=cursor;j<raw.length;j++){if(dist(raw[j],pts[k])<=tol){found=true;cursor=j;break}}if(!found)return {ok:false,reason:'Revisa la dirección: falta una parte del recorrido.'}}
+let out=0;for(const p of raw){let d=Infinity;for(let i=1;i<center.length;i++){d=Math.min(d,segD(p,center[i-1],center[i]));if(d<=tol)break}if(d>tol)out++}if(level<3&&out>raw.length*.28)return {ok:false,reason:'Una parte importante del trazo se sale del camino.'};return {ok:true,reason:'Has completado la d en el sentido correcto.'}}
+function celebrate(){const box=el('celebrate');box.innerHTML='';box.classList.add('show');for(let i=0;i<24;i++){const s=document.createElement('span');s.textContent=['★','✦','●'][i%3];s.style.left=(4+(i*19)%92)+'%';s.style.animationDelay=(i%6*.12)+'s';box.appendChild(s)}setTimeout(()=>box.classList.remove('show'),1900);playSound()}
+function playSound(){if(!soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext,a=audio||(audio=new AC()),n=a.currentTime;[392,523,659,784].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(a.destination);let at=n+i*.13;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.05,at+.03);g.gain.exponentialRampToValueAtTime(.0001,at+.2);o.start(at);o.stop(at+.23)})}catch(_){}}
+function clearAll(){strokes=[];active=null;draw();status('Preparado para escribir.')}function undo(){if(active)active=null;else strokes.pop();draw();status('Último trazo deshecho.')}
+async function demo(){if(demonstrating)return;demonstrating=true;clearAll();await new Promise(res=>{let i=1,cur=[center[0]];active=cur;const tick=()=>{if(i>=center.length){strokes=[cur.slice()];active=null;draw();setTimeout(res,180);return}cur.push(center[i++]);draw();requestAnimationFrame(tick)};tick()});demonstrating=false}
+function setLevel(n){level=n;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('active',Number(b.dataset.level)===n));el('adjust').hidden=n!==3;strokes=[];active=null;el('levTitle').textContent=document.querySelector('[data-level="'+n+'"]').textContent;el('desc').textContent=n===1?'Repasa la d siguiendo la estrella y el recorrido.':n===2?'Sigue la zona azul clara sin flechas.':'Escribe una d libremente entre CIELO y SUELO.';status('Preparado para escribir.');draw()}
+document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>setLevel(Number(b.dataset.level)));el('check').onclick=()=>{if(demonstrating)return;const x=validate();status((x.ok?'✓ CORRECTO. ':'↻ REPETIR. ')+x.reason,x.ok);if(x.ok)celebrate()};el('undo').onclick=undo;el('clear').onclick=clearAll;el('demo').onclick=demo;el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'🔊 Celebración con sonido':'🔇 Celebración silenciada'};el('start').onclick=()=>el('intro').classList.add('off');el('full').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+function sync(){band=Number(el('band').value)||135;width=Number(el('width').value)||900;el('bLabel').textContent=band;el('wLabel').textContent=width;localStorage.setItem('zurron-d-pauta-v70',JSON.stringify({band,width}));draw()}el('band').oninput=sync;el('width').oninput=sync;el('reset').onclick=()=>{el('band').value=135;el('width').value=900;sync()};el('band').value=band;el('width').value=width;sync();draw();
 })();
-</script>
-</body></html>
+</script></body></html>

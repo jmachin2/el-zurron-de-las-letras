@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Calibrador del Zurrón V1.2 · Pauta calibrada desde el modelo</title>
+<title>Calibrador del Zurrón V1.3 · Selector de personaje desde PDF</title>
 <style>
 :root{--ink:#173b52;--muted:#507184;--bg:#fff8eb;--line:#dce5e9;--blue:#007899;--light:#d2eaf5;--green:#17a56b;--purple:#8a5cc7;--orange:#ec9b38;--red:#c84a4a}
 *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden}body{font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
@@ -43,12 +43,33 @@ textarea{height:105px;font-family:Consolas,monospace;font-size:11px}.metric{disp
 
 .level3Hint{font-size:11px;line-height:1.35;color:var(--muted);margin-top:5px}
 
+
+.charPickerOverlay{position:fixed;inset:0;z-index:1000;background:rgba(18,44,58,.72);display:none;align-items:center;justify-content:center;padding:12px}
+.charPickerOverlay.open{display:flex}
+.charPicker{width:min(1180px,96vw);height:min(850px,94dvh);background:#fff;border-radius:18px;box-shadow:0 18px 70px rgba(0,0,0,.28);display:grid;grid-template-columns:minmax(0,1fr) 300px;overflow:hidden}
+.charPickerMain{min-width:0;min-height:0;display:flex;flex-direction:column;padding:12px}
+.charPickerSide{border-left:1px solid var(--line);padding:12px;overflow:auto;background:#fbfdfd}
+.charPickerHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.charPickerHead h2{margin:0;font-size:18px}
+.charPickerNav{display:grid;grid-template-columns:auto 90px auto;gap:6px;align-items:end;margin-bottom:8px}
+.charPickerStage{position:relative;flex:1;min-height:0;border:2px solid #d9e8eb;border-radius:12px;background:#f3f6f7;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#charCanvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;cursor:crosshair;touch-action:none;background:#fff}
+.charPreviewBox{height:220px;border:1px solid var(--line);border-radius:12px;background:
+ linear-gradient(45deg,#edf2f4 25%,transparent 25%) 0 0/20px 20px,
+ linear-gradient(45deg,transparent 75%,#edf2f4 75%) 0 0/20px 20px,
+ linear-gradient(45deg,transparent 75%,#edf2f4 75%) 10px -10px/20px 20px,
+ linear-gradient(45deg,#edf2f4 25%,#fff 25%) 10px 10px/20px 20px;
+display:flex;align-items:center;justify-content:center;overflow:hidden}
+#charCropPreview{max-width:100%;max-height:100%;display:none}
+.charRectInfo{font-size:11px;color:var(--muted);line-height:1.4;margin:6px 0}
+@media(max-width:800px){.charPicker{grid-template-columns:1fr;height:96dvh}.charPickerSide{border-left:0;border-top:1px solid var(--line);max-height:310px}.charPickerStage{min-height:360px}}
+
 @media(max-width:900px){html,body{overflow:auto;height:auto}.layout{display:block}.stage{height:72vh;min-height:520px}.panel{margin-top:8px}.boardwrap{width:100%;max-height:none}header{align-items:flex-start}.buttons{justify-content:flex-end}}
 </style>
 </head>
 <body>
 <header>
- <div><small>EL ZURRÓN DE LAS LETRAS · HERRAMIENTA DOCENTE</small><h1>Calibrador del Zurrón · V1.2</h1></div>
+ <div><small>EL ZURRÓN DE LAS LETRAS · HERRAMIENTA DOCENTE</small><h1>Calibrador del Zurrón · V1.3</h1></div>
  <div class="buttons"><button id="save">Guardar</button><button id="load">Recuperar</button><button id="importJson">Importar JSON</button><button id="full">⛶ Pantalla completa</button></div>
 </header>
 <main class="layout">
@@ -67,7 +88,8 @@ textarea{height:105px;font-family:Consolas,monospace;font-size:11px}.metric{disp
    <div class="grid2"><div><label>Personaje</label><input id="characterName" type="text" placeholder="Doramas"></div><div><label>Página PDF</label><input id="pageNumber" type="number" min="1" value="1"></div></div>
    <div class="actions" style="margin-top:7px">
       <label class="fileButton primary">Cargar PDF / imagen<input id="sourceFile" type="file" accept="application/pdf,image/png,image/jpeg,image/webp"></label>
-      <label class="fileButton">Cargar personaje<input id="characterFile" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      <button id="pickCharacterPdf">Seleccionar personaje del PDF</button>
+      <label class="fileButton wide">O cargar personaje desde archivo<input id="characterFile" type="file" accept="image/png,image/jpeg,image/webp"></label>
    </div>
    <img id="characterPreview" class="characterPreview" alt="Personaje">
    <div id="sourceInfo" class="mini">Carga el PDF o imagen original de la grafía.</div>
@@ -193,7 +215,53 @@ textarea{height:105px;font-family:Consolas,monospace;font-size:11px}.metric{disp
    <div id="exportStatus" class="status">Pendiente de aprobación.</div>
  </div>
 </aside>
+
 </main>
+
+<div id="charPickerOverlay" class="charPickerOverlay" aria-hidden="true">
+  <div class="charPicker" role="dialog" aria-modal="true" aria-labelledby="charPickerTitle">
+    <section class="charPickerMain">
+      <div class="charPickerHead">
+        <div>
+          <small>EXTRAER DEL MISMO PDF</small>
+          <h2 id="charPickerTitle">Seleccionar personaje</h2>
+        </div>
+        <button id="closeCharPicker">✕ Cerrar</button>
+      </div>
+
+      <div class="charPickerNav">
+        <button id="charPrev">← Anterior</button>
+        <div><label>Página</label><input id="charPage" type="number" min="1" value="1"></div>
+        <button id="charNext">Siguiente →</button>
+      </div>
+
+      <div id="charPageInfo" class="mini" style="margin-bottom:6px">Carga primero el PDF de la letra.</div>
+      <div class="charPickerStage">
+        <canvas id="charCanvas" width="900" height="1200"></canvas>
+      </div>
+    </section>
+
+    <aside class="charPickerSide">
+      <h2>Recorte</h2>
+      <p class="desc">Arrastra un rectángulo alrededor del personaje. El recorte es independiente de la grafía y de la pauta.</p>
+
+      <div class="charPreviewBox">
+        <img id="charCropPreview" alt="Vista previa del personaje">
+      </div>
+      <div id="charRectInfo" class="charRectInfo">Todavía no hay selección.</div>
+
+      <div class="actions">
+        <button id="clearCharCrop">Rehacer selección</button>
+        <button id="useCharCrop" class="primary">Usar este recorte</button>
+      </div>
+
+      <div class="help" style="margin-top:8px">
+        Puedes navegar por todo el PDF. La página usada para el personaje puede ser distinta de la página usada para la grafía.
+      </div>
+    </aside>
+  </div>
+</div>
+
 <input id="jsonFile" type="file" accept="application/json" hidden>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -202,7 +270,8 @@ textarea{height:105px;font-family:Consolas,monospace;font-size:11px}.metric{disp
 const W=1185,H=871,pad=document.getElementById('pad'),ctx=pad.getContext('2d'),$=id=>document.getElementById(id);
 if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let sourceImg=new Image(),sourceData='',sourceName='',sourceOriginal=null,sourceMime='',sourcePage=1,sourcePages=1,sourceFit={x:0,y:0,w:W,h:H};
-let characterData='',characterName='',characterFileName='';
+let characterData='',characterName='',characterFileName='',characterSourcePage=null,characterCrop=null;
+let charPdf=null,charPageNo=1,charRendered=null,charSelection=null,charSelecting=false,charStart=null;
 let strokes=[{id:1,points:[]}],activeStrokeId=1,selected={strokeId:1,index:-1},screen=1,preview=1,drag=false,pointer=null,testStrokes=[],activeTest=null,approved=false,animating=false;
 const rules={sky:false,house:false,ground:false,basement:false,notes:''};
 const pauta={
@@ -308,7 +377,11 @@ function nearest(x,y){let ans=null,bd=1e9;strokes.forEach(st=>st.points.forEach(
 function syncStrokeSelect(){const s=$('strokeSelect');s.innerHTML='';strokes.forEach(st=>{const o=document.createElement('option');o.value=st.id;o.textContent='Trazo '+st.id;s.appendChild(o)});s.value=activeStrokeId}
 function sync(){syncStrokeSelect();const p=currentPoint();if(p){$('radius').value=p.r;$('rLabel').textContent=p.r;$('pointType').value=p.type;$('status').textContent='Punto '+selected.strokeId+'.'+(selected.index+1)+' · x '+p.x.toFixed(1)+' · y '+p.y.toFixed(1)+' · '+p.type}else{$('status').textContent=sourceData?'Trazo '+activeStrokeId+': haz clic para añadir el punto '+(activeStroke().points.length+1)+'.':'Carga el PDF o imagen original.'}
  const box=$('list');box.innerHTML='';strokes.forEach(st=>{st.points.forEach((p,i)=>{const d=document.createElement('div');d.className='item'+(selected.strokeId===st.id&&selected.index===i?' selected':'');d.innerHTML='<span class="num '+p.type+'">'+st.id+'.'+(i+1)+'</span><span>'+p.type+' · x '+p.x.toFixed(1)+' · y '+p.y.toFixed(1)+' · r '+p.r+'</span><button>Editar</button>';d.querySelector('button').onclick=()=>{activeStrokeId=st.id;selected={strokeId:st.id,index:i};sync();draw()};box.appendChild(d)})});updateOutput();draw()}
-function calibrationObject(){return {format:'zurron-calibration-v1.2',letter:$('letter').value.trim(),glyph:$('glyph').value.trim(),character:{name:$('characterName').value.trim(),file:characterFileName||null},source:{file:sourceName||null,mime:sourceMime||null,page:sourcePage,pages:sourcePages,reference:'reference.png',canvas:{w:W,h:H},fit:sourceFit},strokeCount:strokes.length,strokes:strokes.map(st=>({id:st.id,points:st.points.map((p,i)=>({order:i+1,x:+p.x.toFixed(2),y:+p.y.toFixed(2),nx:+(p.x/W).toFixed(6),ny:+(p.y/H).toFixed(6),r:+p.r.toFixed(2),nr:+(p.r/Math.min(W,H)).toFixed(6),type:p.type}))})),level3:{
+function calibrationObject(){return {format:'zurron-calibration-v1.3',letter:$('letter').value.trim(),glyph:$('glyph').value.trim(),character:{
+ name:$('characterName').value.trim(),
+ file:characterFileName||null,
+ source:characterSourcePage?{type:'pdf-crop',page:characterSourcePage,crop:characterCrop}:null
+},source:{file:sourceName||null,mime:sourceMime||null,page:sourcePage,pages:sourcePages,reference:'reference.png',canvas:{w:W,h:H},fit:sourceFit},strokeCount:strokes.length,strokes:strokes.map(st=>({id:st.id,points:st.points.map((p,i)=>({order:i+1,x:+p.x.toFixed(2),y:+p.y.toFixed(2),nx:+(p.x/W).toFixed(6),ny:+(p.y/H).toFixed(6),r:+p.r.toFixed(2),nr:+(p.r/Math.min(W,H)).toFixed(6),type:p.type}))})),level3:{
  sky:$('sky').checked,house:$('house').checked,ground:$('ground').checked,basement:$('basement').checked,notes:$('notes').value,
  modelTransform:{scale:+level3.model.scale.toFixed(4),dx:+level3.model.dx.toFixed(2),dy:+level3.model.dy.toFixed(2),opacity:+level3.model.opacity.toFixed(3)},
  pauta:{
@@ -442,11 +515,155 @@ $('lockPauta').onclick=()=>{
  draw()
 };
 
-async function loadSource(file){if(!file)return;sourceOriginal=file;sourceName=file.name;sourceMime=file.type||'';sourcePage=Math.max(1,Number($('pageNumber').value)||1);$('sourceInfo').textContent='Cargando '+file.name+'…';if(file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf')){if(!window.pdfjsLib){$('sourceInfo').textContent='No se pudo cargar PDF.js. Conecta a Internet o usa una imagen.';return}const arr=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:arr}).promise;sourcePages=pdf.numPages;sourcePage=Math.min(sourcePage,pdf.numPages);$('pageNumber').max=pdf.numPages;$('pageNumber').value=sourcePage;const page=await pdf.getPage(sourcePage);const vp=page.getViewport({scale:1.7});const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;sourceData=c.toDataURL('image/png');sourceImg=new Image();sourceImg.onload=()=>{fitSource(sourceImg.width,sourceImg.height);$('sourceInfo').textContent=file.name+' · página '+sourcePage+' de '+sourcePages;$('projectState').textContent='FUENTE OK';sync()};sourceImg.src=sourceData}else{const reader=new FileReader();reader.onload=()=>{sourceData=reader.result;sourcePages=1;sourcePage=1;sourceImg=new Image();sourceImg.onload=()=>{fitSource(sourceImg.width,sourceImg.height);$('sourceInfo').textContent=file.name+' · imagen '+sourceImg.width+'×'+sourceImg.height;$('projectState').textContent='FUENTE OK';sync()};sourceImg.src=sourceData};reader.readAsDataURL(file)}}
-$('sourceFile').onchange=e=>loadSource(e.target.files[0]);$('pageNumber').onchange=()=>{if(sourceOriginal&&sourceMime==='application/pdf')loadSource(sourceOriginal)};$('characterFile').onchange=e=>{const f=e.target.files[0];if(!f)return;characterFileName=f.name;const r=new FileReader();r.onload=()=>{characterData=r.result;$('characterPreview').src=characterData;$('characterPreview').style.display='block'};r.readAsDataURL(f)}
 
-$('save').onclick=()=>{localStorage.setItem('zurron-calibrador-project-v1',JSON.stringify({calibration:calibrationObject(),sourceData,sourceName,sourceMime,sourceFit,characterData,characterFileName}));$('status').textContent='Proyecto guardado en este navegador.'};$('load').onclick=()=>{try{const d=JSON.parse(localStorage.getItem('zurron-calibrador-project-v1')||'null');if(!d)return;applyCalibration(d.calibration);sourceData=d.sourceData||'';sourceName=d.sourceName||'';sourceMime=d.sourceMime||'';sourceFit=d.sourceFit||sourceFit;characterData=d.characterData||'';characterFileName=d.characterFileName||'';if(sourceData){sourceImg=new Image();sourceImg.onload=()=>sync();sourceImg.src=sourceData}$('characterPreview').src=characterData;if(characterData)$('characterPreview').style.display='block';sync()}catch(err){alert('No se pudo recuperar el proyecto: '+err.message)}};$('full').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.()
-function applyCalibration(obj){if(!obj)return;$('letter').value=obj.letter||'';$('glyph').value=obj.glyph||'';$('characterName').value=obj.character?.name||'';strokes=(obj.strokes||[{id:1,points:[]}]).map((st,si)=>({id:si+1,points:(st.points||[]).map(p=>({x:Number(p.x),y:Number(p.y),r:Number(p.r)||30,type:p.type||'normal'}))}));activeStrokeId=strokes[0]?.id||1;selected={strokeId:activeStrokeId,index:-1};$('sky').checked=!!obj.level3?.sky;$('house').checked=!!obj.level3?.house;$('ground').checked=!!obj.level3?.ground;$('basement').checked=!!obj.level3?.basement;$('notes').value=obj.level3?.notes||'';
+const charOverlay=$('charPickerOverlay'),charCanvas=$('charCanvas'),charCtx=charCanvas.getContext('2d');
+
+function charCanvasPos(e){
+ const r=charCanvas.getBoundingClientRect();
+ return [(e.clientX-r.left)*charCanvas.width/r.width,(e.clientY-r.top)*charCanvas.height/r.height]
+}
+function normalizeRect(a,b){
+ const x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]);
+ return {x,y,w:Math.abs(b[0]-a[0]),h:Math.abs(b[1]-a[1])}
+}
+function drawCharPicker(){
+ if(!charRendered)return;
+ charCtx.clearRect(0,0,charCanvas.width,charCanvas.height);
+ charCtx.drawImage(charRendered,0,0,charCanvas.width,charCanvas.height);
+ if(charSelection&&charSelection.w>1&&charSelection.h>1){
+   charCtx.save();
+   charCtx.fillStyle='rgba(0,121,153,.12)';
+   charCtx.strokeStyle='#007899';charCtx.lineWidth=Math.max(2,charCanvas.width/500);
+   charCtx.setLineDash([12,8]);
+   charCtx.fillRect(charSelection.x,charSelection.y,charSelection.w,charSelection.h);
+   charCtx.strokeRect(charSelection.x,charSelection.y,charSelection.w,charSelection.h);
+   charCtx.restore();
+ }
+}
+function updateCharPreview(){
+ const img=$('charCropPreview'),info=$('charRectInfo');
+ if(!charSelection||charSelection.w<8||charSelection.h<8){
+   img.style.display='none';img.removeAttribute('src');
+   info.textContent='Todavía no hay selección.';
+   return
+ }
+ const r=charSelection,c=document.createElement('canvas');
+ c.width=Math.max(1,Math.round(r.w));c.height=Math.max(1,Math.round(r.h));
+ c.getContext('2d').drawImage(charCanvas,r.x,r.y,r.w,r.h,0,0,c.width,c.height);
+ img.src=c.toDataURL('image/png');img.style.display='block';
+ info.textContent='Página '+charPageNo+' · '+Math.round(r.w)+' × '+Math.round(r.h)+' px';
+}
+async function ensureCharPdf(){
+ if(!sourceOriginal){
+   alert('Primero carga el PDF que contiene la letra y el personaje.');
+   return false
+ }
+ const isPdf=sourceMime==='application/pdf'||sourceName.toLowerCase().endsWith('.pdf');
+ if(!isPdf){
+   charPdf=null;return true
+ }
+ if(!window.pdfjsLib){
+   alert('No se pudo cargar PDF.js.');
+   return false
+ }
+ if(!charPdf){
+   const arr=await sourceOriginal.arrayBuffer();
+   charPdf=await pdfjsLib.getDocument({data:arr}).promise;
+ }
+ return true
+}
+async function renderCharPage(n){
+ if(!(await ensureCharPdf()))return;
+ charSelection=null;updateCharPreview();
+ const isPdf=sourceMime==='application/pdf'||sourceName.toLowerCase().endsWith('.pdf');
+ if(isPdf){
+   charPageNo=Math.max(1,Math.min(charPdf.numPages,Math.round(Number(n)||1)));
+   const page=await charPdf.getPage(charPageNo),vp0=page.getViewport({scale:1});
+   const maxW=1400,maxH=1700,scale=Math.min(maxW/vp0.width,maxH/vp0.height,2.2);
+   const vp=page.getViewport({scale});
+   const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);
+   await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+   charCanvas.width=c.width;charCanvas.height=c.height;charRendered=c;
+   $('charPage').max=charPdf.numPages;$('charPage').value=charPageNo;
+   $('charPrev').disabled=charPageNo<=1;$('charNext').disabled=charPageNo>=charPdf.numPages;
+   $('charPageInfo').textContent=sourceName+' · página '+charPageNo+' de '+charPdf.numPages;
+ }else{
+   charPageNo=1;
+   const img=new Image();
+   await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=sourceData});
+   const scale=Math.min(1400/img.width,1700/img.height,1);
+   charCanvas.width=Math.round(img.width*scale);charCanvas.height=Math.round(img.height*scale);
+   charRendered=img;
+   $('charPage').value=1;$('charPage').max=1;$('charPrev').disabled=true;$('charNext').disabled=true;
+   $('charPageInfo').textContent=sourceName+' · imagen';
+ }
+ drawCharPicker()
+}
+async function openCharPicker(){
+ if(!(await ensureCharPdf()))return;
+ charOverlay.classList.add('open');charOverlay.setAttribute('aria-hidden','false');
+ charPageNo=characterSourcePage||sourcePage||1;
+ await renderCharPage(charPageNo)
+}
+function closeCharPicker(){
+ charOverlay.classList.remove('open');charOverlay.setAttribute('aria-hidden','true');
+ charSelecting=false;charStart=null
+}
+$('pickCharacterPdf').onclick=openCharPicker;
+$('closeCharPicker').onclick=closeCharPicker;
+charOverlay.addEventListener('pointerdown',e=>{if(e.target===charOverlay)closeCharPicker()});
+$('charPrev').onclick=()=>renderCharPage(charPageNo-1);
+$('charNext').onclick=()=>renderCharPage(charPageNo+1);
+$('charPage').onchange=()=>renderCharPage($('charPage').value);
+$('charPage').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();renderCharPage($('charPage').value)}});
+
+charCanvas.addEventListener('pointerdown',e=>{
+ e.preventDefault();charSelecting=true;charStart=charCanvasPos(e);charSelection={x:charStart[0],y:charStart[1],w:0,h:0};
+ try{charCanvas.setPointerCapture(e.pointerId)}catch(_){}
+ drawCharPicker()
+});
+charCanvas.addEventListener('pointermove',e=>{
+ if(!charSelecting||!charStart)return;
+ charSelection=normalizeRect(charStart,charCanvasPos(e));drawCharPicker()
+});
+function endCharSelect(e){
+ if(!charSelecting)return;
+ charSelecting=false;
+ if(charStart)charSelection=normalizeRect(charStart,charCanvasPos(e));
+ charStart=null;drawCharPicker();updateCharPreview()
+}
+charCanvas.addEventListener('pointerup',endCharSelect);
+charCanvas.addEventListener('pointercancel',()=>{charSelecting=false;charStart=null});
+
+$('clearCharCrop').onclick=()=>{charSelection=null;updateCharPreview();drawCharPicker()};
+$('useCharCrop').onclick=()=>{
+ if(!charSelection||charSelection.w<12||charSelection.h<12){
+   alert('Marca primero un rectángulo alrededor del personaje.');
+   return
+ }
+ const r=charSelection,c=document.createElement('canvas');
+ c.width=Math.round(r.w);c.height=Math.round(r.h);
+ c.getContext('2d').drawImage(charCanvas,r.x,r.y,r.w,r.h,0,0,c.width,c.height);
+ characterData=c.toDataURL('image/png');
+ const safe=($('characterName').value.trim()||'personaje').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'personaje';
+ characterFileName=safe+'.png';
+ characterSourcePage=charPageNo;
+ characterCrop={
+   x:+(r.x/charCanvas.width).toFixed(6),
+   y:+(r.y/charCanvas.height).toFixed(6),
+   w:+(r.w/charCanvas.width).toFixed(6),
+   h:+(r.h/charCanvas.height).toFixed(6)
+ };
+ $('characterPreview').src=characterData;$('characterPreview').style.display='block';
+ approved=false;updateOutput();closeCharPicker()
+};
+
+
+async function loadSource(file){if(!file)return;charPdf=null;characterSourcePage=null;characterCrop=null;sourceOriginal=file;sourceName=file.name;sourceMime=file.type||'';sourcePage=Math.max(1,Number($('pageNumber').value)||1);$('sourceInfo').textContent='Cargando '+file.name+'…';if(file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf')){if(!window.pdfjsLib){$('sourceInfo').textContent='No se pudo cargar PDF.js. Conecta a Internet o usa una imagen.';return}const arr=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:arr}).promise;sourcePages=pdf.numPages;sourcePage=Math.min(sourcePage,pdf.numPages);$('pageNumber').max=pdf.numPages;$('pageNumber').value=sourcePage;const page=await pdf.getPage(sourcePage);const vp=page.getViewport({scale:1.7});const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;sourceData=c.toDataURL('image/png');sourceImg=new Image();sourceImg.onload=()=>{fitSource(sourceImg.width,sourceImg.height);$('sourceInfo').textContent=file.name+' · página '+sourcePage+' de '+sourcePages;$('projectState').textContent='FUENTE OK';sync()};sourceImg.src=sourceData}else{const reader=new FileReader();reader.onload=()=>{sourceData=reader.result;sourcePages=1;sourcePage=1;sourceImg=new Image();sourceImg.onload=()=>{fitSource(sourceImg.width,sourceImg.height);$('sourceInfo').textContent=file.name+' · imagen '+sourceImg.width+'×'+sourceImg.height;$('projectState').textContent='FUENTE OK';sync()};sourceImg.src=sourceData};reader.readAsDataURL(file)}}
+$('sourceFile').onchange=e=>loadSource(e.target.files[0]);$('pageNumber').onchange=()=>{if(sourceOriginal&&sourceMime==='application/pdf')loadSource(sourceOriginal)};$('characterFile').onchange=e=>{const f=e.target.files[0];if(!f)return;characterFileName=f.name;characterSourcePage=null;characterCrop=null;const r=new FileReader();r.onload=()=>{characterData=r.result;$('characterPreview').src=characterData;$('characterPreview').style.display='block';approved=false;updateOutput()};r.readAsDataURL(f)}
+
+$('save').onclick=()=>{localStorage.setItem('zurron-calibrador-project-v1',JSON.stringify({calibration:calibrationObject(),sourceData,sourceName,sourceMime,sourceFit,characterData,characterFileName,characterSourcePage,characterCrop}));$('status').textContent='Proyecto guardado en este navegador.'};$('load').onclick=()=>{try{const d=JSON.parse(localStorage.getItem('zurron-calibrador-project-v1')||'null');if(!d)return;applyCalibration(d.calibration);sourceData=d.sourceData||'';sourceName=d.sourceName||'';sourceMime=d.sourceMime||'';sourceFit=d.sourceFit||sourceFit;characterData=d.characterData||'';characterFileName=d.characterFileName||'';characterSourcePage=d.characterSourcePage||d.calibration?.character?.source?.page||null;characterCrop=d.characterCrop||d.calibration?.character?.source?.crop||null;if(sourceData){sourceImg=new Image();sourceImg.onload=()=>sync();sourceImg.src=sourceData}$('characterPreview').src=characterData;if(characterData)$('characterPreview').style.display='block';sync()}catch(err){alert('No se pudo recuperar el proyecto: '+err.message)}};$('full').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.()
+function applyCalibration(obj){if(!obj)return;$('letter').value=obj.letter||'';$('glyph').value=obj.glyph||'';$('characterName').value=obj.character?.name||'';characterSourcePage=obj.character?.source?.page||characterSourcePage||null;characterCrop=obj.character?.source?.crop||characterCrop||null;strokes=(obj.strokes||[{id:1,points:[]}]).map((st,si)=>({id:si+1,points:(st.points||[]).map(p=>({x:Number(p.x),y:Number(p.y),r:Number(p.r)||30,type:p.type||'normal'}))}));activeStrokeId=strokes[0]?.id||1;selected={strokeId:activeStrokeId,index:-1};$('sky').checked=!!obj.level3?.sky;$('house').checked=!!obj.level3?.house;$('ground').checked=!!obj.level3?.ground;$('basement').checked=!!obj.level3?.basement;$('notes').value=obj.level3?.notes||'';
  const mt=obj.level3?.modelTransform||{},pg=obj.level3?.pauta||{};
  level3.model.scale=Number(mt.scale)||1;level3.model.dx=Number(mt.dx)||0;level3.model.dy=Number(mt.dy)||0;level3.model.opacity=Number.isFinite(Number(mt.opacity))?Number(mt.opacity):.65;
 
@@ -570,7 +787,7 @@ document.querySelectorAll('[data-screen]').forEach(b=>b.onclick=()=>{
 })
 ;['sky','house','ground','basement','notes','letter','glyph','characterName'].forEach(id=>$(id).addEventListener('input',()=>{approved=false;updateOutput()}));$('approve').onclick=()=>{const missing=[];if(!sourceData)missing.push('PDF/imagen original');if(!$('letter').value.trim())missing.push('letra');if(!$('glyph').value.trim())missing.push('grafía');if(!$('characterName').value.trim())missing.push('nombre del personaje');if(!characterData)missing.push('imagen del personaje');if(strokes.some(s=>s.points.length<2))missing.push('al menos 2 puntos en cada trazo');if(missing.length){$('exportStatus').className='status bad';$('exportStatus').textContent='Falta: '+missing.join(', ')+'.';return}approved=true;$('exportStatus').className='status good';$('exportStatus').textContent='Calibración aprobada. Lista para exportar.';updateOutput()}
 function dataURLtoBlob(dataurl){const arr=dataurl.split(','),mime=arr[0].match(/:(.*?);/)[1],bstr=atob(arr[1]);let n=bstr.length,u8=new Uint8Array(n);while(n--)u8[n]=bstr.charCodeAt(n);return new Blob([u8],{type:mime})}function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}function referencePng(){const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);if(sourceData&&sourceImg.complete)x.drawImage(sourceImg,sourceFit.x,sourceFit.y,sourceFit.w,sourceFit.h);return c.toDataURL('image/png')}
-$('exportZip').onclick=async()=>{if(!approved){$('exportStatus').className='status bad';$('exportStatus').textContent='Primero pulsa “Aprobar calibración”.';return}if(!window.JSZip){$('exportStatus').className='status bad';$('exportStatus').textContent='No se pudo cargar JSZip. Revisa la conexión a Internet.';return}const z=new JSZip(),cal=calibrationObject(),letter=cal.letter||'letra',glyph=cal.glyph||letter;const manifest={format:'zurron-letter-package-v1.2',created:new Date().toISOString(),letter,glyph,character:cal.character,files:{calibration:'calibracion.json',reference:'reference.png',character:characterFileName||'personaje.png',original:sourceName||null},instruction:'CALIBRACIÓN APROBADA POR EL DOCENTE. NO MODIFICAR LA GEOMETRÍA.'};z.file('manifest.json',JSON.stringify(manifest,null,2));z.file('calibracion.json',JSON.stringify(cal,null,2));z.file('reference.png',dataURLtoBlob(referencePng()));z.file('LEEME.txt','PAQUETE PARA EL ZURRÓN DE LAS LETRAS\n\nCALIBRACIÓN APROBADA POR EL DOCENTE. NO MODIFICAR LA GEOMETRÍA.\n\nLetra: '+letter+'\nGrafía: '+glyph+'\nPersonaje: '+cal.character.name+'\n\nChatGPT debe usar reference.png como fuente visual canónica del Nivel 1. calibracion.json contiene los puntos canónicos y UNA ÚNICA pauta Montessori calibrada en la pantalla 1. Esa misma pauta debe reutilizarse en el modelo resultante y en el Nivel 3; no debe crearse ni recalcularse otra pauta.');if(characterData)z.file(characterFileName||'personaje.png',dataURLtoBlob(characterData));if(sourceOriginal)z.file(sourceName,sourceOriginal);const blob=await z.generateAsync({type:'blob',compression:'DEFLATE'});downloadBlob(blob,'Zurron_'+letter+'_'+glyph+'_calibrado.zip');$('exportStatus').className='status good';$('exportStatus').textContent='ZIP generado. Súbelo a ChatGPT y pide: “Incorpora esta grafía al Zurrón”.'}
+$('exportZip').onclick=async()=>{if(!approved){$('exportStatus').className='status bad';$('exportStatus').textContent='Primero pulsa “Aprobar calibración”.';return}if(!window.JSZip){$('exportStatus').className='status bad';$('exportStatus').textContent='No se pudo cargar JSZip. Revisa la conexión a Internet.';return}const z=new JSZip(),cal=calibrationObject(),letter=cal.letter||'letra',glyph=cal.glyph||letter;const manifest={format:'zurron-letter-package-v1.3',created:new Date().toISOString(),letter,glyph,character:cal.character,files:{calibration:'calibracion.json',reference:'reference.png',character:characterFileName||'personaje.png',original:sourceName||null},instruction:'CALIBRACIÓN APROBADA POR EL DOCENTE. NO MODIFICAR LA GEOMETRÍA.'};z.file('manifest.json',JSON.stringify(manifest,null,2));z.file('calibracion.json',JSON.stringify(cal,null,2));z.file('reference.png',dataURLtoBlob(referencePng()));z.file('LEEME.txt','PAQUETE PARA EL ZURRÓN DE LAS LETRAS\n\nCALIBRACIÓN APROBADA POR EL DOCENTE. NO MODIFICAR LA GEOMETRÍA.\n\nLetra: '+letter+'\nGrafía: '+glyph+'\nPersonaje: '+cal.character.name+'\n\nChatGPT debe usar reference.png como fuente visual canónica del Nivel 1. calibracion.json contiene los puntos canónicos y UNA ÚNICA pauta Montessori calibrada en la pantalla 1. Esa misma pauta debe reutilizarse en el modelo resultante y en el Nivel 3; no debe crearse ni recalcularse otra pauta. Si character.source.type es pdf-crop, personaje.png fue recortado del mismo PDF original y character.source.page/crop identifican su procedencia.');if(characterData)z.file(characterFileName||'personaje.png',dataURLtoBlob(characterData));if(sourceOriginal)z.file(sourceName,sourceOriginal);const blob=await z.generateAsync({type:'blob',compression:'DEFLATE'});downloadBlob(blob,'Zurron_'+letter+'_'+glyph+'_calibrado.zip');$('exportStatus').className='status good';$('exportStatus').textContent='ZIP generado. Súbelo a ChatGPT y pide: “Incorpora esta grafía al Zurrón”.'}
 
 sourceImg.onload=draw;syncPautaControls();syncLevel3Controls();setPautaMode('points');sync();draw();
 })();

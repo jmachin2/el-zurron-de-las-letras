@@ -262,7 +262,9 @@ function pautaRows(){
  ];
 }
 function drawMontessori(interactive=false){
- if(!pauta.visible)return;
+ /* Ocultar pauta es solo una ayuda visual en Pantalla 1.
+    En Pantalla 2 y Nivel 3 la pauta canónica siempre se muestra. */
+ if(interactive&&!pauta.visible)return;
  const b=pautaBounds();
  for(const row of pautaRows()){
    ctx.save();
@@ -339,7 +341,8 @@ pad.addEventListener('pointerdown',e=>{
  if(screen===1){
    if(!pauta.locked&&pauta.mode==='lines'){
      const key=nearestPautaLine(y);
-     if(key){guideDrag={kind:'line',key,startY:y,baseY:pauta.lines[key]};draw();return}
+     if(key){guideDrag={kind:'line',key,startY:y,baseY:pauta.lines[key]};draw()}
+     return
    }
    if(!pauta.locked&&pauta.mode==='group'){
      guideDrag={kind:'group',startY:y,base:{...pauta.lines}};draw();return

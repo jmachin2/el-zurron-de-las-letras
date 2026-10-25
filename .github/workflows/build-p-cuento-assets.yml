@@ -1,0 +1,45 @@
+name: Build P cuento assets
+on:
+  push:
+    paths:
+      - '.github/workflows/build-p-cuento-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download slide images
+        run: |
+          mkdir -p p/cuento/assets/story p/cuento/assets/info p/cuento/assets/audio
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena01_20261025" -o "p/cuento/assets/story/scene-01.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena02_20261025" -o "p/cuento/assets/story/scene-02.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena03_20261025" -o "p/cuento/assets/story/scene-03.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena04_20261025" -o "p/cuento/assets/story/scene-04.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena05_20261025" -o "p/cuento/assets/story/scene-05.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena06_20261025" -o "p/cuento/assets/story/scene-06.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena07_20261025" -o "p/cuento/assets/story/scene-07.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_acerina_escena08_20261025" -o "p/cuento/assets/story/scene-08.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_01" -o "p/cuento/assets/info/info-01.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_02" -o "p/cuento/assets/info/info-02.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_03" -o "p/cuento/assets/info/info-03.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=h12940ecf875872b1_13_18" -o "p/cuento/assets/info/info-04.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_04" -o "p/cuento/assets/info/info-05.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_05" -o "p/cuento/assets/info/info-06.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_06" -o "p/cuento/assets/info/info-07.png"
+          curl -L --fail --retry 3 "https://docs.google.com/presentation/d/1OaywDfEcGrVsbmkWab5LVI7GM9V9xy_m6XI_vWmWxE0/export/png?pageid=zurron_p_collage_didactico_20261025_07" -o "p/cuento/assets/info/info-08.png"
+          file p/cuento/assets/story/*.png p/cuento/assets/info/*.png
+      - name: Download audio
+        run: |
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=1OTSMzi1F5OnJ9fVBSpf79AtAftB-GZzj&export=download&confirm=t" -o "p/cuento/assets/audio/rima-pandorga.mp3"
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=1TJ3XCm9zaP5op7r-flLsxOkRW2Hr08SH&export=download&confirm=t" -o "p/cuento/assets/audio/base-cuento-pandorga.mp3"
+          file p/cuento/assets/audio/*.mp3
+      - name: Commit assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add p/cuento/assets
+          git diff --cached --quiet || git commit -m "Integrar escenas y audios oficiales del cuento P"
+          git push

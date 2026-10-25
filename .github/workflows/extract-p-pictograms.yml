@@ -1,0 +1,59 @@
+name: Extract P pictograms
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install render tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip pillow
+
+      - name: Download source PDF
+        run: |
+          mkdir -p /tmp/p_source /tmp/p_pages p/mision/assets/pictograms
+          curl -L --fail --retry 3             "https://drive.usercontent.google.com/download?id=10wIGCeUtBIR1Pp3ckQqINfHrS78oDksk&export=download&confirm=t"             -o /tmp/p_source/pictogramas-p.pdf
+          file /tmp/p_source/pictogramas-p.pdf
+          test -s /tmp/p_source/pictogramas-p.pdf
+
+      - name: Render and crop pictograms
+        run: |
+          pdftoppm -f 7 -l 39 -r 110 -png /tmp/p_source/pictogramas-p.pdf /tmp/p_pages/page
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+
+          words = {
+            7:"paloma",8:"pala",9:"paella",10:"palillos",11:"pañal",12:"paraguas",13:"patín",14:"pavo",
+            15:"pañuelos",16:"pecera",17:"pelícano",18:"pera",19:"pimiento",20:"pizza",21:"pollo",22:"poni",23:"pupila",
+            24:"tapa",25:"copa",26:"ropa",27:"esparadrapo",28:"equipo",29:"lupa",30:"champú",31:"chapa",
+            32:"campana",33:"lámpara",34:"mapache",35:"relámpago",36:"España",37:"estropajo",38:"espejo",39:"alpinista"
+          }
+          def slug(s):
+              return s.translate(str.maketrans("áéíóúñÁÉÍÓÚÑ","aeiounAEIOUN")).lower().replace(" ","-")
+          files=sorted(Path("/tmp/p_pages").glob("page-*.png"))
+          if len(files)!=33:
+              raise SystemExit(f"Expected 33 pages, got {len(files)}")
+          out=Path("p/mision/assets/pictograms")
+          out.mkdir(parents=True,exist_ok=True)
+          for page,path in zip(range(7,40),files):
+              im=Image.open(path).convert("RGB")
+              crop=im.crop((465,190,1060,785))
+              crop.thumbnail((420,420),Image.Resampling.LANCZOS)
+              crop.save(out/f"{page:02d}-{slug(words[page])}.webp","WEBP",quality=72,method=6)
+          PY
+
+      - name: Commit extracted pictograms
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add p/mision/assets/pictograms
+          git diff --cached --quiet || git commit -m "Extraer pictogramas oficiales para Misión P"
+          git push

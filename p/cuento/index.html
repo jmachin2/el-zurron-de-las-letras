@@ -1,19 +1,209 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cuento · La pandorga palmera</title><style>
-:root{--ink:#17324d;--muted:#607486;--paper:#fffdf8;--line:#d9e5ec;--p:#a13f7a;--green:#2f9e5b;--shadow:0 14px 38px rgba(27,65,95,.14)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#eef6fa}
-a{text-decoration:none;color:inherit}button{font:inherit}.hidden{display:none!important}
-.shell{min-height:calc(100vh - 18px);margin:9px;background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);background:#fff}
-.brand{display:flex;align-items:center;gap:12px}.mark{width:48px;height:48px;border-radius:15px;background:var(--p);color:white;display:grid;place-items:center;font-size:31px;font-weight:950}
-.kicker{font-size:11px;font-weight:900;letter-spacing:.08em;color:var(--muted)}h1{margin:2px 0 0;font-size:clamp(22px,3vw,36px)}
-.back,.btn{border:2px solid var(--line);border-radius:14px;background:white;color:var(--ink);font-weight:900;padding:10px 14px;cursor:pointer}
-.btn.primary{background:var(--p);border-color:var(--p);color:white}.btn.green{background:var(--green);border-color:var(--green);color:#fff}
-.content{padding:16px}.sub{color:var(--muted);line-height:1.45}.card{background:white;border:2px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 7px 20px rgba(30,70,105,.08)}
-.controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La pandorga palmera · Letra P</title>
+<style>
+:root{--p:#7856b5;--p2:#efe8ff;--ink:#17324d;--muted:#627486;--line:#d9e3ec;--bg:#fff8ef;--good:#198754;--bad:#c83b4d}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#fff8ef,#fff)}
+body{overflow:hidden}.app{height:100dvh;display:grid;grid-template-rows:auto auto minmax(0,1fr);padding-bottom:58px}
+header{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.badge{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--p);color:#fff;font-size:30px;font-weight:900}
+.brand{min-width:0;flex:1}.brand h1{font-size:clamp(20px,2.3vw,31px);margin:0}.brand small{color:var(--muted);font-weight:700}
+.back{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;background:#17324d;border-radius:12px;padding:10px 14px;font-weight:900;white-space:nowrap}
+.tabs{display:flex;gap:7px;padding:8px 12px;background:#fff;border-bottom:1px solid var(--line);overflow:auto}
+.tabs button{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:9px 14px;font-weight:900;white-space:nowrap;cursor:pointer}
+.tabs button.on{background:var(--p);border-color:var(--p);color:#fff}
+main{min-height:0;overflow:hidden}.panel{height:100%;padding:10px 12px;overflow:auto}.hidden{display:none!important}
+.card{background:#fff;border:2px solid var(--line);border-radius:18px;box-shadow:0 8px 22px rgba(25,50,75,.08)}
+.story{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:12px}
+.slidebox{min-height:0;display:grid;place-items:center;padding:8px;overflow:hidden}
+.slidebox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:13px;box-shadow:0 8px 20px rgba(0,0,0,.12);background:#fff}
+.side{display:flex;flex-direction:column;gap:10px;padding:14px;overflow:auto}
+.kicker{font-weight:900;color:var(--p);font-size:13px;letter-spacing:.05em}.side h2{margin:0;font-size:clamp(21px,2vw,29px)}
+.side p{font-size:16px;line-height:1.45;margin:0;color:#334f65}.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.btn{border:0;border-radius:12px;padding:11px 12px;font-weight:900;cursor:pointer;background:#eaf1f6;color:var(--ink)}.btn.primary{background:var(--p);color:#fff}.btn.good{background:#daf4e4;color:#086d38}
+.counter{text-align:center;font-weight:900;color:var(--muted);padding:4px}
+.audioGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.audioCard{padding:20px;min-height:230px;display:flex;flex-direction:column;justify-content:center}.audioCard h2{margin:0 0 8px;font-size:26px}.audioCard p{color:var(--muted);line-height:1.4}.audioCard audio{width:100%;margin-top:14px}.lyrics{background:var(--p2);border-radius:14px;padding:13px;line-height:1.55;font-weight:700}
+.qgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.qcard{padding:16px}.qnum{color:var(--p);font-weight:900}.qcard h3{font-size:20px;margin:6px 0 12px}.answer{display:none;margin-top:10px;background:#eef8f1;border:2px solid #b9e2c8;border-radius:12px;padding:12px;font-weight:800;line-height:1.4}.qcard.open .answer{display:block}
+.order{margin-top:12px;padding:16px;text-align:center}.order h2{margin:0 0 5px}.orderBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px}.orderBtns button{width:70px;height:58px;border-radius:14px;border:3px solid var(--line);background:#fff;font-size:26px;font-weight:900;cursor:pointer}.orderBtns button.used{opacity:.35}.orderResult{font-weight:900;min-height:28px}.orderSeq{font-size:28px;font-weight:900;color:var(--p);min-height:38px}
+.vocab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.vcard{padding:17px}.word{font-size:30px;font-weight:950;color:var(--p)}.syll{font-size:18px;font-weight:900;color:#5b7082;margin:3px 0 12px}.vlabel{font-size:12px;font-weight:900;color:var(--muted);letter-spacing:.05em;margin-top:10px}.vtext{font-size:17px;line-height:1.4}.phon{margin-top:13px;padding:11px;background:var(--p2);border-radius:12px;font-weight:900}
+.infoLayout{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:12px}.infoSide{padding:14px;display:flex;flex-direction:column;gap:10px}.infoSide h2{margin:0}.infoList{display:grid;gap:7px}.infoList button{text-align:left;border:2px solid var(--line);background:#fff;border-radius:11px;padding:9px 10px;font-weight:800;cursor:pointer}.infoList button.on{border-color:var(--p);background:var(--p2)}
+.safe{position:fixed;left:0;right:0;bottom:0;height:48px;pointer-events:none;background:linear-gradient(0deg,rgba(255,255,255,.98),rgba(255,255,255,.75),transparent);z-index:5}
+@media(max-width:850px){body{overflow:auto}.app{height:auto;min-height:100dvh}.story,.infoLayout{grid-template-columns:1fr;height:auto}.slidebox{min-height:55vh}.audioGrid,.qgrid,.vocab{grid-template-columns:1fr}.side{overflow:visible}.panel{overflow:visible}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="badge">P</div>
+  <div class="brand"><h1>La pandorga palmera</h1><small>El cuento de Acerina · Letra P</small></div>
+  <a class="back" href="../">← LETRA P</a>
+</header>
+<nav class="tabs">
+  <button class="on" data-tab="story">CUENTO</button>
+  <button data-tab="songs">CANCIONES</button>
+  <button data-tab="comp">COMPRENSIÓN</button>
+  <button data-tab="vocab">VOCABULARIO</button>
+  <button data-tab="info">APRENDEMOS</button>
+</nav>
+<main>
+<section id="story" class="panel">
+  <div class="story">
+    <div class="slidebox card"><img id="storyImg" alt="Escena del cuento de la Pandorga palmera"></div>
+    <aside class="side card">
+      <div class="kicker">CUANDO ACERINA ERA PEQUEÑA…</div>
+      <h2 id="storyTitle"></h2>
+      <p id="storyText"></p>
+      <div class="counter" id="storyCount"></div>
+      <button class="btn" id="speakBtn">🔊 LEER EN VOZ ALTA</button>
+      <div class="controls"><button class="btn" id="prevStory">← ANTERIOR</button><button class="btn primary" id="nextStory">SIGUIENTE →</button></div>
+    </aside>
+  </div>
+</section>
 
-.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button{border:2px solid var(--line);border-radius:12px;padding:9px 12px;background:#fff;font-weight:900}.tabs .on{background:var(--p);color:#fff;border-color:var(--p)}.story{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}.story img{width:100%;height:420px;object-fit:cover;border-radius:20px}.storyText{font-size:clamp(19px,2.2vw,27px);line-height:1.55}.audioGrid{display:grid;grid-template-columns:1fr 1fr;gap:15px}audio{width:100%}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer{min-height:70px;border:0;border-radius:16px;background:#eaf3f8;font-weight:900;font-size:18px}.voc{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.voc h2{color:var(--p);font-size:30px}@media(max-width:850px){.story{grid-template-columns:1fr}.audioGrid,.voc{grid-template-columns:1fr}}</style></head><body><main class="shell"><header class="header"><div class="brand"><div class="mark">P</div><div><div class="kicker">EL ZURRÓN · CUENTO</div><h1>La pandorga palmera</h1></div></div><a class="back" href="../">← LETRA P</a></header><div class="content"><div class="tabs"><button class="on" data-tab="cuento">CUENTO</button><button data-tab="canciones">CANCIONES</button><button data-tab="quiz">COMPRENSIÓN</button><button data-tab="vocab">VOCABULARIO</button></div>
-<section id="cuento" class="panel"><div class="story card" style="margin-top:12px"><div><h2 id="sceneTitle"></h2><p id="sceneText" class="storyText"></p><div class="controls"><button class="btn" id="prev">ANTERIOR</button><span id="counter"></span><button class="btn primary" id="next">SIGUIENTE</button></div></div><img src="https://drive.google.com/thumbnail?id=1Cp03YB6oRzqRmf06tDStjaePO1RqL72P&sz=w1600" alt="Ilustración de la pandorga palmera"></div></section>
-<section id="canciones" class="panel hidden"><div class="audioGrid" style="margin-top:12px"><article class="card"><h2>Rima de la Pandorga palmera</h2><p class="sub">Parapapá · Párapa párapa parapapá.</p><audio controls src="https://drive.google.com/uc?export=download&id=1OTSMzi1F5OnJ9fVBSpf79AtAftB-GZzj"></audio></article><article class="card"><h2>Base musical del cuento</h2><p class="sub">Acompañamiento para narrar el cuento.</p><audio controls src="https://drive.google.com/uc?export=download&id=1TJ3XCm9zaP5op7r-flLsxOkRW2Hr08SH"></audio></article></div></section>
-<section id="quiz" class="panel hidden"><div class="card" style="margin-top:12px;text-align:center"><div id="qcount"></div><h2 id="qtext" style="font-size:30px"></h2><div id="answers" class="answers"></div><div id="qfeedback" style="min-height:35px;font-size:22px;font-weight:900;margin:12px"></div><button id="qnext" class="btn primary hidden">SIGUIENTE PREGUNTA</button></div></section>
-<section id="vocab" class="panel hidden"><div class="voc" style="margin-top:12px" id="voc"></div></section></div></main>
-<script>const SCENES=[["1 · Acerina recuerda su infancia","Acerina miró unas fotografías antiguas y comenzó a recordar. Cuando era una pepona, una niña pequeña, vivía en La Palma, la Isla Bonita. Cada cinco años celebraban la Bajada de la Virgen de las Nieves. ¡Y le encantaban las pandorgas!"],["2 · Preparamos las pandorgas","Acerina, sus hermanos y sus primos preparaban figuras con cañas y papeles de muchos colores. Había pandorgas de formas diferentes. ¡Eran preciosas!"],["3 · El desfile de luces","Por la noche llevaban las pandorgas por las calles de Santa Cruz de La Palma. Se iluminaban y sus colores brillaban en la oscuridad. Había música, alegría y parrandas. Aunque hacía pelete, nadie quería marcharse."],["4 · La hoguera y los recuerdos","Al terminar, las pandorgas se quemaban en una gran hoguera. Acerina recuerda aquellos días felices y se emociona. Olegario la abraza y le promete llevarla a la próxima Bajada, ¡aunque sea nadando!"]],QUIZ=[["¿Qué miraba Acerina al comenzar el cuento?",["Unas fotografías antiguas","Un mapa","Una pandorga nueva"],0],["¿En qué isla vivía Acerina cuando era pequeña?",["Tenerife","La Palma","El Hierro"],1],["¿Con qué materiales preparaban las pandorgas?",["Con cañas y papeles de colores","Con piedra y barro","Con metal"],0],["¿Qué hacían los niños durante el desfile?",["Dormían","Llevaban las pandorgas, cantaban y bailaban","Iban a pescar"],1],["¿Por qué lloraba Acerina?",["Porque recordaba momentos felices","Porque tenía frío","Porque perdió una pandorga"],0],["¿Qué le prometió Olegario?",["Comprar una casa","Llevarla a la próxima Bajada","Hacer una paella"],1]],VOC=[["pandorga","pan · dor · ga","Figura de cañas y papel de colores que se ilumina en la fiesta.","Acerina llevaba una pandorga de colores."],["parranda","pa · rran · da","Grupo de personas que se reúne para cantar y tocar música.","La parranda llenaba la calle de música."],["pelete","pe · le · te","Palabra canaria para decir que hace frío.","Aquella noche hacía pelete en La Palma."],["pepona","pe · po · na","En el cuento, manera cariñosa de llamar a una niña pequeña.","Acerina era una pepona cuando iba a la fiesta."]];const $=x=>document.getElementById(x);let si=0,qi=0,score=0;document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.panel').forEach(x=>x.classList.add('hidden'));$(b.dataset.tab).classList.remove('hidden')});function scene(){$('sceneTitle').textContent=SCENES[si][0];$('sceneText').textContent=SCENES[si][1];$('counter').textContent='Página '+(si+1)+' de '+SCENES.length;$('prev').disabled=si===0;$('next').disabled=si===SCENES.length-1}$('prev').onclick=()=>{si--;scene()};$('next').onclick=()=>{si++;scene()};scene();function showQ(){if(qi>=QUIZ.length){$('qcount').textContent='Comprensión completada';$('qtext').textContent=score+' / '+QUIZ.length;$('answers').innerHTML='';$('qfeedback').textContent='';$('qnext').textContent='VOLVER A JUGAR';$('qnext').classList.remove('hidden');$('qnext').onclick=()=>{qi=0;score=0;showQ()};return}let q=QUIZ[qi];$('qcount').textContent='Pregunta '+(qi+1)+' de '+QUIZ.length;$('qtext').textContent=q[0];$('answers').innerHTML='';$('qfeedback').textContent='';$('qnext').classList.add('hidden');q[1].forEach((a,j)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>{document.querySelectorAll('.answer').forEach(x=>x.disabled=true);if(j===q[2]){b.style.background='#dff5e6';score++;$('qfeedback').textContent='✓ Correcto'}else{b.style.background='#ffe2df';$('qfeedback').textContent='La respuesta correcta es: '+q[1][q[2]]}$('qnext').classList.remove('hidden');$('qnext').onclick=()=>{qi++;showQ()}};$('answers').appendChild(b)})}showQ();$('voc').innerHTML=VOC.map(v=>'<article class="card"><h2>'+v[0]+'</h2><strong>'+v[1]+'</strong><p>'+v[2]+'</p><p class="sub"><b>En el cuento:</b> '+v[3]+'</p></article>').join('');</script></body></html>
+<section id="songs" class="panel hidden">
+  <div class="audioGrid">
+    <article class="audioCard card">
+      <div class="kicker">RIMA DE LA PANDORGA PALMERA</div>
+      <h2>Parapapá</h2>
+      <div class="lyrics">Parapapá · Parapapá · Párapa párapa parapapá.<br><br>La Pandorga palmera brilla sin parar, las luces y sombras se hacen notar. Con un pasacalle se marca el compás y una gran hoguera anuncia el final.</div>
+      <audio controls preload="metadata" src="assets/audio/rima-pandorga.mp3"></audio>
+    </article>
+    <article class="audioCard card">
+      <div class="kicker">ACOMPAÑAMIENTO</div>
+      <h2>Base musical del cuento</h2>
+      <p>Para escuchar o acompañar la narración de «La pandorga palmera».</p>
+      <audio controls preload="metadata" src="assets/audio/base-cuento-pandorga.mp3"></audio>
+    </article>
+  </div>
+</section>
+
+<section id="comp" class="panel hidden">
+  <div class="qgrid" id="questions"></div>
+  <div class="order card">
+    <div class="kicker">ORDENAMOS LA HISTORIA</div>
+    <h2>¿Cuál va primero, después y al final?</h2>
+    <p>Toca las letras en el orden correcto.</p>
+    <div class="orderSeq" id="orderSeq">—</div>
+    <div class="orderBtns"><button data-o="A">A</button><button data-o="B">B</button><button data-o="C">C</button></div>
+    <div class="orderResult" id="orderResult"></div>
+    <button class="btn" id="resetOrder">BORRAR</button>
+  </div>
+</section>
+
+<section id="vocab" class="panel hidden">
+  <div class="vocab" id="vocabGrid"></div>
+</section>
+
+<section id="info" class="panel hidden">
+  <div class="infoLayout">
+    <div class="slidebox card"><img id="infoImg" alt="Página informativa sobre la pandorga palmera"></div>
+    <aside class="infoSide card">
+      <div class="kicker">LEEMOS PARA APRENDER</div>
+      <h2>La pandorga palmera</h2>
+      <p style="margin:0;color:var(--muted);line-height:1.4">Usamos títulos, subtítulos, imágenes y texto para localizar información.</p>
+      <div class="infoList" id="infoList"></div>
+      <div class="controls"><button class="btn" id="prevInfo">← ANTERIOR</button><button class="btn primary" id="nextInfo">SIGUIENTE →</button></div>
+    </aside>
+  </div>
+</section>
+</main>
+</div>
+<div class="safe"></div>
+
+<script>
+const STORY=[
+ {title:'1 · Cuando Acerina era pequeña…',text:'La Pandorga palmera.',img:'assets/story/scene-01.png'},
+ {title:'2 · Acerina recuerda su infancia',text:'Acerina miró las fotos y comenzó a recordar. Cuando era una pepona, una niña pequeña, vivía en La Palma, la Isla Bonita. Cada cinco años celebrábamos la Bajada de la Virgen de las Nieves. ¡Y me encantaban las pandorgas!',img:'assets/story/scene-02.png'},
+ {title:'3 · Preparamos las pandorgas',text:'Mis hermanos, mis primos y yo preparábamos figuras con cañas y papeles de muchos colores. Había pandorgas de diferentes formas. ¡Eran preciosas!',img:'assets/story/scene-03.png'},
+ {title:'4 · El desfile de las pandorgas',text:'Por la noche, llevábamos las pandorgas por las calles de Santa Cruz de La Palma. Las pandorgas se iluminaban y sus colores brillaban en la oscuridad. ¡Parecían pequeñas luces que caminaban por la ciudad!',img:'assets/story/scene-04.png'},
+ {title:'5 · Música y alegría',text:'Había música, alegría y parrandas. Nosotros cantábamos y bailábamos durante el desfile. Aunque hacía pelete, nadie quería marcharse a casa.',img:'assets/story/scene-05.png'},
+ {title:'6 · La hoguera final',text:'Al terminar, llegaba un momento muy emocionante: las pandorgas se quemaban en una gran hoguera. Yo miraba las llamas junto a mi familia. ¡Qué noches tan bonitas!',img:'assets/story/scene-06.png'},
+ {title:'7 · Los recuerdos emocionan',text:'Acerina dejó de hablar un momento. Echedey le preguntó por qué tenía lágrimas en los ojos. Acerina explicó que recordaba aquellos días felices y que la polca de los Enanos todavía la emocionaba.',img:'assets/story/scene-07.png'},
+ {title:'8 · Un abrazo de Olegario',text:'Olegario se acercó y la abrazó. «¡No llores, mi pambufa! ¡Yo te llevo a la próxima Bajada aunque sea nadando!». Todos comenzaron a reír y Acerina volvió a sentirse aquella niña de La Palma.',img:'assets/story/scene-08.png'}
+];
+const QUESTIONS=[
+ ['¿Qué miraba Acerina al comenzar el cuento?','Miraba unas fotografías antiguas de las pandorgas.'],
+ ['¿En qué isla vivía Acerina cuando era pequeña?','Vivía en La Palma, la Isla Bonita.'],
+ ['¿Con qué materiales preparaban las pandorgas?','Con cañas y papeles de muchos colores.'],
+ ['¿Qué hacían los niños durante el desfile?','Llevaban las pandorgas, cantaban y bailaban.'],
+ ['¿Por qué lloraba Acerina?','Porque recordaba momentos felices de su infancia.'],
+ ['¿Qué le prometió Olegario?','Que la llevaría a la próxima Bajada, ¡aunque fuera nadando!']
+];
+const VOCAB=[
+ {w:'pandorga',s:'pan · dor · ga',d:'Figura de cañas y papel de colores que se ilumina en la fiesta.',e:'Acerina llevaba una pandorga de colores.',p:'¿Qué sonido escuchas al principio?  /p/'},
+ {w:'parranda',s:'pa · rran · da',d:'Grupo de personas que se reúne para cantar y tocar música.',e:'La parranda llenaba la calle de música.',p:'¿Escuchas /p/ al principio?  Sí, /p/.'},
+ {w:'pelete',s:'pe · le · te',d:'Palabra canaria para decir que hace frío.',e:'Aquella noche hacía pelete en La Palma.',p:'¿Qué vocal escuchas después de /p/?  /e/'},
+ {w:'pepona',s:'pe · po · na',d:'En el cuento, manera cariñosa de llamar a una niña pequeña.',e:'Acerina era una pepona cuando iba a la fiesta.',p:'¿Cuántas veces escuchas /p/?  Dos veces.'}
+];
+const INFO=[
+ ['Portada','assets/info/info-01.png'],
+ ['¿Qué es una pandorga?','assets/info/info-02.png'],
+ ['¿Cómo se construye?','assets/info/info-03.png'],
+ ['Ilustración con etiquetas','assets/info/info-04.png'],
+ ['¿Cuándo se celebra?','assets/info/info-05.png'],
+ ['¿Cómo es la fiesta?','assets/info/info-06.png'],
+ ['¡Buscamos información!','assets/info/info-07.png'],
+ ['¿Qué hemos aprendido?','assets/info/info-08.png']
+];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+$$('.tabs button').forEach(b=>b.onclick=()=>{
+  $$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  ['story','songs','comp','vocab','info'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==b.dataset.tab));
+});
+
+let si=0;
+function renderStory(){
+ const x=STORY[si]; $('#storyImg').src=x.img; $('#storyTitle').textContent=x.title; $('#storyText').textContent=x.text;
+ $('#storyCount').textContent=(si+1)+' / '+STORY.length;
+ $('#prevStory').disabled=si===0; $('#nextStory').disabled=si===STORY.length-1;
+}
+$('#prevStory').onclick=()=>{if(si>0){si--;renderStory()}};
+$('#nextStory').onclick=()=>{if(si<STORY.length-1){si++;renderStory()}};
+$('#speakBtn').onclick=()=>{
+ if(!('speechSynthesis' in window))return;
+ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(STORY[si].text);u.lang='es-ES';u.rate=.88;speechSynthesis.speak(u);
+};
+renderStory();
+
+const q=$('#questions');
+QUESTIONS.forEach((x,i)=>{
+ const a=document.createElement('article');a.className='qcard card';
+ a.innerHTML='<div class="qnum">PREGUNTA '+(i+1)+'</div><h3>'+x[0]+'</h3><button class="btn primary">VER RESPUESTA</button><div class="answer">'+x[1]+'</div>';
+ a.querySelector('button').onclick=()=>a.classList.toggle('open');q.appendChild(a);
+});
+
+let order=[];
+function renderOrder(){
+ $('#orderSeq').textContent=order.length?order.join(' → '):'—';
+ $$('.orderBtns button').forEach(b=>b.classList.toggle('used',order.includes(b.dataset.o)));
+ if(order.length===3){
+   const ok=order.join('')==='BCA'; $('#orderResult').textContent=ok?'✓ ¡Correcto! 1.º B → 2.º C → 3.º A':'Todavía no. Piensa qué ocurrió primero.';
+   $('#orderResult').style.color=ok?'var(--good)':'var(--bad)';
+ }
+}
+$$('.orderBtns button').forEach(b=>b.onclick=()=>{if(!order.includes(b.dataset.o)&&order.length<3){order.push(b.dataset.o);renderOrder()}});
+$('#resetOrder').onclick=()=>{order=[];$('#orderResult').textContent='';renderOrder()};
+
+const vg=$('#vocabGrid');
+VOCAB.forEach(v=>{
+ const a=document.createElement('article');a.className='vcard card';
+ a.innerHTML='<div class="word">'+v.w+'</div><div class="syll">'+v.s+'</div><div class="vlabel">¿QUÉ SIGNIFICA?</div><div class="vtext">'+v.d+'</div><div class="vlabel">EN EL CUENTO</div><div class="vtext">'+v.e+'</div><div class="phon">'+v.p+'</div>';
+ vg.appendChild(a);
+});
+
+let ii=0;
+function renderInfo(){
+ $('#infoImg').src=INFO[ii][1];
+ $('#prevInfo').disabled=ii===0;$('#nextInfo').disabled=ii===INFO.length-1;
+ $$('#infoList button').forEach((b,i)=>b.classList.toggle('on',i===ii));
+}
+INFO.forEach((x,i)=>{const b=document.createElement('button');b.textContent=(i+1)+' · '+x[0];b.onclick=()=>{ii=i;renderInfo()};$('#infoList').appendChild(b)});
+$('#prevInfo').onclick=()=>{if(ii>0){ii--;renderInfo()}};
+$('#nextInfo').onclick=()=>{if(ii<INFO.length-1){ii++;renderInfo()}};
+renderInfo();
+</script>
+</body></html>

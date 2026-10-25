@@ -1,5 +1,8 @@
 name: Extract P pictograms
 on:
+  push:
+    paths:
+      - '.github/workflows/extract-p-pictograms.yml'
   workflow_dispatch:
 permissions:
   contents: write

@@ -1,0 +1,45 @@
+name: Build final P assets
+on:
+  push:
+    paths:
+      - '.github/workflows/build-p-final-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip pillow
+      - name: Build tracing source images
+        run: |
+          mkdir -p /tmp/pdir trazo/assets p/cuento/assets/audio
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=1efyOsEn3RTwE99lgnOmS_6DDa5u49H7n&export=download&confirm=t" -o /tmp/pdir/source.pdf
+          pdftoppm -f 1 -l 2 -r 180 -png /tmp/pdir/source.pdf /tmp/pdir/page
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          files=sorted(Path('/tmp/pdir').glob('page-*.png'))
+          if len(files)<2: raise SystemExit('No se renderizaron las dos páginas')
+          p=Image.open(files[0]).convert('RGB').crop((80,180,1120,1260))
+          P=Image.open(files[1]).convert('RGB').crop((180,210,1100,1240))
+          p.save('trazo/assets/p-lower-source.webp','WEBP',quality=82,method=6)
+          P.save('trazo/assets/P-upper-source.webp','WEBP',quality=82,method=6)
+          PY
+      - name: Download final audio variants
+        run: |
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=14QEHZK_b7649C-IzNdaOyWURFml5mAyE&export=download&confirm=t" -o "p/cuento/assets/audio/base-rondalla.mp3"
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=11o5J-sgtVEEBjmJc4GPZvzEP5CsDDQuA&export=download&confirm=t" -o "p/cuento/assets/audio/base-orquestal.mp3"
+          file trazo/assets/*.webp p/cuento/assets/audio/*.mp3
+      - name: Commit assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add trazo/assets/p-lower-source.webp trazo/assets/P-upper-source.webp p/cuento/assets/audio/base-rondalla.mp3 p/cuento/assets/audio/base-orquestal.mp3
+          git diff --cached --quiet || git commit -m "Integrar recursos finales de audio y trazo P"
+          git push

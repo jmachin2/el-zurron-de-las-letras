@@ -47,6 +47,7 @@ main{min-height:0;overflow:hidden}.panel{height:100%;padding:10px 12px;overflow:
   <button data-tab="comp">COMPRENSIÓN</button>
   <button data-tab="vocab">VOCABULARIO</button>
   <button data-tab="info">APRENDEMOS</button>
+  <button data-tab="original">AMPLIAMOS EL CUENTO</button>
 </nav>
 <main>
 <section id="story" class="panel">
@@ -72,10 +73,22 @@ main{min-height:0;overflow:hidden}.panel{height:100%;padding:10px 12px;overflow:
       <audio controls preload="metadata" src="assets/audio/rima-pandorga.mp3"></audio>
     </article>
     <article class="audioCard card">
-      <div class="kicker">ACOMPAÑAMIENTO</div>
-      <h2>Base musical del cuento</h2>
-      <p>Para escuchar o acompañar la narración de «La pandorga palmera».</p>
+      <div class="kicker">CUENTO</div>
+      <h2>Base musical original</h2>
+      <p>Base para acompañar la narración del cuento.</p>
       <audio controls preload="metadata" src="assets/audio/base-cuento-pandorga.mp3"></audio>
+    </article>
+    <article class="audioCard card">
+      <div class="kicker">VERSIÓN MUSICAL</div>
+      <h2>Rondalla</h2>
+      <p>Versión con sonoridad de rondalla para acompañar el ambiente palmero.</p>
+      <audio controls preload="metadata" src="assets/audio/base-rondalla.mp3"></audio>
+    </article>
+    <article class="audioCard card">
+      <div class="kicker">VERSIÓN MUSICAL</div>
+      <h2>Orquestal</h2>
+      <p>Versión orquestal de la base de «La Pandorga palmera».</p>
+      <audio controls preload="metadata" src="assets/audio/base-orquestal.mp3"></audio>
     </article>
   </div>
 </section>
@@ -107,6 +120,16 @@ main{min-height:0;overflow:hidden}.panel{height:100%;padding:10px 12px;overflow:
       <div class="infoList" id="infoList"></div>
       <div class="controls"><button class="btn" id="prevInfo">← ANTERIOR</button><button class="btn primary" id="nextInfo">SIGUIENTE →</button></div>
     </aside>
+  </div>
+</section>
+<section id="original" class="panel hidden">
+  <div class="qgrid">
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 1</div><h3>Para Olegario, «pandorga» significaba otra cosa</h3><p>Cuando Acerina hablaba emocionada de la Pandorga, Olegario no lo entendía al principio. Como pescador, conocía la pandorga como una gueldera que utilizaba para pescar en los charquitos con sus nietos. Para Acerina, en cambio, era un recuerdo de su infancia palmera.</p></article>
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 2</div><h3>¿Por qué se celebra la Bajada?</h3><p>El relato explica que los palmeros y palmeras tienen una gran devoción por la Virgen de las Nieves y recuerdan que, según la tradición, los ha protegido de piratas, sequías y plagas.</p></article>
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 3</div><h3>La luz de las pandorgas</h3><p>Las figuras se hacían con cañas o maderas y papeles de vivos colores. Llevaban una luz en su interior. Cuando se apagaban las farolas, sus luces parpadeantes alumbraban las calles y el camino.</p></article>
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 4</div><h3>Parrandas, pelete y emoción</h3><p>Durante el desfile se formaban grandes parrandas. Acerina y sus hermanos disfrutaban de la música y se emocionaban cuando llegaba el momento de quemar las pandorgas en la hoguera final. Ni siquiera el pelete de la noche les quitaba las ganas de bailar.</p></article>
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 5</div><h3>El principio de la Semana Grande</h3><p>Para Acerina no era una fiesta cualquiera: la Pandorga anunciaba el comienzo de la Semana Grande. Por eso la familia regresaba cada cinco años a La Palma para vivir la Bajada y rendir homenaje a «La Morenita».</p></article>
+    <article class="qcard card"><div class="qnum">DEL CUENTO ORIGINAL · 6</div><h3>La polca de los Enanos</h3><p>Escuchar la famosa polca de los Enanos era una de las debilidades de Acerina. Cada vez que sonaba, se emocionaba y sus ojos se iluminaban «como los famosos farolillos palmeros». Entonces Olegario la consolaba con su promesa de llevarla a la próxima Bajada.</p></article>
   </div>
 </section>
 </main>
@@ -152,7 +175,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
 $$('.tabs button').forEach(b=>b.onclick=()=>{
   $$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  ['story','songs','comp','vocab','info'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==b.dataset.tab));
+  ['story','songs','comp','vocab','info','original'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==b.dataset.tab));
 });
 
 let si=0;

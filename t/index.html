@@ -43,7 +43,7 @@ function say(t){speechSynthesis.cancel();const v=new SpeechSynthesisUtterance(St
 function rich(t){return String(t).replace(/t/gi,a=>'<span class="t">'+a+'</span>')}
 const levels=[
 {title:"1 · Sílabas",type:"syllables",pool:["ta","te","ti","to","tu","at","et","it","ot","ut","TA","TE","TI","TO","TU"]},
-{title:"2 · Palabras",type:"words",pool:["pastel","Timplillo","tomates","Tenerife","pato","seta","tienda","maletín","tunera","tunos","moto","pelotas"]},
+{title:"2 · Palabras",type:"words",pool:["pastel","Timplillo","tomate","Tenerife","pato","seta","tienda","maletín","tunera","tunos","moto","pelotas"]},
 {title:"3 · Grupos",type:"groups",pool:["la nata","el topo","la tapa","esta lata","ese pito","la meta","esa tos","estas telas","una tila","este auto"]},
 {title:"4 · Oraciones",type:"sentences",pool:["La tunera tiene tunos de todos los tamaños.","Mi tío Tomás tiene una moto.","Don Pepito y Doña Teodora son los abuelos de Matías.","Maite tiene siete pelotas de tenis.","Tú y Tito tienen que meter las maletas."]}];
 let lv=0,ri=0,confirmed=false;

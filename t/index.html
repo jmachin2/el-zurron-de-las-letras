@@ -38,7 +38,7 @@ const sections=["home","cartilla","mision","cuento","trazo"];
 let active="home";
 function show(id){sections.forEach(x=>$(x).classList.toggle("active",x===id));active=id;window.scrollTo(0,0);speechSynthesis.cancel()}
 document.querySelectorAll("[data-go]").forEach(x=>x.addEventListener("click",()=>show(x.dataset.go)));
-$("back").addEventListener("click",()=>active==="home"?location.assign("/"):show("home"));
+$("back").addEventListener("click",()=>active==="home"?location.assign(new URL("../", location.href).href):show("home"));
 function say(t){speechSynthesis.cancel();const v=new SpeechSynthesisUtterance(String(t).replaceAll("·"," "));v.lang="es-ES";v.rate=.84;speechSynthesis.speak(v)}
 function rich(t){return String(t).replace(/t/gi,a=>'<span class="t">'+a+'</span>')}
 const levels=[

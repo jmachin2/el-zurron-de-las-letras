@@ -1038,7 +1038,7 @@ h1{font-size:clamp(22px,2.7vw,32px)!important;margin-bottom:2px!important}
     <!-- PASO 3 -->
     <section id="screenSound" class="stage hidden">
       <div class="stepLabel">PASO 3</div>
-      <div class="question">¿Dónde suena la S?</div>
+      <div class="question">¿Dónde suena la T?</div>
       <div id="soundWord" class="word"></div>
       <div id="soundSyllables" class="syllables"></div>
       <div id="soundFeedback" class="feedback" aria-live="polite"></div>
@@ -1383,7 +1383,7 @@ function completeSoundStep(){
   const targets=getSoundTargets();
   $$('#soundSyllables .syll').forEach(b=>b.disabled=true);
   $('#soundFeedback').className='feedback ok';
-  $('#soundFeedback').textContent='Muy bien. Has encontrado dónde suena la S.';
+  $('#soundFeedback').textContent='Muy bien. Has encontrado dónde suena la T.';
   addPoints(pointsFor(soundTries));
   show('#toSentenceBtn');
   refitStage();
@@ -1520,7 +1520,7 @@ if(fullscreenBtn){
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/t/", "/s/centro/", "/s/mision/", "/s/cuento/", "/l/", "/l/centro/", "/l/mision/","/t/","/t/centro/","/t/mision/","/t/cuento/","/t/trazo/"]);
+  const ROUTES = new Set(["/", "/m/", "/m/centro/", "/m/mision/", "/t/", "/t/centro/", "/t/mision/", "/t/cuento/", "/l/", "/l/centro/", "/l/mision/","/t/","/t/centro/","/t/mision/","/t/cuento/","/t/trazo/"]);
 
   function normalizeInternal(href) {
     if (!href) return null;

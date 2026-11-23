@@ -77,7 +77,7 @@ button{font:inherit}
 
 <main class="app">
  <header class="top">
-  <a class="back" href="../">← LETRA R</a><div class="mark">R</div>
+  <a class="back" href="../" id="backR">← LETRA R</a><div class="mark">R</div>
   <div class="title"><h1>El taller de las erres</h1><p>Juego manipulativo · r / rr</p></div>
   <div class="progress"><div class="stars" id="stars">★ 0</div><div class="counter" id="counter">1 / 14</div></div>
  </header>
@@ -210,5 +210,11 @@ $$('.tile').forEach(t=>{
 });
 $('#listen').onclick=()=>speak(current().w);$('#rhyme').onclick=()=>rhyme('Empezamos con '+current().w);$('#hint').onclick=showHint;
 $('#hearIntro').onclick=()=>rhyme();$('#play').onclick=()=>{$('#start').classList.add('off');render()};
+document.getElementById('backR').addEventListener('click',(ev)=>{
+  if(window.parent && window.parent!==window){
+    ev.preventDefault();ev.stopImmediatePropagation();
+    window.parent.postMessage({type:'zurron:navigate',path:'/r/'},'*');
+  }
+});
 </script>
 </body></html>

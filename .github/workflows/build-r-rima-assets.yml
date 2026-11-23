@@ -1,0 +1,58 @@
+name: Build R rima pictograms
+on:
+  push:
+    paths:
+      - '.github/workflows/build-r-rima-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pip pillow
+      - name: Download and render source PDF
+        run: |
+          mkdir -p /tmp/rr r/juego-r-rr/assets
+          curl -L --fail --retry 3 "https://drive.usercontent.google.com/download?id=1FG82HrQeygcizrPrvllJB1z93S7GBXDn&export=download&confirm=t" -o /tmp/rr/source.pdf
+          pdftoppm -f 3 -l 9 -r 150 -png /tmp/rr/source.pdf /tmp/rr/page
+      - name: Crop original pictograms
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          names=[
+            ('carretera',3,0),('guitarra',3,1),
+            ('recreo',4,0),('jirafa',4,1),
+            ('burro',5,0),('rebeca',5,1),
+            ('perrera',6,0),('rana',6,1),
+            ('rosa',7,0),('pure',7,1),
+            ('jarra',8,0),('sonrisa',8,1),
+            ('torero',9,0),('enroscar',9,1),
+          ]
+          # pdftoppm names start at page-03.png / page-04.png depending version;
+          # locate by source-page sequence.
+          files=sorted(Path('/tmp/rr').glob('page-*.png'))
+          if len(files)!=7: raise SystemExit(f'Expected 7 renders, got {len(files)}: {files}')
+          page_map={3+i:files[i] for i in range(7)}
+          # Pictogram boxes are stable across pages 3-9.
+          boxes=[(145,125,510,455),(145,495,510,835)]
+          out=Path('r/juego-r-rr/assets')
+          for name,page,row in names:
+              im=Image.open(page_map[page]).convert('RGB')
+              crop=im.crop(boxes[row])
+              crop.save(out/f'{name}.webp','WEBP',quality=88,method=6)
+          PY
+      - name: Verify and commit
+        run: |
+          file r/juego-r-rr/assets/*.webp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add r/juego-r-rr/assets
+          git diff --cached --quiet || git commit -m "Añadir pictogramas originales juego R y RR"
+          git push

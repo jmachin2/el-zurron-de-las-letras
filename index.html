@@ -147,7 +147,7 @@ function siteRootURL(){
   const url=new URL(location.href);
   let path=url.pathname;
 
-  const routeSuffixes=["/a/trazo/","/e/trazo/","/i/trazo/","/o/trazo/","/u/trazo/","/d/centro/","/d/mision/","/d/cuento/","/d/trazo/","/m/centro/","/m/mision/","/s/centro/","/s/mision/","/s/cuento/","/l/centro/","/l/mision/","/l/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/"];
+  const routeSuffixes=["/a/trazo/","/e/trazo/","/i/trazo/","/o/trazo/","/u/trazo/","/d/centro/","/d/mision/","/d/cuento/","/d/trazo/","/m/centro/","/m/mision/","/s/centro/","/s/mision/","/s/cuento/","/l/centro/","/l/mision/","/l/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/r/"];
 
   for(const suffix of routeSuffixes){
     if(path.endsWith(suffix)){
@@ -164,7 +164,7 @@ function siteRootURL(){
 
 function initialRoute(){
   const path=location.pathname;
-  const candidates=["/a/trazo/","/e/trazo/","/i/trazo/","/o/trazo/","/u/trazo/","/d/centro/","/d/mision/","/d/cuento/","/d/trazo/","/m/centro/","/m/mision/","/s/centro/","/s/mision/","/s/cuento/","/l/centro/","/l/mision/","/l/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/"];
+  const candidates=["/a/trazo/","/e/trazo/","/i/trazo/","/o/trazo/","/u/trazo/","/d/centro/","/d/mision/","/d/cuento/","/d/trazo/","/m/centro/","/m/mision/","/s/centro/","/s/mision/","/s/cuento/","/l/centro/","/l/mision/","/l/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/r/"];
   for(const route of candidates){
     if(path.endsWith(route)) return route;
   }

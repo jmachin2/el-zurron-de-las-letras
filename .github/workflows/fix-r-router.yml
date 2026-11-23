@@ -11,16 +11,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Restore generic router on public R routes
+      - name: Patch router and R assets
         run: |
-          mkdir -p r/juego-r-rr
-          cp d/index.html r/index.html
-          cp d/index.html r/juego-r-rr/index.html
-      - name: Commit router files
+          python - <<'PY'
+          from pathlib import Path
+          src=Path('d/index.html').read_text(encoding='utf-8')
+          routes_old='"/d/trazo/":{"title":"Trazo de la D · La contraseña del Zurrón","src":"/app-content/d/trazo/index.html","direct":true}};'
+          routes_new='"/d/trazo/":{"title":"Trazo de la D · La contraseña del Zurrón","src":"/app-content/d/trazo/index.html","direct":true},"/r/":{"title":"Letra R · El Zurrón de las Letras","src":"/app-content/r/index.html","direct":true},"/r/juego-r-rr/":{"title":"El taller de las erres · R o RR","src":"/app-content/r/juego-r-rr/index.html","direct":true}};'
+          if routes_old not in src:
+              raise SystemExit('No se encontró el final de ROUTES esperado')
+          src=src.replace(routes_old,routes_new,1)
+
+          old_suffix='"/l/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/"]'
+          new_suffix='"/l/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/r/"]'
+          count=src.count(old_suffix)
+          if count < 2:
+              raise SystemExit(f'Se esperaban 2 listas de rutas, encontradas {count}')
+          src=src.replace(old_suffix,new_suffix,2)
+
+          Path('r/index.html').write_text(src,encoding='utf-8')
+          Path('r/juego-r-rr/index.html').write_text(src,encoding='utf-8')
+
+          dest=Path('app-content/r/juego-r-rr/assets')
+          dest.mkdir(parents=True,exist_ok=True)
+          for p in Path('r/juego-r-rr/assets').glob('*.webp'):
+              (dest/p.name).write_bytes(p.read_bytes())
+          PY
+      - name: Verify R integration
+        run: |
+          grep -q '"/r/"' r/index.html
+          grep -q '"/r/juego-r-rr/"' r/index.html
+          test -f app-content/r/juego-r-rr/index.html
+          test "$(find app-content/r/juego-r-rr/assets -name '*.webp' | wc -l)" -eq 14
+      - name: Commit corrected R integration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add r/index.html r/juego-r-rr/index.html
-          git diff --cached --quiet || git commit -m "Integrar R en el router común del Zurrón"
+          git add r/index.html r/juego-r-rr/index.html app-content/r/juego-r-rr/assets
+          git diff --cached --quiet || git commit -m "Corregir router y recursos de la letra R"
           git pull --rebase origin main
           git push origin HEAD:main

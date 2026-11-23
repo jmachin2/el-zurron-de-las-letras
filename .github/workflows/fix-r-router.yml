@@ -11,43 +11,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch router and R assets
+      - name: Patch master router with R routes
         run: |
           python - <<'PY'
           from pathlib import Path
-          src=Path('d/index.html').read_text(encoding='utf-8')
-          routes_old='"/d/trazo/":{"title":"Trazo de la D · La contraseña del Zurrón","src":"/app-content/d/trazo/index.html","direct":true}};'
-          routes_new='"/d/trazo/":{"title":"Trazo de la D · La contraseña del Zurrón","src":"/app-content/d/trazo/index.html","direct":true},"/r/":{"title":"Letra R · El Zurrón de las Letras","src":"/app-content/r/index.html","direct":true},"/r/juego-r-rr/":{"title":"El taller de las erres · R o RR","src":"/app-content/r/juego-r-rr/index.html","direct":true}};'
-          if routes_old not in src:
-              raise SystemExit('No se encontró el final de ROUTES esperado')
-          src=src.replace(routes_old,routes_new,1)
+          src=Path('index.html').read_text(encoding='utf-8')
 
-          old_suffix='"/l/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/"]'
-          new_suffix='"/l/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/r/"]'
-          count=src.count(old_suffix)
-          if count < 2:
-              raise SystemExit(f'Se esperaban 2 listas de rutas, encontradas {count}')
-          src=src.replace(old_suffix,new_suffix,2)
+          if '"/r/":{"title":"Letra R · El Zurrón de las Letras"' not in src:
+              anchor='"/p/trazo/":{"title":"Trazo de la P · La contraseña del Zurrón","src":"/p/trazo/index.html","direct":true}};'
+              repl='"/p/trazo/":{"title":"Trazo de la P · La contraseña del Zurrón","src":"/p/trazo/index.html","direct":true},"/r/":{"title":"Letra R · El Zurrón de las Letras","src":"/app-content/r/index.html","direct":true},"/r/juego-r-rr/":{"title":"El taller de las erres · R o RR","src":"/app-content/r/juego-r-rr/index.html","direct":true}};'
+              if anchor not in src: raise SystemExit('No se encontró ancla ROUTES del router maestro')
+              src=src.replace(anchor,repl,1)
 
+          # Patch both route suffix list and initial candidates if needed.
+          old='"/p/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/p/"]'
+          new='"/p/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/p/","/r/"]'
+          src=src.replace(old,new)
+
+          # Write one synchronized router to root, 404, and R public entrypoints.
+          Path('index.html').write_text(src,encoding='utf-8')
+          Path('404.html').write_text(src,encoding='utf-8')
+          Path('r').mkdir(exist_ok=True)
+          Path('r/juego-r-rr').mkdir(parents=True,exist_ok=True)
           Path('r/index.html').write_text(src,encoding='utf-8')
           Path('r/juego-r-rr/index.html').write_text(src,encoding='utf-8')
-
-          dest=Path('app-content/r/juego-r-rr/assets')
-          dest.mkdir(parents=True,exist_ok=True)
-          for p in Path('r/juego-r-rr/assets').glob('*.webp'):
-              (dest/p.name).write_bytes(p.read_bytes())
           PY
-      - name: Verify R integration
+      - name: Verify complete R router integration
         run: |
-          grep -q '"/r/"' r/index.html
-          grep -q '"/r/juego-r-rr/"' r/index.html
+          grep -q '"/r/":{"title":"Letra R' index.html
+          grep -q '"/r/juego-r-rr/"' index.html
+          grep -q '"/r/":{"title":"Letra R' r/index.html
+          grep -q '"/r/juego-r-rr/"' r/juego-r-rr/index.html
+          test -f app-content/r/index.html
           test -f app-content/r/juego-r-rr/index.html
-          test "$(find app-content/r/juego-r-rr/assets -name '*.webp' | wc -l)" -eq 14
-      - name: Commit corrected R integration
+      - name: Commit synchronized routers
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add r/index.html r/juego-r-rr/index.html app-content/r/juego-r-rr/assets
-          git diff --cached --quiet || git commit -m "Corregir router y recursos de la letra R"
+          git add index.html 404.html r/index.html r/juego-r-rr/index.html
+          git diff --cached --quiet || git commit -m "Sincronizar router maestro con letra R"
           git pull --rebase origin main
           git push origin HEAD:main

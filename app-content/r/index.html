@@ -13,7 +13,7 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 .back{justify-self:start;display:inline-flex;align-items:center;min-height:38px;padding:6px 11px;border-radius:13px;border:1px solid rgba(216,228,237,.95);background:rgba(255,255,255,.94);font-weight:950}
 .heroTop{display:flex;align-items:center;gap:12px}.mark{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:var(--r);color:#fff;font-size:37px;font-weight:950}
 .kicker{font-size:11px;font-weight:950;letter-spacing:.08em;color:#31536d}h1{margin:2px 0 0;font-size:36px;line-height:1}.sub{margin:4px 0 0;font-size:15px;font-weight:750;color:#355a75}
-.grid{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:start}
+.grid{width:100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:start}
 .card{height:360px;padding:20px;border-radius:24px;border:2px solid #edd7ca;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .card h2{margin:0 0 8px;font-size:clamp(22px,2vw,29px);line-height:1.08}.card p{margin:0 0 11px;color:var(--muted);font-size:15px;line-height:1.35}
 .chips{display:flex;flex-wrap:wrap;gap:5px}.chip{padding:5px 9px;border:1px solid rgba(23,50,77,.13);border-radius:999px;background:#fff;font-size:12px;font-weight:900}
@@ -56,12 +56,19 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
   <div class="chips"><span class="chip">r minúscula</span><span class="chip">R mayúscula</span><span class="chip">Pauta Montessori</span><span class="chip">Dirección</span></div>
   <div class="open">ABRIR ACTIVIDAD DE TRAZO</div>
 </a>
+
+<a class="card" href="/r/juego-r-rr/">
+  <h2>Juego · ¿R o RR?</h2>
+  <p>Escucha, reconoce el pictograma y decide si cada hueco necesita una r o dos erres.</p>
+  <div class="chips"><span class="chip">14 palabras</span><span class="chip">Pictogramas originales</span><span class="chip">Rima</span><span class="chip">r / rr</span></div>
+  <div class="open">ABRIR JUEGO R / RR</div>
+</a>
 </div>
 </div></section></main>
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/","/r/","/r/centro/","/r/mision/","/r/cuento/","/r/trazo/"]);
+  const ROUTES = new Set(["/","/r/","/r/centro/","/r/mision/","/r/cuento/","/r/trazo/","/r/juego-r-rr/"]);
   document.addEventListener('click',(ev)=>{
     const a=ev.target.closest('a[href]'); if(!a) return;
     let href=String(a.getAttribute('href')||'').trim(); if(!href.startsWith('/')) return;

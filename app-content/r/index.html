@@ -25,7 +25,7 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 </head>
 <body>
 <main class="page"><section class="shell"><div class="content">
-<a class="back" href="/">← EL ZURRÓN DE LAS LETRAS</a>
+<a class="back" href="../..">← EL ZURRÓN DE LAS LETRAS</a>
 <div class="heroTop"><div class="mark">R</div><div><div class="kicker">EL ZURRÓN DE LAS LETRAS</div><h1>Letra R</h1><p class="sub">Elige una actividad para seguir jugando y aprendiendo.</p></div></div>
 
 <div class="grid">
@@ -53,7 +53,7 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
   <div class="chips"><span class="chip">r minúscula</span><span class="chip">R mayúscula</span><span class="chip">Pauta Montessori</span><span class="chip">Dirección</span></div>
   <div class="open mutedOpen">EN PREPARACIÓN</div></div>
 
-<a class="card" href="/r/juego-r-rr/">
+<a class="card" href="juego-r-rr/">
   <h2>Juego · ¿R o RR?</h2>
   <p>Escucha, reconoce el pictograma y decide si cada hueco necesita una r o dos erres.</p>
   <div class="chips"><span class="chip">14 palabras</span><span class="chip">Pictogramas originales</span><span class="chip">Rima</span><span class="chip">r / rr</span></div>
@@ -64,13 +64,16 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/","/r/","/r/juego-r-rr/"]);
   document.addEventListener('click',(ev)=>{
     const a=ev.target.closest('a[href]'); if(!a) return;
-    let href=String(a.getAttribute('href')||'').trim(); if(!href.startsWith('/')) return;
-    let path=href.split('?')[0].split('#')[0]; if(path!=='/'&&!path.endsWith('/')) path+='/';
-    if(!ROUTES.has(path)) return;
-    if(window.parent&&window.parent!==window){ev.preventDefault();ev.stopImmediatePropagation();window.parent.postMessage({type:'zurron:navigate',path},'*');}
+    const href=a.getAttribute('href');
+    if(href==='juego-r-rr/' && window.parent && window.parent!==window){
+      ev.preventDefault();ev.stopImmediatePropagation();
+      window.parent.postMessage({type:'zurron:navigate',path:'/r/juego-r-rr/'},'*');
+    } else if(href==='../..' && window.parent && window.parent!==window){
+      ev.preventDefault();ev.stopImmediatePropagation();
+      window.parent.postMessage({type:'zurron:navigate',path:'/'},'*');
+    }
   },true);
 })();
 </script>

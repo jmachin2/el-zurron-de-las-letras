@@ -24,9 +24,11 @@ jobs:
               src=src.replace(anchor,repl,1)
 
           # Patch both route suffix list and initial candidates if needed.
-          old='"/p/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/p/"]'
-          new='"/p/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/p/","/r/"]'
-          src=src.replace(old,new)
+          old='"/l/trazo/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/"]'
+          new='"/l/trazo/","/r/juego-r-rr/","/a/","/e/","/i/","/o/","/u/","/d/","/m/","/s/","/l/","/r/"]'
+          count=src.count(old)
+          if count < 2: raise SystemExit(f'No se encontraron las dos listas base del router: {count}')
+          src=src.replace(old,new,2)
 
           # Write one synchronized router to root, 404, and R public entrypoints.
           Path('index.html').write_text(src,encoding='utf-8')

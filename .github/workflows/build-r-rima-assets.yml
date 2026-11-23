@@ -41,7 +41,7 @@ jobs:
           if len(files)!=7: raise SystemExit(f'Expected 7 renders, got {len(files)}: {files}')
           page_map={3+i:files[i] for i in range(7)}
           # Pictogram boxes are stable across pages 3-9.
-          boxes=[(165,145,455,395),(165,515,455,765)]
+          boxes=[(165,150,565,510),(165,590,565,950)]
           out=Path('r/juego-r-rr/assets')
           for name,page,row in names:
               im=Image.open(page_map[page]).convert('RGB')

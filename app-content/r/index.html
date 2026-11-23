@@ -17,7 +17,7 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 .card{height:360px;padding:20px;border-radius:24px;border:2px solid #edd7ca;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .card h2{margin:0 0 8px;font-size:clamp(22px,2vw,29px);line-height:1.08}.card p{margin:0 0 11px;color:var(--muted);font-size:15px;line-height:1.35}
 .chips{display:flex;flex-wrap:wrap;gap:5px}.chip{padding:5px 9px;border:1px solid rgba(23,50,77,.13);border-radius:999px;background:#fff;font-size:12px;font-weight:900}
-.open{margin-top:auto;min-height:50px;border-radius:16px;display:grid;place-items:center;background:var(--r);color:#fff;font-size:15px;font-weight:950;text-align:center;padding:8px}
+.pending{opacity:.72;border-style:dashed}.mutedOpen{background:#8a807a!important;cursor:default}.open{margin-top:auto;min-height:50px;border-radius:16px;display:grid;place-items:center;background:var(--r);color:#fff;font-size:15px;font-weight:950;text-align:center;padding:8px}
 @media(max-height:700px) and (min-width:901px){.content{padding:6px 14px 72px;gap:5px}.mark{width:42px;height:42px;font-size:26px}h1{font-size:26px}.sub{font-size:11px}.card{height:285px;padding:12px}.card h2{font-size:18px}.card p{font-size:11px}.chip{font-size:9px}.open{min-height:40px;font-size:10px}}
 @media(max-width:1100px) and (min-width:761px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{height:270px}}
 @media(max-width:760px){html,body{height:auto}body{overflow:auto}.page{height:auto;min-height:100dvh;padding:5px}.shell{height:auto;min-height:calc(100dvh - 10px)}.content{height:auto;min-height:calc(100dvh - 10px);padding:10px 10px 84px;display:flex;flex-direction:column}.grid{grid-template-columns:1fr}.card{height:auto;min-height:270px}}
@@ -29,33 +29,29 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 <div class="heroTop"><div class="mark">R</div><div><div class="kicker">EL ZURRÓN DE LAS LETRAS</div><h1>Letra R</h1><p class="sub">Elige una actividad para seguir jugando y aprendiendo.</p></div></div>
 
 <div class="grid">
-<a class="card" href="/r/centro/">
+<div class="card pending">
   <h2>Juego con la CARTILLA DE LECTURA de la R</h2>
   <p>Práctica progresiva con sílabas, palabras y frases de la cartilla de lectura de la R.</p>
   <div class="chips"><span class="chip">ra · re · ri · ro · ru</span><span class="chip">Lectura</span><span class="chip">Palabras</span><span class="chip">Frases</span></div>
-  <div class="open">ABRIR JUEGO DE CARTILLA</div>
-</a>
+  <div class="open mutedOpen">EN PREPARACIÓN</div></div>
 
-<a class="card" href="/r/mision/">
+<div class="card pending">
   <h2>Misión R · Conciencia fonémica y fonológica</h2>
   <p>Identifica pictogramas, cuenta sílabas, localiza el sonido trabajado y crea una oración.</p>
   <div class="chips"><span class="chip">Pictogramas</span><span class="chip">Sílabas</span><span class="chip">Fonema</span><span class="chip">Expresión oral</span></div>
-  <div class="open">ABRIR MISIÓN R</div>
-</a>
+  <div class="open mutedOpen">EN PREPARACIÓN</div></div>
 
-<a class="card" href="/r/cuento/">
+<div class="card pending">
   <h2>Cuento de la letra R</h2>
   <p>Acceso al cuento, comprensión oral, vocabulario y actividades relacionadas con la letra R.</p>
   <div class="chips"><span class="chip">Cuento</span><span class="chip">Comprensión</span><span class="chip">Vocabulario</span><span class="chip">Audio</span></div>
-  <div class="open">ABRIR CUENTO</div>
-</a>
+  <div class="open mutedOpen">EN PREPARACIÓN</div></div>
 
-<a class="card" href="/r/trazo/">
+<div class="card pending">
   <h2>La contraseña del Zurrón · Trazo r / R</h2>
   <p>Práctica de la r minúscula y la R mayúscula siguiendo el modelo original del Zurrón.</p>
   <div class="chips"><span class="chip">r minúscula</span><span class="chip">R mayúscula</span><span class="chip">Pauta Montessori</span><span class="chip">Dirección</span></div>
-  <div class="open">ABRIR ACTIVIDAD DE TRAZO</div>
-</a>
+  <div class="open mutedOpen">EN PREPARACIÓN</div></div>
 
 <a class="card" href="/r/juego-r-rr/">
   <h2>Juego · ¿R o RR?</h2>
@@ -68,7 +64,7 @@ body{overflow:hidden}a{text-decoration:none;color:inherit}.page{width:100%;heigh
 
 <script id="zurron-local-nav">
 (() => {
-  const ROUTES = new Set(["/","/r/","/r/centro/","/r/mision/","/r/cuento/","/r/trazo/","/r/juego-r-rr/"]);
+  const ROUTES = new Set(["/","/r/","/r/juego-r-rr/"]);
   document.addEventListener('click',(ev)=>{
     const a=ev.target.closest('a[href]'); if(!a) return;
     let href=String(a.getAttribute('href')||'').trim(); if(!href.startsWith('/')) return;

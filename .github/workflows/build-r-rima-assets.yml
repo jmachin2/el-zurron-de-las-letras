@@ -41,12 +41,16 @@ jobs:
           if len(files)!=7: raise SystemExit(f'Expected 7 renders, got {len(files)}: {files}')
           page_map={3+i:files[i] for i in range(7)}
           # Pictogram boxes are stable across pages 3-9.
-          boxes=[(145,125,510,455),(145,495,510,835)]
+          boxes=[(165,145,455,395),(165,515,455,765)]
           out=Path('r/juego-r-rr/assets')
           for name,page,row in names:
               im=Image.open(page_map[page]).convert('RGB')
               crop=im.crop(boxes[row])
-              crop.save(out/f'{name}.webp','WEBP',quality=88,method=6)
+              # Elimina el marco negro y conserva solo el pictograma, centrado.
+              bg=Image.new('RGB',(360,300),'white')
+              crop.thumbnail((300,240),Image.Resampling.LANCZOS)
+              bg.paste(crop,((360-crop.width)//2,(300-crop.height)//2))
+              bg.save(out/f'{name}.webp','WEBP',quality=92,method=6)
           PY
       - name: Verify and commit
         run: |

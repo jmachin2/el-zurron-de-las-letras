@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>El taller de las erres · El Zurrón de las Letras</title>
+<style>
+:root{
+  --ink:#17324d;--muted:#607486;--paper:#fffaf1;--line:#d8e4ed;
+  --r:#c45a2f;--rr:#8a4027;--gold:#f3c754;--good:#2e9b61;--bad:#c54a4a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;background:#eef5f9;color:var(--ink)}
+body{overflow:hidden}
+button{font:inherit}
+.app{height:100dvh;padding:8px 8px 62px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px}
+.top{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:8px 10px}
+.back{padding:8px 10px;border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--ink);font-weight:900;background:#fff}
+.mark{width:48px;height:48px;border-radius:15px;background:var(--r);color:#fff;display:grid;place-items:center;font-size:30px;font-weight:950}
+.title{min-width:0}.title h1{margin:0;font-size:clamp(20px,2.5vw,31px)}.title p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.progress{margin-left:auto;display:flex;align-items:center;gap:7px}.stars{font-weight:950;color:#8c6511}.counter{background:#fff3e9;border:1px solid #edcdb9;border-radius:12px;padding:8px 10px;font-weight:950}
+
+.game{min-height:0;display:grid;grid-template-columns:minmax(300px,.85fr) minmax(0,1.35fr);gap:10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:20px;min-height:0;overflow:hidden}
+.left{padding:12px;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:8px}
+.kicker{font-size:11px;letter-spacing:.07em;font-weight:950;color:var(--r)}
+.listenRow{display:flex;gap:8px;align-items:center}.listenBtn,.rhymeBtn{border:0;border-radius:13px;padding:10px 12px;font-weight:950;cursor:pointer}.listenBtn{background:var(--r);color:white;flex:1}.rhymeBtn{background:#fff3e8;color:var(--rr);border:1px solid #edcdb9}
+.pics{min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pic{min-height:0;border:2px solid var(--line);background:#fff;border-radius:17px;padding:7px;cursor:pointer;display:grid;place-items:center;position:relative;transition:.16s transform,.16s border-color,.16s box-shadow}
+.pic:hover{transform:translateY(-2px)}.pic img{width:100%;height:100%;max-height:200px;object-fit:contain}
+.pic.correct{border-color:var(--good);box-shadow:0 0 0 3px #d9f2e5}.pic.wrong{animation:shake .24s linear 2;border-color:var(--bad)}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+.right{padding:12px;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:9px}
+.workbench{min-height:0;border-radius:18px;background:linear-gradient(180deg,#fff9ef,#f7eadb);border:2px solid #ecd7bd;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px}
+.wordCard{width:min(860px,100%);background:#fff;border:2px solid #dfc7ab;border-radius:20px;padding:18px 14px;text-align:center;box-shadow:0 8px 20px rgba(80,50,20,.08)}
+.wordLabel{font-size:12px;color:var(--muted);font-weight:900;margin-bottom:8px}.word{font-size:clamp(32px,5.3vw,72px);font-weight:950;letter-spacing:.01em;line-height:1.18}
+.slot{display:inline-grid;place-items:center;min-width:clamp(54px,6vw,82px);height:1.05em;margin:0 3px;border:3px dashed #ce9d78;border-radius:13px;background:#fff8f1;vertical-align:baseline;color:var(--rr);font-size:.82em;cursor:pointer}
+.slot.active{border-color:var(--r);box-shadow:0 0 0 4px #f7d5c1}.slot.filled{border-style:solid;background:#fff0e4}.slot.good{border-color:var(--good);background:#eaf8f0}.slot.bad{border-color:var(--bad);background:#fff0f0}
+.tiles{display:flex;gap:16px;justify-content:center;align-items:center;flex-wrap:wrap}
+.tile{width:120px;height:82px;border:0;border-radius:18px;cursor:grab;background:linear-gradient(145deg,#d68b58,#b85e35);color:white;font-size:43px;font-weight:950;box-shadow:0 8px 0 #7d3c22,0 12px 18px rgba(70,30,10,.18);touch-action:none}
+.tile.rr{background:linear-gradient(145deg,#a85f45,#763720);box-shadow:0 8px 0 #532514,0 12px 18px rgba(70,30,10,.18)}
+.tile:active{transform:translateY(4px);box-shadow:0 4px 0 #6f331e}.tile[disabled]{opacity:.45;cursor:not-allowed}
+
+.helper{width:min(860px,100%);display:none;background:#fff;border:1px solid #e4c8b5;border-radius:16px;padding:10px 12px}
+.helper.show{display:block}.helperTitle{font-weight:950;color:var(--r);margin-bottom:7px}.ruleGrid{display:grid;grid-template-columns:1fr auto;gap:5px 10px;font-size:14px}.ans{font-weight:950}.yes{color:var(--good)}.no{color:#9b5f35}
+
+.feedback{min-height:46px;border-radius:14px;background:#f5f8fa;padding:10px 12px;font-weight:850;display:flex;align-items:center;justify-content:center;text-align:center}
+.feedback.good{background:#e9f7ef;color:#146b42}.feedback.bad{background:#fff0f0;color:#9d2d2d}
+.actions{display:flex;gap:8px}.actions button{flex:1;border:0;border-radius:14px;padding:12px;font-weight:950;cursor:pointer}.check{background:var(--r);color:#fff}.next{background:#17324d;color:#fff}.hint{background:#f5eadf;color:#743e28}.next:disabled{opacity:.42;cursor:not-allowed}
+
+.start{position:fixed;inset:0;z-index:20;background:linear-gradient(145deg,#fff3e5,#f7fbfd);display:grid;place-items:center;padding:14px}
+.start.off{display:none}.startCard{width:min(780px,100%);background:white;border:2px solid #ecd2bd;border-radius:28px;padding:22px;text-align:center;box-shadow:0 18px 45px rgba(60,50,40,.16)}
+.startCard .big{font-size:clamp(70px,13vw,140px);font-weight:950;color:var(--r);line-height:1}.startCard h2{font-size:clamp(26px,4vw,42px);margin:6px 0}.startCard p{font-size:18px;line-height:1.45}.startCard button{border:0;border-radius:15px;padding:13px 20px;font-weight:950;font-size:18px;cursor:pointer}.play{background:var(--r);color:white}.hear{background:#fff0e5;color:var(--rr);margin-right:8px}
+
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}.confetti span{position:absolute;top:-30px;font-size:25px;animation:fall 1.9s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(430deg);opacity:.2}}
+
+@media(max-width:860px){
+  body{overflow:auto}.app{height:auto;min-height:100dvh;padding-bottom:70px}.game{grid-template-columns:1fr}.pics{min-height:420px}.right{min-height:650px}.tile{width:100px;height:70px}
+}
+@media(max-height:670px) and (min-width:861px){
+ .app{padding-top:5px}.top{padding:5px 8px}.mark{width:38px;height:38px;font-size:24px}.title h1{font-size:22px}.panel{border-radius:15px}.left,.right{padding:8px}.pic img{max-height:150px}.wordCard{padding:10px}.word{font-size:clamp(30px,4vw,54px)}.tile{width:95px;height:60px;font-size:34px}.feedback{min-height:38px;padding:7px}
+}
+</style>
+</head>
+<body>
+<div class="start" id="start">
+ <div class="startCard">
+  <div class="big">R · RR</div>
+  <h2>El taller de las erres</h2>
+  <p>Escucha la palabra, encuentra su dibujo y completa sus huecos colocando <b>r</b> o <b>rr</b>.</p>
+  <p><b>Vamos a jugar y me tendrás que indicar si una o dos erres debemos colocar.</b></p>
+  <button class="hear" id="hearIntro">🔊 ESCUCHAR</button><button class="play" id="play">EMPEZAR</button>
+ </div>
+</div>
+
+<main class="app">
+ <header class="top">
+  <a class="back" href="../">← LETRA R</a><div class="mark">R</div>
+  <div class="title"><h1>El taller de las erres</h1><p>Juego manipulativo · r / rr</p></div>
+  <div class="progress"><div class="stars" id="stars">★ 0</div><div class="counter" id="counter">1 / 14</div></div>
+ </header>
+
+ <section class="game">
+  <div class="panel left">
+   <div class="kicker">1 · ESCUCHA Y ENCUENTRA</div>
+   <div class="listenRow"><button class="listenBtn" id="listen">🔊 ESCUCHAR PALABRA</button><button class="rhymeBtn" id="rhyme">🎵 RIMA</button></div>
+   <div class="pics" id="pics"></div>
+  </div>
+
+  <div class="panel right">
+   <div class="kicker">2 · CONSTRUYE LA PALABRA</div>
+   <div class="workbench">
+    <div class="wordCard">
+      <div class="wordLabel" id="wordLabel">Primero encuentra el pictograma correcto.</div>
+      <div class="word" id="word"></div>
+    </div>
+    <div class="tiles">
+      <button class="tile" draggable="true" data-v="r" disabled>r</button>
+      <button class="tile rr" draggable="true" data-v="rr" disabled>rr</button>
+    </div>
+    <div class="helper" id="helper">
+      <div class="helperTitle">Pista de la rima</div>
+      <div class="ruleGrid">
+        <div>¿Suena fuerte?</div><div class="ans" id="hStrong"></div>
+        <div>¿Tiene una vocal delante y otra detrás?</div><div class="ans" id="hBetween"></div>
+        <div>Entonces colocamos…</div><div class="ans" id="hAnswer">?</div>
+      </div>
+    </div>
+   </div>
+   <div class="feedback" id="feedback">Escucha la palabra y busca su dibujo.</div>
+   <div class="actions"><button class="hint" id="hint">💡 PISTA</button><button class="check" id="check">✓ COMPROBAR</button><button class="next" id="next" disabled>SIGUIENTE →</button></div>
+  </div>
+ </section>
+</main>
+<div class="confetti" id="confetti"></div>
+
+<script>
+const DATA=[
+ {w:'carretera',img:'carretera.webp',parts:['ca','ete','a'],ans:['rr','r'],strong:[1,0],between:[1,1]},
+ {w:'guitarra',img:'guitarra.webp',parts:['guita','a'],ans:['rr'],strong:[1],between:[1]},
+ {w:'recreo',img:'recreo.webp',parts:['','ec','eo'],ans:['r','r'],strong:[1,0],between:[0,0]},
+ {w:'jirafa',img:'jirafa.webp',parts:['ji','afa'],ans:['r'],strong:[0],between:[1]},
+ {w:'burro',img:'burro.webp',parts:['bu','o'],ans:['rr'],strong:[1],between:[1]},
+ {w:'rebeca',img:'rebeca.webp',parts:['','ebeca'],ans:['r'],strong:[1],between:[0]},
+ {w:'perrera',img:'perrera.webp',parts:['pe','e','a'],ans:['rr','r'],strong:[1,0],between:[1,1]},
+ {w:'rana',img:'rana.webp',parts:['','ana'],ans:['r'],strong:[1],between:[0]},
+ {w:'rosa',img:'rosa.webp',parts:['','osa'],ans:['r'],strong:[1],between:[0]},
+ {w:'puré',img:'pure.webp',parts:['pu','é'],ans:['r'],strong:[0],between:[1]},
+ {w:'jarra',img:'jarra.webp',parts:['ja','a'],ans:['rr'],strong:[1],between:[1]},
+ {w:'sonrisa',img:'sonrisa.webp',parts:['son','isa'],ans:['r'],strong:[1],between:[0]},
+ {w:'torero',img:'torero.webp',parts:['to','e','o'],ans:['r','r'],strong:[0,0],between:[1,1]},
+ {w:'enroscar',img:'enroscar.webp',parts:['en','osca',''],ans:['r','r'],strong:[1,0],between:[0,0]}
+];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let order=[...DATA.keys()].sort(()=>Math.random()-.5), pos=0, chosenPic=false, activeSlot=0, stars=0;
+let placed=[];
+function current(){return DATA[order[pos]]}
+function speak(t,rate=.85){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='es-ES';u.rate=rate;speechSynthesis.speak(u)}
+function rhyme(extra=''){speak('Vamos a jugar y me tendrás que indicar si una o dos erres debemos colocar. '+extra,.82)}
+function setTiles(on){$$('.tile').forEach(b=>b.disabled=!on)}
+function samplePics(x){return [x,...DATA.filter(y=>y!==x).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5)}
+function buildWord(){
+ const x=current(); let h='';
+ for(let i=0;i<x.ans.length;i++){
+   h+=x.parts[i]+'<span class="slot '+(i===activeSlot?'active':'')+'" data-i="'+i+'">'+(placed[i]||'')+'</span>';
+ }
+ h+=x.parts.at(-1); $('#word').innerHTML=h;
+ $$('.slot').forEach(s=>{
+   s.onclick=()=>{activeSlot=+s.dataset.i;$('#helper').classList.remove('show');buildWord()};
+   s.ondragover=e=>e.preventDefault();
+   s.ondrop=e=>{e.preventDefault();place(e.dataTransfer.getData('text/plain'),+s.dataset.i)};
+ });
+}
+function place(v,i=activeSlot){
+ if(!chosenPic||!['r','rr'].includes(v))return;
+ placed[i]=v;activeSlot=Math.min(i+1,current().ans.length-1);$('#helper').classList.remove('show');buildWord();
+}
+function render(){
+ const x=current();chosenPic=false;activeSlot=0;placed=Array(x.ans.length).fill('');setTiles(false);
+ $('#counter').textContent=(pos+1)+' / '+DATA.length;$('#stars').textContent='★ '+stars;
+ $('#wordLabel').textContent='Primero encuentra el pictograma correcto.';$('#feedback').className='feedback';$('#feedback').textContent='Escucha la palabra y busca su dibujo.';
+ $('#helper').classList.remove('show');$('#next').disabled=true;$('#next').textContent=pos===DATA.length-1?'TERMINAR':'SIGUIENTE →';
+ buildWord();$('#pics').innerHTML='';
+ samplePics(x).forEach(p=>{
+   const b=document.createElement('button');b.className='pic';b.innerHTML='<img src="assets/'+p.img+'" alt="">';
+   b.onclick=()=>{
+     if(p.w===x.w){
+       $$('.pic').forEach(z=>z.disabled=true);b.classList.add('correct');chosenPic=true;setTiles(true);
+       $('#wordLabel').textContent='Completa '+x.w+' colocando las piezas.';$('#feedback').className='feedback good';$('#feedback').textContent='¡Ese es! Ahora coloca r o rr en cada hueco.';speak(x.w)
+     }else{b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),550);$('#feedback').className='feedback bad';$('#feedback').textContent='Ese no es. Escucha otra vez.';speak(x.w)}
+   };$('#pics').appendChild(b)
+ });
+ setTimeout(()=>speak(x.w),300);
+}
+function showHint(){
+ if(!chosenPic){rhyme('Empezamos con '+current().w);return}
+ const x=current(),i=activeSlot;
+ $('#helper').classList.add('show');
+ const s=!!x.strong[i], b=!!x.between[i];
+ $('#hStrong').textContent=s?'SÍ':'NO';$('#hStrong').className='ans '+(s?'yes':'no');
+ $('#hBetween').textContent=b?'SÍ':'NO';$('#hBetween').className='ans '+(b?'yes':'no');
+ $('#hAnswer').textContent='?';
+ rhyme('¿Suena fuerte? '+(s?'Sí. ':'No. ')+'¿Lleva una vocal delante y otra detrás? '+(b?'Sí.':'No.'));
+}
+function celebrate(){
+ const c=$('#confetti');c.innerHTML='';
+ for(let i=0;i<26;i++){const s=document.createElement('span');s.textContent=['⭐','✨','🎈','●'][i%4];s.style.left=(3+(i*37)%94)+'%';s.style.animationDelay=(i%7*.08)+'s';c.appendChild(s)}
+ setTimeout(()=>c.innerHTML='',2300)
+}
+$('#check').onclick=()=>{
+ const x=current();
+ if(!chosenPic){$('#feedback').className='feedback bad';$('#feedback').textContent='Primero encuentra el pictograma.';return}
+ if(placed.some(v=>!v)){ $('#feedback').className='feedback bad';$('#feedback').textContent='Todavía queda algún hueco vacío.';return}
+ let ok=true, firstWrong=-1;
+ $$('.slot').forEach((s,i)=>{s.classList.remove('good','bad');if(placed[i]===x.ans[i])s.classList.add('good');else{s.classList.add('bad');ok=false;if(firstWrong<0)firstWrong=i}});
+ if(ok){stars++;$('#stars').textContent='★ '+stars;$('#feedback').className='feedback good';$('#feedback').textContent='✓ ¡Palabra construida correctamente!';$('#next').disabled=false;setTiles(false);celebrate();speak('¡Muy bien! '+x.w)}
+ else{activeSlot=firstWrong;$('#feedback').className='feedback bad';$('#feedback').textContent='Hay una pieza que debemos revisar. Usa la pista de la rima.';showHint()}
+};
+$('#next').onclick=()=>{
+ if($('#next').disabled)return;
+ if(pos<DATA.length-1){pos++;render()}else{
+   $('#feedback').className='feedback good';$('#feedback').textContent='🏆 ¡Has completado el taller de las erres!';$('#next').disabled=true;setTiles(false);celebrate();speak('¡Fantástico! Has completado el taller de las erres.')
+ }
+};
+$$('.tile').forEach(t=>{
+ t.onclick=()=>place(t.dataset.v);
+ t.ondragstart=e=>{if(t.disabled){e.preventDefault();return}e.dataTransfer.setData('text/plain',t.dataset.v)}
+});
+$('#listen').onclick=()=>speak(current().w);$('#rhyme').onclick=()=>rhyme('Empezamos con '+current().w);$('#hint').onclick=showHint;
+$('#hearIntro').onclick=()=>rhyme();$('#play').onclick=()=>{$('#start').classList.add('off');render()};
+</script>
+</body></html>

@@ -13,7 +13,7 @@ function element(tag, className, value) {
   if (value) node.textContent = value;
   return node;
 }
-const lengthOf = item => item.pages.length + (item.activities?.length || 0);
+const lengthOf = item => item.pages.length + (QUESTIONS[item.id] ? 1 : 0);
 function renderShelf() {
   const query = normalize(get("search").value.trim());
   const matches = BOOKS.filter(item => (!category || item.type === category || (category === "Comprensión" && item.activities?.length)) &&
@@ -32,7 +32,7 @@ function renderShelf() {
     if (item.letter) cover.append(element("b", "", item.letter));
     const info = element("div", "info");
     info.append(element("small", "", item.type + (item.activities?.length ? " · Con preguntas" : "")), element("h3", "", item.title),
-      element("small", "", saved?.finished ? "Lectura terminada" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
+      element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Ir a las preguntas" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
     card.append(cover, info);
     return card;
   }));
@@ -44,24 +44,31 @@ function renderShelf() {
 function showPage() {
   get("page-error").hidden = true;
   page.hidden = false;
-  const activity = book.activities?.[index - book.pages.length];
-  const activityTitle = get("activity-title");
-  activityTitle.hidden = !activity && book.type !== "Comprensión";
-  activityTitle.textContent = activity?.title || "Lee y responde";
-  get("jump-activity").hidden = !book.activities?.length;
-  get("jump-activity").textContent = activity ? "Volver al texto" : "Preguntas de comprensión";
-  get("jump-activity").dataset.target = activity ? String(book.pages.length - 1) : String(book.pages.length);
-  page.src = activity?.src || book.pages[index];
-  page.alt = activity ? book.title + " · " + activity.title :
-    book.alts?.[index] || book.title + " · Página " + (index + 1);
+  const hasQuiz = Boolean(QUESTIONS[book.id]);
+  const playing = hasQuiz && index === book.pages.length;
+  stage.hidden = playing;
+  get("page-controls").hidden = playing;
+  get("zoom").hidden = playing;
+  get("progress").hidden = playing;
+  get("activity-title").hidden = playing || book.type !== "Comprensión";
+  get("activity-title").textContent = "Lee el texto y juega";
+  get("jump-activity").hidden = !hasQuiz;
+  get("jump-activity").textContent = playing ? "Volver al texto" : "Jugar a las preguntas";
+  get("jump-activity").dataset.target = playing ? String(book.pages.length - 1) : String(book.pages.length);
+  quiz.hidden = !playing;
+  if (playing) showQuiz(book, book.activities?.[0]?.src || (book.type === "Comprensión" ? book.pages[0] : ""), true);
+  else {
+    page.src = book.pages[index];
+    page.alt = book.alts?.[index] || book.title + " · Página " + (index + 1);
+  }
   get("number").value = String(index);
   get("prev").disabled = index === 0;
   get("next").disabled = index === lengthOf(book) - 1;
-  get("end").hidden = !get("next").disabled;
-  get("next").textContent = !activity && index === book.pages.length - 1 && book.activities?.length ? "Ver preguntas" : "Siguiente";
+  get("end").hidden = hasQuiz || !get("next").disabled;
+  get("next").textContent = index === book.pages.length - 1 && hasQuiz ? "Jugar" : "Siguiente";
   get("progress").max = lengthOf(book);
   get("progress").value = index + 1;
-  progress[book.id] = {index, time:Date.now(), finished:get("next").disabled};
+  progress[book.id] = {index, time:Date.now(), finished:!playing && get("next").disabled};
   try { localStorage.setItem("zurron-lecturas-v1", JSON.stringify(progress)); } catch {}
   if (book.pages[index + 1]) new Image().src = book.pages[index + 1];
 }
@@ -78,7 +85,7 @@ function route() {
     get("book-title").textContent = book.title;
     get("number").replaceChildren(...Array.from({length: lengthOf(book)}, (_, i) => {
       const option = element("option", "", i >= book.pages.length ?
-        "Actividad " + (i - book.pages.length + 1) : (i + 1) + " de " + book.pages.length);
+        "Juego de comprensión" : (i + 1) + " de " + book.pages.length);
       option.value = i;
       return option;
     }));
@@ -113,7 +120,7 @@ page.onerror = () => { page.hidden = true; get("page-error").hidden = false; };
 get("retry").onclick = showPage;
 window.addEventListener("hashchange", route);
 document.addEventListener("keydown", event => {
-  if (!book || event.altKey || event.ctrlKey || event.metaKey || event.target.matches("select,input,textarea")) return;
+  if (!book || index >= book.pages.length || event.altKey || event.ctrlKey || event.metaKey || event.target.matches("select,input,textarea")) return;
   if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
     event.preventDefault();
     move(index + (event.key === "ArrowRight" ? 1 : -1));

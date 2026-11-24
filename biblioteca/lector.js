@@ -78,6 +78,17 @@ function showPage() {
   const sequenceButton = get("jump-sequence");
   sequenceButton.hidden = !hasSequence(book) || ordering;
   get("jump-activity").hidden = !hasQuiz && !ordering;
+  const sections = get("r-sections");
+  sections.hidden = book.letter !== "R" || !hasQuiz || !hasSequence(book);
+  if (!sections.hidden) {
+    get("jump-activity").hidden = true;
+    sequenceButton.hidden = true;
+    const current = ordering ? "order" : answering ? "quiz" : "read";
+    for (const button of sections.querySelectorAll("button")) {
+      if (button.dataset.section === current) button.setAttribute("aria-current", "step");
+      else button.removeAttribute("aria-current");
+    }
+  }
   quiz.hidden = !answering;
   sequencePanel.hidden = !ordering;
   if (ordering) showSequence(book);
@@ -137,6 +148,12 @@ function move(value) {
   if (book && value >= 0 && value < lengthOf(book)) location.hash = path(book.id, value);
 }
 get("search").addEventListener("input", renderShelf);
+get("r-sections").addEventListener("click", event => {
+  if (!book || !event.target.matches("button[data-section]")) return;
+  const section = event.target.dataset.section;
+  if (section === "read" && index < book.pages.length) return;
+  move(section === "quiz" ? book.pages.length : section === "order" ? sequenceIndex(book) : 0);
+});
 get("jump-sequence").onclick = () => move(sequenceIndex(book));
 get("jump-activity").onclick = event => move(Number(event.target.dataset.target));
 get("prev").onclick = () => move(index - 1);

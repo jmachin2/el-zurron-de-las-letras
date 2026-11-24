@@ -2,8 +2,8 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Biblioteca de lectura de Primero de Primaria del CEIP Camino Largo.">
-<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css"><link rel="stylesheet" href="juego.css?v=11">
-<script defer src="catalogo.js"></script><script defer src="preguntas.js"></script><script defer src="juego.js"></script><script defer src="tarjetas.js?v=7"></script><script defer src="secuencia.js?v=7"></script><script defer src="lector.js?v=11"></script></head>
+<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css"><link rel="stylesheet" href="juego.css?v=12">
+<script defer src="catalogo.js"></script><script defer src="preguntas.js"></script><script defer src="juego.js"></script><script defer src="tarjetas.js?v=7"></script><script defer src="secuencia.js?v=7"></script><script defer src="lector.js?v=12"></script></head>
 <body>
 <header class="mast"><div class="wrap bar"><a class="brand" href="#" aria-label="Inicio de la biblioteca"><span aria-hidden="true">Z</span> Camino Largo</a><span>1.º de Primaria</span></div></header>
 <main class="wrap">
@@ -14,7 +14,7 @@
 </div>
 <section id="reader" hidden aria-label="Lector de libros">
 <div class="reader-top"><a class="button secondary" href="#">Biblioteca</a><h1 id="book-title" tabindex="-1"></h1><button id="zoom" class="secondary" aria-pressed="false">Ampliar</button></div>
-<div class="reading-tools"><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><button id="jump-sequence" class="secondary" hidden>Ordenar la lectura</button><p id="activity-title" aria-live="polite" hidden></p></div>
+<div class="reading-tools"><nav id="r-sections" aria-label="Actividades del libro" hidden><button class="secondary" data-section="read">Leer</button><button class="secondary" data-section="quiz">Comprensión</button><button class="secondary" data-section="order">Ordenar</button></nav><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><button id="jump-sequence" class="secondary" hidden>Ordenar la lectura</button><p id="activity-title" aria-live="polite" hidden></p></div>
 <figure id="stage"><img id="page" alt="" draggable="false"><figcaption id="page-error" hidden>No se pudo cargar esta página. <button id="retry">Reintentar</button></figcaption></figure>
 <section id="quiz" class="quiz" aria-label="Juego de comprensión" hidden>
   <div class="quiz-status"><span id="quiz-position"></span><progress id="quiz-progress" aria-label="Progreso del juego"></progress></div>

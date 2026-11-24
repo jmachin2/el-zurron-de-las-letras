@@ -7,19 +7,12 @@ const sequenceColors = ["#176652", "#245a9c", "#80457c", "#9a4f15"];
 let redrawSequence = () => {};
 new ResizeObserver(() => redrawSequence()).observe(sequenceBoard);
 const sequenceGames = new Map();
-const sequencePages = {
-  "mi-mama-se-llama-mifaya": [2,4,6,10],
-  "la-fiesta-de-la-pandorga": [1,3,4,6],
-  "la-luna-y-la-lava": [1,2,4,6],
-  "timplillo-se-va-de-tenderete": [1,3,5,6]
-};
-
 function hasSequence(item) {
-  return item.type === "Decodificables" && item.pages.length >= 5;
+  return Object.hasOwn(SEQUENCE_CARDS, item.id);
 }
 
 function showSequence(item, focusHeading = true) {
-  const pageIndices = sequencePages[item.id] || [1,3,5,item.pages.length - 1];
+  const entries = SEQUENCE_CARDS[item.id];
   if (!sequenceGames.has(item.id)) sequenceGames.set(item.id, newSequence());
   const game = sequenceGames.get(item.id);
   const scenes = document.getElementById("sequence-scenes");
@@ -43,13 +36,30 @@ function showSequence(item, focusHeading = true) {
     button.type = "button";
     const badge = document.createElement("span");
     badge.textContent = String.fromCharCode(65 + cardIndex);
-    const image = document.createElement("img");
-    image.src = item.pages[pageIndices[scene]];
-    image.alt = (item.alts?.[pageIndices[scene]] || "").trim();
-    button.setAttribute("aria-label", "Imagen " + badge.textContent + (image.alt ? ". " + image.alt : ""));
-    button.append(badge, image);
+    const [pageIndex, text, ratio, crop] = entries[scene];
+    const original = item.pages[pageIndex];
+    const caption = document.createElement("strong");
+    caption.className = "sequence-caption";
+    caption.textContent = text;
+    button.setAttribute("aria-label", "Tarjeta " + badge.textContent + ". " + text);
+    button.append(badge);
+    if (item.id !== "la-luna-y-la-lava") {
+      const art = document.createElement("div");
+      art.className = "sequence-art";
+      const cropped = document.createElement("div");
+      cropped.className = "sequence-crop";
+      cropped.style.setProperty("--ratio", ratio);
+      cropped.style.setProperty("--crop", crop);
+      const image = document.createElement("img");
+      image.src = original;
+      image.alt = "";
+      image.draggable = false;
+      cropped.append(image);
+      art.append(cropped);
+      button.append(art);
+    }
+    button.append(caption);
     button.style.setProperty("--pair-color", sequenceColors[cardIndex]);
-    image.draggable = false;
 
     const place = () => {
       if (game.selected === null) {
@@ -84,8 +94,8 @@ function showSequence(item, focusHeading = true) {
     read.setAttribute("aria-label", "Leer imagen " + badge.textContent + " en grande");
     read.onclick = () => {
       document.getElementById("sequence-preview-title").textContent = "Imagen " + badge.textContent;
-      previewImage.src = image.src;
-      previewImage.alt = image.alt || "Imagen " + badge.textContent + " de " + item.title;
+      previewImage.src = original;
+      previewImage.alt = text;
       preview.classList.remove("enlarged");
       enlarge.textContent = "Más grande";
       enlarge.setAttribute("aria-pressed", "false");

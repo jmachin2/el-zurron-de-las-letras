@@ -44,3 +44,48 @@
 #sequence-preview > div{overflow:auto;max-height:70dvh;background:#eef5f0}
 #sequence-preview img{display:block;width:100%;max-width:620px;height:auto;margin:auto}
 #sequence-preview.enlarged img{width:155%;max-width:none}
+
+/* Keep the entire matching board in the visible viewport. */
+body:has(#sequence:not([hidden])){overflow:hidden}
+#reader:has(#sequence:not([hidden])){
+  position:fixed;inset:0;z-index:10;
+  background:var(--canvas);
+  padding:clamp(4px,1.4dvh,13px) clamp(6px,3vw,26px);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto minmax(0,1fr);gap:5px 8px;
+}
+#reader:has(#sequence:not([hidden])) .reader-top{margin:0;justify-content:start;min-width:0}
+#reader:has(#sequence:not([hidden])) .reader-top h1{
+  font-size:clamp(.86rem,2.6vw,1.4rem);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left
+}
+#reader:has(#sequence:not([hidden])) .reading-tools{margin:0;align-self:center}
+#reader:has(#sequence:not([hidden])) .reader-top a,
+#reader:has(#sequence:not([hidden])) .reading-tools button{min-height:36px;padding:5px 8px;font-size:clamp(.76rem,2.5vw,1rem)}
+#sequence:not([hidden]){
+  grid-column:1/-1;
+  display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:clamp(3px,1dvh,9px);
+  margin:0 auto;width:min(100%,810px);max-width:none;min-height:0;
+  padding:clamp(5px,1.5dvh,14px);
+}
+#sequence h2{margin:0;font-size:clamp(1.05rem,3vw,1.85rem)}
+#sequence > p{margin:0;line-height:1.18;font-size:clamp(.8rem,2.6vw,1rem)}
+#sequence-board{margin:0 auto;width:100%;min-height:0;max-width:725px;column-gap:clamp(25px,8vw,92px)}
+.sequence-column{grid-template-rows:repeat(4,minmax(0,1fr));gap:clamp(3px,1dvh,8px);min-height:0}
+.sequence-card{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr);align-items:center;min-height:0}
+#sequence-scenes .sequence-card > button:first-child{width:100%;height:100%;min-height:0;padding:2px 2px 2px 20px}
+#sequence-scenes img{width:100%;height:100%;min-height:0}
+#sequence-scenes span{font-size:.7rem;left:2px;padding:1px 4px}
+.sequence-card .sequence-read{min-height:32px;font-size:.84rem;padding:3px 6px}
+#sequence-moments button{min-height:0;max-height:100%;padding:4px;font-size:clamp(.8rem,2.8vw,1.2rem)}
+.sequence-footer{display:flex;align-items:center;justify-content:center;gap:4px 14px;flex-wrap:wrap}
+#sequence-feedback{margin:0;font-size:.85rem;line-height:1.15}
+.sequence-actions{display:flex;gap:6px}
+.sequence-actions button{min-height:34px;padding:4px 9px;font-size:.85rem}
+#sequence-preview img{max-height:calc(86dvh - 90px);object-fit:contain}
+#sequence-preview.enlarged img{max-height:none}
+@media(max-height:460px){
+  #sequence{gap:3px}
+  #sequence h2{font-size:1rem}
+  #sequence > p{font-size:.77rem}
+  #sequence-preview form{margin-bottom:4px}
+}

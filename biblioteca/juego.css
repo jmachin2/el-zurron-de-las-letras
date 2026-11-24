@@ -15,18 +15,20 @@
 #quiz-sheet{display:block;max-width:100%;margin:12px auto 0}
 @media(max-width:540px){.quiz-answers{grid-template-columns:1fr}.quiz-answers button{min-height:54px}}
 
-.sequence{max-width:1100px}
+ .sequence{max-width:770px}
 .sequence h2{margin:0 0 10px}
-.sequence-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-block:15px}
-#sequence-scenes button{position:relative;display:flex;align-items:center;padding:8px;background:#e0eee7;color:#153d36;border:3px solid transparent}
-#sequence-scenes button[aria-pressed="true"]{border-color:#225e9a;background:#cde4fb}
-#sequence-scenes button.assigned{border-style:dashed;border-color:#587c6e}
-#sequence-scenes button span{position:absolute;top:5px;left:5px;background:#153d36;color:white;padding:4px 8px;border-radius:8px}
-#sequence-scenes img{width:100%;height:clamp(110px,27vw,255px);object-fit:contain}
-#sequence-moments button{background:#e8eef8;color:#193a59;min-height:57px}
+#sequence-board{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);column-gap:clamp(27px,10vw,105px);margin:18px auto;max-width:610px}
+.sequence-column{display:grid;grid-template-rows:repeat(4,1fr);gap:8px;min-width:0}
+.sequence-column button{min-width:0}
+#sequence-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#sequence-scenes button{position:relative;padding:4px 6px 4px 28px;background:#eff6f1;color:#153d36;border:3px solid transparent;cursor:grab}
+#sequence-scenes button[aria-pressed="true"]{border-color:var(--pair-color);background:#d7ebfa}
+#sequence-scenes button.assigned{border-color:var(--pair-color)}
+#sequence-scenes span{position:absolute;left:4px;top:5px;background:var(--pair-color);color:white;padding:2px 5px;border-radius:5px}
+#sequence-scenes img{display:block;width:100%;height:clamp(80px,13vw,125px);object-fit:contain}
+#sequence-moments button{font-size:clamp(.9rem,2.8vw,1.3rem);padding:5px;align-self:center;min-height:54px;background:#eef5fa;color:#193a59;border:3px solid var(--pair-color)}
+#sequence-moments .drop-target{background:#cde4fb;border-style:dashed}
 #sequence-moments [data-result="correct"]{background:#d4f0df;color:#124729}
 #sequence-moments [data-result="review"]{background:#ffedcc;color:#6c380b}
 #sequence-feedback{font-weight:750}
-@media(max-width:640px){.sequence-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#sequence-scenes img{height:155px}}
 .reading-tools:has(> :not([hidden])){display:flex}
-#sequence-scenes button.assigned[aria-pressed="true"]{border-color:#225e9a;border-style:solid}

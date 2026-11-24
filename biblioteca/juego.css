@@ -120,3 +120,10 @@ body:has(#reader:not([hidden]) #sequence:not([hidden])){overflow:hidden}
   line-height: 1.36;
   font-size: clamp(.8rem, min(2.4vw, 2.8dvh), 1.4rem);
 }
+
+#shelf{display:block}
+.shelf-letter + .shelf-letter{margin-top:2rem}
+.shelf-letter > h3{margin:0 0 .75rem;font-size:1.35rem}
+.shelf-books{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr));gap:18px}
+.shelf-books .info h4{margin:.1rem 0 .35rem;font-size:1rem}
+@media(max-width:540px){.shelf-books{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}

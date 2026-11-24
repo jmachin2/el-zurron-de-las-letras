@@ -21,27 +21,43 @@ function renderShelf() {
   const matches = decodificables.filter(item =>
     (/^[a-z]$/u.test(query) ? normalize(item.letter) === query : normalize(item.title + " " + item.letter).includes(query)));
   get("count").textContent = matches.length ? matches.length + (matches.length === 1 ? " lectura" : " lecturas") : "No hay lecturas con esa búsqueda.";
-  shelf.replaceChildren(...matches.map(item => {
-    const saved = progress[item.id];
-    const card = element("a", "card");
-    card.href = path(item.id, saved?.finished ? 0 : saved?.index || 0);
-    const cover = element("div", "cover");
-    const img = element("img");
-    img.src = item.cover || item.pages[0];
-    img.alt = "";
-    img.loading = "lazy";
-    cover.append(img);
-    if (item.letter) cover.append(element("b", "", item.letter));
-    const info = element("div", "info");
-    info.append(element("h3", "", item.title),
-      element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Continuar el juego" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
-    card.append(cover, info);
-    return card;
+  const sections = new Map();
+  for (const item of matches) {
+    if (!sections.has(item.letter)) sections.set(item.letter, []);
+    sections.get(item.letter).push(item);
+  }
+  const letters = [...sections.keys()].sort((a, b) => a.localeCompare(b, "es"));
+  shelf.replaceChildren(...letters.map(letter => {
+    const section = element("section", "shelf-letter");
+    const heading = element("h3", "", "Letra " + letter);
+    heading.id = "letra-" + letter.toLowerCase();
+    section.setAttribute("aria-labelledby", heading.id);
+    const row = element("div", "shelf-books");
+    row.append(...sections.get(letter).map(renderCard));
+    section.append(heading, row);
+    return section;
   }));
   const latest = decodificables.filter(item => progress[item.id] && !progress[item.id].finished)
     .sort((a,b) => progress[b.id].time - progress[a.id].time)[0];
   get("resume").hidden = !latest;
   if (latest) get("resume").onclick = () => { location.hash = path(latest.id, progress[latest.id].index); };
+}
+function renderCard(item) {
+  const saved = progress[item.id];
+  const card = element("a", "card");
+  card.href = path(item.id, saved?.finished ? 0 : saved?.index || 0);
+  const cover = element("div", "cover");
+  const img = element("img");
+  img.src = item.cover || item.pages[0];
+  img.alt = "";
+  img.loading = "lazy";
+  cover.append(img);
+  if (item.letter) cover.append(element("b", "", item.letter));
+  const info = element("div", "info");
+  info.append(element("h4", "", item.title),
+    element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Continuar el juego" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
+  card.append(cover, info);
+  return card;
 }
 function showPage() {
   get("page-error").hidden = true;

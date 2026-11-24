@@ -1,8 +1,9 @@
 "use strict";
 const get = id => document.getElementById(id);
 const shelf = get("shelf"), page = get("page"), stage = get("stage");
-const booksById = new Map(BOOKS.map(book => [book.id, book]));
-let book, index = 0, category = "", touchX, touchY;
+const decodificables = BOOKS.filter(book => book.type === "Decodificables");
+const booksById = new Map(decodificables.map(book => [book.id, book]));
+let book, index = 0, touchX, touchY;
 let progress = {};
 try { progress = JSON.parse(localStorage.getItem("zurron-lecturas-v1")) || {}; } catch {}
 const normalize = value => value.toLocaleLowerCase("es").normalize("NFD").replace(/\p{M}/gu, "");
@@ -17,7 +18,7 @@ const sequenceIndex = item => item.pages.length + Number(Boolean(QUESTIONS[item.
 const lengthOf = item => sequenceIndex(item) + Number(hasSequence(item));
 function renderShelf() {
   const query = normalize(get("search").value.trim());
-  const matches = BOOKS.filter(item => (!category || item.type === category || (category === "Comprensión" && (item.activities?.length || hasSequence(item)))) &&
+  const matches = decodificables.filter(item =>
     (/^[a-z]$/u.test(query) ? normalize(item.letter) === query : normalize(item.title + " " + item.letter).includes(query)));
   get("count").textContent = matches.length ? matches.length + (matches.length === 1 ? " lectura" : " lecturas") : "No hay lecturas con esa búsqueda.";
   shelf.replaceChildren(...matches.map(item => {
@@ -32,12 +33,12 @@ function renderShelf() {
     cover.append(img);
     if (item.letter) cover.append(element("b", "", item.letter));
     const info = element("div", "info");
-    info.append(element("small", "", item.type + (item.activities?.length ? " · Con preguntas" : hasSequence(item) ? " · Juego de ordenar" : "")), element("h3", "", item.title),
+    info.append(element("h3", "", item.title),
       element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Continuar el juego" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
     card.append(cover, info);
     return card;
   }));
-  const latest = BOOKS.filter(item => progress[item.id] && !progress[item.id].finished)
+  const latest = decodificables.filter(item => progress[item.id] && !progress[item.id].finished)
     .sort((a,b) => progress[b.id].time - progress[a.id].time)[0];
   get("resume").hidden = !latest;
   if (latest) get("resume").onclick = () => { location.hash = path(latest.id, progress[latest.id].index); };
@@ -119,12 +120,6 @@ function route() {
 function move(value) {
   if (book && value >= 0 && value < lengthOf(book)) location.hash = path(book.id, value);
 }
-get("filters").addEventListener("click", event => {
-  if (!event.target.matches("button")) return;
-  category = event.target.dataset.type;
-  for (const node of get("filters").querySelectorAll("button")) node.setAttribute("aria-pressed", String(node === event.target));
-  renderShelf();
-});
 get("search").addEventListener("input", renderShelf);
 get("jump-sequence").onclick = () => move(sequenceIndex(book));
 get("jump-activity").onclick = event => move(Number(event.target.dataset.target));

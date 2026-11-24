@@ -2,8 +2,8 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Biblioteca de lectura de Primero de Primaria del CEIP Camino Largo.">
-<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css"><link rel="stylesheet" href="juego.css">
-<script defer src="catalogo.js"></script><script defer src="preguntas.js"></script><script defer src="juego.js"></script><script defer src="lector.js?v=2"></script></head>
+<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css"><link rel="stylesheet" href="juego.css?v=3">
+<script defer src="catalogo.js"></script><script defer src="preguntas.js"></script><script defer src="juego.js"></script><script defer src="secuencia.js"></script><script defer src="lector.js?v=3"></script></head>
 <body>
 <header class="mast"><div class="wrap bar"><a class="brand" href="#" aria-label="Inicio de la biblioteca"><span aria-hidden="true">Z</span> Camino Largo</a><span>1.º de Primaria</span></div></header>
 <main class="wrap">
@@ -15,7 +15,7 @@
 </div>
 <section id="reader" hidden aria-label="Lector de libros">
 <div class="reader-top"><a class="button secondary" href="#">Biblioteca</a><h1 id="book-title" tabindex="-1"></h1><button id="zoom" class="secondary" aria-pressed="false">Ampliar</button></div>
-<div class="reading-tools"><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><p id="activity-title" aria-live="polite" hidden></p></div>
+<div class="reading-tools"><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><button id="jump-sequence" class="secondary" hidden>Ordenar la lectura</button><p id="activity-title" aria-live="polite" hidden></p></div>
 <figure id="stage"><img id="page" alt="" draggable="false"><figcaption id="page-error" hidden>No se pudo cargar esta página. <button id="retry">Reintentar</button></figcaption></figure>
 <section id="quiz" class="quiz" aria-label="Juego de comprensión" hidden>
   <div class="quiz-status"><span id="quiz-position"></span><progress id="quiz-progress" aria-label="Progreso del juego"></progress></div>
@@ -24,6 +24,15 @@
   <p id="quiz-feedback" role="status" hidden></p>
   <button id="quiz-next" type="button" hidden>Siguiente pregunta</button>
   <details id="quiz-reference" hidden><summary>Consultar la ficha original</summary><img id="quiz-sheet" alt="Ficha original de comprensión"></details>
+</section>
+<section id="sequence" class="quiz sequence" aria-labelledby="sequence-title" hidden>
+  <h2 id="sequence-title" tabindex="-1">¿Qué pasa primero?</h2>
+  <p>Toca una tarjeta y luego el momento que le corresponde.</p>
+  <div id="sequence-scenes" class="sequence-grid" role="group" aria-label="Tarjetas de la lectura"></div>
+  <div id="sequence-moments" class="sequence-grid" role="group" aria-label="Momentos de la lectura"></div>
+  <p id="sequence-feedback" role="status"></p>
+  <button id="sequence-check" type="button">Comprobar</button>
+  <button id="sequence-reset" class="secondary" type="button">Volver a jugar</button>
 </section>
 <nav id="page-controls" class="controls" aria-label="Pasar páginas"><button id="prev">Anterior</button><label class="position"><span class="sr-only">Ir a una página</span><select id="number"></select></label><button id="next">Siguiente</button></nav>
 <progress id="progress" aria-label="Progreso del libro"></progress><div id="end" hidden>¡Has llegado al final! <a href="#">Volver a la biblioteca</a></div>

@@ -13,10 +13,11 @@ function element(tag, className, value) {
   if (value) node.textContent = value;
   return node;
 }
-const lengthOf = item => item.pages.length + (QUESTIONS[item.id] ? 1 : 0);
+const sequenceIndex = item => item.pages.length + Number(Boolean(QUESTIONS[item.id]));
+const lengthOf = item => sequenceIndex(item) + Number(hasSequence(item));
 function renderShelf() {
   const query = normalize(get("search").value.trim());
-  const matches = BOOKS.filter(item => (!category || item.type === category || (category === "Comprensión" && item.activities?.length)) &&
+  const matches = BOOKS.filter(item => (!category || item.type === category || (category === "Comprensión" && (item.activities?.length || hasSequence(item)))) &&
     (/^[a-z]$/u.test(query) ? normalize(item.letter) === query : normalize(item.title + " " + item.letter).includes(query)));
   get("count").textContent = matches.length ? matches.length + (matches.length === 1 ? " lectura" : " lecturas") : "No hay lecturas con esa búsqueda.";
   shelf.replaceChildren(...matches.map(item => {
@@ -31,8 +32,8 @@ function renderShelf() {
     cover.append(img);
     if (item.letter) cover.append(element("b", "", item.letter));
     const info = element("div", "info");
-    info.append(element("small", "", item.type + (item.activities?.length ? " · Con preguntas" : "")), element("h3", "", item.title),
-      element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Ir a las preguntas" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
+    info.append(element("small", "", item.type + (item.activities?.length ? " · Con preguntas" : hasSequence(item) ? " · Juego de ordenar" : "")), element("h3", "", item.title),
+      element("small", "", saved?.finished ? "Lectura terminada" : saved?.index >= item.pages.length ? "Continuar el juego" : saved?.index ? "Continuar · pág. " + (saved.index + 1) : item.pages.length + (item.pages.length === 1 ? " página" : " páginas")));
     card.append(cover, info);
     return card;
   }));
@@ -45,7 +46,9 @@ function showPage() {
   get("page-error").hidden = true;
   page.hidden = false;
   const hasQuiz = Boolean(QUESTIONS[book.id]);
-  const playing = hasQuiz && index === book.pages.length;
+  const ordering = hasSequence(book) && index === sequenceIndex(book);
+  const answering = hasQuiz && index === book.pages.length;
+  const playing = ordering || answering;
   stage.hidden = playing;
   get("page-controls").hidden = playing;
   get("zoom").hidden = playing;
@@ -55,8 +58,13 @@ function showPage() {
   get("jump-activity").hidden = !hasQuiz;
   get("jump-activity").textContent = playing ? "Volver al texto" : "Jugar a las preguntas";
   get("jump-activity").dataset.target = playing ? String(book.pages.length - 1) : String(book.pages.length);
-  quiz.hidden = !playing;
-  if (playing) showQuiz(book, book.activities?.[0]?.src || (book.type === "Comprensión" ? book.pages[0] : ""), true);
+  const sequenceButton = get("jump-sequence");
+  sequenceButton.hidden = !hasSequence(book) || ordering;
+  get("jump-activity").hidden = !hasQuiz && !ordering;
+  quiz.hidden = !answering;
+  sequencePanel.hidden = !ordering;
+  if (ordering) showSequence(book);
+  else if (answering) showQuiz(book, book.activities?.[0]?.src || (book.type === "Comprensión" ? book.pages[0] : ""), true);
   else {
     page.src = book.pages[index];
     page.alt = book.alts?.[index] || book.title + " · Página " + (index + 1);
@@ -64,8 +72,8 @@ function showPage() {
   get("number").value = String(index);
   get("prev").disabled = index === 0;
   get("next").disabled = index === lengthOf(book) - 1;
-  get("end").hidden = hasQuiz || !get("next").disabled;
-  get("next").textContent = index === book.pages.length - 1 && hasQuiz ? "Jugar" : "Siguiente";
+  get("end").hidden = playing || !get("next").disabled;
+  get("next").textContent = index === book.pages.length - 1 ? (hasQuiz ? "Jugar a las preguntas" : hasSequence(book) ? "Ordenar la lectura" : "Siguiente") : "Siguiente";
   get("progress").max = lengthOf(book);
   get("progress").value = index + 1;
   progress[book.id] = {index, time:Date.now(), finished:!playing && get("next").disabled};
@@ -85,7 +93,7 @@ function route() {
     get("book-title").textContent = book.title;
     get("number").replaceChildren(...Array.from({length: lengthOf(book)}, (_, i) => {
       const option = element("option", "", i >= book.pages.length ?
-        "Juego de comprensión" : (i + 1) + " de " + book.pages.length);
+        (i === sequenceIndex(book) ? "Ordenar la lectura" : "Juego de comprensión") : (i + 1) + " de " + book.pages.length);
       option.value = i;
       return option;
     }));
@@ -107,6 +115,7 @@ get("filters").addEventListener("click", event => {
   renderShelf();
 });
 get("search").addEventListener("input", renderShelf);
+get("jump-sequence").onclick = () => move(sequenceIndex(book));
 get("jump-activity").onclick = event => move(Number(event.target.dataset.target));
 get("prev").onclick = () => move(index - 1);
 get("next").onclick = () => move(index + 1);

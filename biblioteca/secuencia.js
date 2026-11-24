@@ -27,7 +27,18 @@ function showSequence(item, focusHeading = true) {
   const info = document.getElementById("sequence-feedback");
   const check = document.getElementById("sequence-check");
   const heading = document.getElementById("sequence-title");
+  const preview = document.getElementById("sequence-preview");
+  const previewImage = document.getElementById("sequence-preview-image");
+  const enlarge = document.getElementById("sequence-enlarge");
+  enlarge.onclick = () => {
+    const zoomed = preview.classList.toggle("enlarged");
+    enlarge.textContent = zoomed ? "Ajustar" : "Más grande";
+    enlarge.setAttribute("aria-pressed", String(zoomed));
+  };
+
   const cards = game.order.map((scene, cardIndex) => {
+    const card = document.createElement("div");
+    card.className = "sequence-card";
     const button = document.createElement("button");
     button.type = "button";
     const badge = document.createElement("span");
@@ -35,35 +46,19 @@ function showSequence(item, focusHeading = true) {
     const image = document.createElement("img");
     image.src = item.pages[pageIndices[scene]];
     image.alt = (item.alts?.[pageIndices[scene]] || "").trim();
-    button.setAttribute("aria-label", "Tarjeta " + badge.textContent + (image.alt ? ". " + image.alt : ""));
-    button.append(badge,image);
+    button.setAttribute("aria-label", "Imagen " + badge.textContent + (image.alt ? ". " + image.alt : ""));
+    button.append(badge, image);
     button.style.setProperty("--pair-color", sequenceColors[cardIndex]);
-    button.draggable = true;
     image.draggable = false;
-    button.ondragstart = event => {
-      event.dataTransfer.setData("text/plain", String(scene));
-      event.dataTransfer.effectAllowed = "move";
-      game.selected = scene;
-      refresh();
-    };
-    button.onclick = () => {
-      game.selected = game.selected === scene ? null : scene;
-      refresh();
-      if (game.selected !== null) info.textContent = "Elige un momento para la tarjeta " + badge.textContent + ".";
-    };
-    return button;
-  });
-  const spaces = sequenceMoments.map((label, position) => {
-    const button = document.createElement("button");
-    button.type = "button";
+
     const place = () => {
       if (game.selected === null) {
-        info.textContent = "Elige primero una imagen de la derecha.";
+        info.textContent = "Elige primero una palabra de la izquierda.";
         return;
       }
-      const previous = game.matches.indexOf(game.selected);
+      const previous = game.matches.indexOf(scene);
       if (previous !== -1) game.matches[previous] = null;
-      game.matches[position] = game.selected;
+      game.matches[game.selected] = scene;
       game.selected = null;
       game.checked = false;
       refresh();
@@ -79,11 +74,45 @@ function showSequence(item, focusHeading = true) {
     button.ondrop = event => {
       event.preventDefault();
       button.classList.remove("drop-target");
-      if (event.dataTransfer.getData("text/plain") === String(game.selected)) place();
+      if (event.dataTransfer.getData("text/plain") === "momento:" + game.selected) place();
+    };
+
+    const read = document.createElement("button");
+    read.type = "button";
+    read.className = "sequence-read secondary";
+    read.textContent = "Leer";
+    read.setAttribute("aria-label", "Leer imagen " + badge.textContent + " en grande");
+    read.onclick = () => {
+      document.getElementById("sequence-preview-title").textContent = "Imagen " + badge.textContent;
+      previewImage.src = image.src;
+      previewImage.alt = image.alt || "Imagen " + badge.textContent + " de " + item.title;
+      preview.classList.remove("enlarged");
+      enlarge.textContent = "Más grande";
+      enlarge.setAttribute("aria-pressed", "false");
+      preview.showModal();
+      previewImage.parentElement.scrollTo(0, 0);
+    };
+    card.append(button, read);
+    return {card, button};
+  });
+  const spaces = sequenceMoments.map((label, position) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.draggable = true;
+    const select = () => {
+      game.selected = position;
+      refresh();
+      info.textContent = label + " seleccionado. Elige su imagen.";
+    };
+    button.onclick = select;
+    button.ondragstart = event => {
+      event.dataTransfer.setData("text/plain", "momento:" + position);
+      event.dataTransfer.effectAllowed = "move";
+      select();
     };
     return button;
   });
-  scenes.replaceChildren(...cards);
+  scenes.replaceChildren(...cards.map(entry => entry.card));
   targets.replaceChildren(...spaces);
   check.onclick = () => { game.checked = true; refresh(); };
   document.getElementById("sequence-reset").onclick = () => {
@@ -100,8 +129,7 @@ function showSequence(item, focusHeading = true) {
     let placed = 0;
     let correct = 0;
     for (const [i, scene] of game.order.entries()) {
-      cards[i].setAttribute("aria-pressed", String(game.selected === scene));
-      cards[i].classList.toggle("assigned", game.matches.includes(scene));
+      cards[i].button.classList.toggle("assigned", game.matches.includes(scene));
     }
     for (const [i, moment] of sequenceMoments.entries()) {
       const scene = game.matches[i];
@@ -109,6 +137,7 @@ function showSequence(item, focusHeading = true) {
       const ok = scene === i;
       if (scene !== null) placed++;
       if (ok) correct++;
+      cell.setAttribute("aria-pressed", String(game.selected === i));
       cell.style.setProperty("--pair-color", scene === null ? "#b7c9c0" : sequenceColors[game.order.indexOf(scene)]);
       cell.textContent = moment + (scene === null ? "" : " · " + String.fromCharCode(65 + game.order.indexOf(scene)));
       if (game.checked) {
@@ -131,15 +160,15 @@ function showSequence(item, focusHeading = true) {
     for (const [i, scene] of game.matches.entries()) {
       if (scene === null) continue;
       const cardIndex = game.order.indexOf(scene);
-      const from = cards[cardIndex].getBoundingClientRect();
-      const to = spaces[i].getBoundingClientRect();
-      const x1 = from.left - board.left, y1 = from.top + from.height / 2 - board.top;
-      const x2 = to.right - board.left, y2 = to.top + to.height / 2 - board.top;
+      const from = spaces[i].getBoundingClientRect();
+      const to = cards[cardIndex].button.getBoundingClientRect();
+      const x1 = from.right - board.left, y1 = from.top + from.height / 2 - board.top;
+      const x2 = to.left - board.left, y2 = to.top + to.height / 2 - board.top;
       const middle = (x1 + x2) / 2;
       const color = sequenceColors[cardIndex];
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path.setAttribute("d", "M " + x1 + " " + y1 + " C " + middle + " " + y1 + ", " + middle + " " + y2 + ", " + x2 + " " + y2
-        + " m 7 -5 l -7 5 l 7 5");
+        + " m -7 -5 l 7 5 l -7 5");
       path.setAttribute("stroke", color);
       path.setAttribute("stroke-width", "3");
       path.setAttribute("stroke-linejoin", "round");

@@ -46,21 +46,21 @@
 #sequence-preview.enlarged img{width:155%;max-width:none}
 
 /* Keep the entire matching board in the visible viewport. */
-body:has(#sequence:not([hidden])){overflow:hidden}
-#reader:has(#sequence:not([hidden])){
+body:has(#reader:not([hidden]) #sequence:not([hidden])){overflow:hidden}
+#reader:not([hidden]):has(#sequence:not([hidden])){
   position:fixed;inset:0;z-index:10;
   background:var(--canvas);
   padding:clamp(4px,1.4dvh,13px) clamp(6px,3vw,26px);
   display:grid;grid-template-columns:minmax(0,1fr) auto;
   grid-template-rows:auto minmax(0,1fr);gap:5px 8px;
 }
-#reader:has(#sequence:not([hidden])) .reader-top{margin:0;justify-content:start;min-width:0}
-#reader:has(#sequence:not([hidden])) .reader-top h1{
+#reader:not([hidden]):has(#sequence:not([hidden])) .reader-top{margin:0;justify-content:start;min-width:0}
+#reader:not([hidden]):has(#sequence:not([hidden])) .reader-top h1{
   font-size:clamp(.86rem,2.6vw,1.4rem);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left
 }
-#reader:has(#sequence:not([hidden])) .reading-tools{margin:0;align-self:center}
-#reader:has(#sequence:not([hidden])) .reader-top a,
-#reader:has(#sequence:not([hidden])) .reading-tools button{min-height:36px;padding:5px 8px;font-size:clamp(.76rem,2.5vw,1rem)}
+#reader:not([hidden]):has(#sequence:not([hidden])) .reading-tools{margin:0;align-self:center}
+#reader:not([hidden]):has(#sequence:not([hidden])) .reader-top a,
+#reader:not([hidden]):has(#sequence:not([hidden])) .reading-tools button{min-height:36px;padding:5px 8px;font-size:clamp(.76rem,2.5vw,1rem)}
 #sequence:not([hidden]){
   grid-column:1/-1;
   display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:clamp(3px,1dvh,9px);

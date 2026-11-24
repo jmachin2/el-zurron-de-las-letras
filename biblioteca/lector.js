@@ -87,7 +87,18 @@ function route() {
   book = nextBook;
   get("library").hidden = !!book;
   get("reader").hidden = !book;
-  if (!book) { renderShelf(); return; }
+  if (!book) {
+    sequencePanel.hidden = true;
+    quiz.hidden = true;
+    const preview = get("sequence-preview");
+    if (preview.open) preview.close();
+    renderShelf();
+    if (changed) {
+      get("shelf-title").focus({preventScroll: true});
+      window.scrollTo(0, 0);
+    }
+    return;
+  }
   index = Math.max(0, Math.min((Number.parseInt(position, 10) || 1) - 1, lengthOf(book) - 1));
   if (changed) {
     get("book-title").textContent = book.title;

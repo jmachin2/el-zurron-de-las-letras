@@ -1,0 +1,57 @@
+name: Incorporar páginas de la biblioteca
+on:
+  push:
+    paths:
+      - .github/workflows/importar-biblioteca.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Transferir y comprobar las imágenes
+        run: |
+          python3 - <<'PY'
+          from concurrent.futures import ThreadPoolExecutor
+          from hashlib import sha1
+          from pathlib import Path
+          from urllib.request import urlopen
+          from urllib.parse import quote
+          from time import sleep
+
+          origin = 'https://biblioteca-zurron-camino-largo.gregmachin.chatgpt.site/'
+          manifest = Path('.github/biblioteca-imagenes.txt')
+          items = [line.split() for line in manifest.read_text().splitlines()]
+          def save(item):
+              name, expected = item
+              output = Path('biblioteca') / name
+              for attempt in range(4):
+                  try:
+                      with urlopen(origin + quote(name), timeout=25) as response:
+                          data = response.read()
+                      digest = sha1(f'blob {len(data)}\\0'.encode() + data).hexdigest()
+                      if digest != expected:
+                          raise ValueError(f'Contenido inesperado: {name}')
+                      output.write_bytes(data)
+                      return
+                  except Exception:
+                      if attempt == 3:
+                          raise
+                      sleep(2 ** attempt)
+          Path('biblioteca/libros').mkdir(parents=True, exist_ok=True)
+          with ThreadPoolExecutor(max_workers=12) as workers:
+              list(workers.map(save, items))
+          print(f'{len(items)} imágenes verificadas.')
+          PY
+      - name: Guardar la biblioteca en GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add biblioteca/libros
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Añadir las páginas ilustradas de la biblioteca"
+          git push

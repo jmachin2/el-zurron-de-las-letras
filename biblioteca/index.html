@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Biblioteca de lectura de Primero de Primaria del CEIP Camino Largo.">
+<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css">
+<script defer src="catalogo.js"></script><script defer src="lector.js"></script></head>
+<body>
+<header class="mast"><div class="wrap bar"><a class="brand" href="#" aria-label="Inicio de la biblioteca"><span aria-hidden="true">Z</span> Camino Largo</a><span>1.º de Primaria</span></div></header>
+<main class="wrap">
+<div id="library">
+<section class="hero"><div><p class="eyebrow">BIBLIOTECA DE AULA</p><h1>El Zurrón<br>de las Letras</h1><p>Elige un libro, abre sus páginas y empieza a leer.</p><button id="resume" hidden>Continuar mi lectura</button></div><div class="hero-art" aria-hidden="true"><img id="hero-img" alt=""><span>Rr</span></div></section>
+<section class="collection" aria-labelledby="shelf-title"><div class="tools"><div><h2 id="shelf-title">Elige tu lectura</h2><p id="count" aria-live="polite"></p></div><label class="search">Buscar <input id="search" type="search" placeholder="Título o letra"></label></div>
+<div id="filters" aria-label="Colecciones"><button data-type="" aria-pressed="true">Todas</button><button data-type="Cuentos" aria-pressed="false">Cuentos</button><button data-type="Decodificables" aria-pressed="false">Decodificables</button><button data-type="Cartilla" aria-pressed="false">Cartilla</button><button data-type="Comprensión" aria-pressed="false">Comprensión</button></div>
+<div id="shelf"></div></section>
+</div>
+<section id="reader" hidden aria-label="Lector de libros">
+<div class="reader-top"><a class="button secondary" href="#">Biblioteca</a><h1 id="book-title" tabindex="-1"></h1><button id="zoom" class="secondary" aria-pressed="false">Ampliar</button></div>
+<div class="reading-tools"><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><p id="activity-title" aria-live="polite" hidden></p></div>
+<figure id="stage"><img id="page" alt="" draggable="false"><figcaption id="page-error" hidden>No se pudo cargar esta página. <button id="retry">Reintentar</button></figcaption></figure>
+<nav class="controls" aria-label="Pasar páginas"><button id="prev">Anterior</button><label class="position"><span class="sr-only">Ir a una página</span><select id="number"></select></label><button id="next">Siguiente</button></nav>
+<progress id="progress" aria-label="Progreso del libro"></progress><div id="end" hidden>¡Has llegado al final! <a href="#">Volver a la biblioteca</a></div>
+</section>
+</main><footer class="wrap">CEIP Camino Largo · El Zurrón de las Letras<br>Cartilla del Grupo de trabajo «El Zurrón de las Letras» · Consejería de Educación del Gobierno de Canarias, 2025.</footer>
+</body></html>

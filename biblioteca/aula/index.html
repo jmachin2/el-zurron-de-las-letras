@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Biblioteca de lectura de Primero de Primaria del CEIP Camino Largo.">
+<title>El Zurrón de las Letras · Biblioteca</title><link rel="stylesheet" href="estilo.css?v=13"><link rel="stylesheet" href="juego.css?v=12">
+<link rel="stylesheet" href="cuentas.css">
+<script defer src="configuracion.js"></script><script defer src="flores.js"></script><script defer src="catalogo-aula.js"></script><script defer src="firebase-api.js"></script><script defer src="piloto.js"></script><script defer src="juego.js"></script><script defer src="secuencia.js"></script><script defer src="lector.js"></script></head>
+<body>
+<header class="mast"><div class="wrap bar"><a class="brand" href="#" aria-label="Inicio de la biblioteca"><span aria-hidden="true">Z</span> Camino Largo</a><span id="identidad"></span><button id="salir" class="secondary" hidden>Salir</button></div></header>
+<main class="wrap">
+<section id="app"></section><p id="aviso" role="status"></p><div id="library" hidden>
+<section class="hero"><div><p class="eyebrow">BIBLIOTECA DE AULA</p><h1>El Zurrón<br>de las Letras</h1><p>Elige un libro, abre sus páginas y empieza a leer.</p><button id="resume" hidden>Continuar mi lectura</button></div><div class="hero-art" aria-hidden="true"><img id="hero-img" alt=""><span>Rr</span></div></section>
+<section class="collection" aria-labelledby="shelf-title"><div class="tools"><div><h2 id="shelf-title" tabindex="-1">Libros decodificables</h2><p id="count" aria-live="polite"></p></div><label class="search">Buscar <input id="search" type="search" placeholder="Título o letra"></label></div>
+<div id="shelf" style="margin-top: 1rem"></div></section>
+</div>
+<section id="reader" hidden aria-label="Lector de libros">
+<div class="reader-top"><a class="button secondary" href="#">Biblioteca</a><h1 id="book-title" tabindex="-1"></h1><button id="zoom" class="secondary" aria-pressed="false">Ampliar</button></div>
+<div class="reading-tools"><nav id="r-sections" aria-label="Actividades del libro" hidden><button class="secondary" data-section="read">Leer</button><button class="secondary" data-section="quiz">Comprensión</button><button class="secondary" data-section="order">Ordenar</button></nav><button id="jump-activity" class="secondary" hidden>Preguntas de comprensión</button><button id="jump-sequence" class="secondary" hidden>Ordenar la lectura</button><p id="activity-title" aria-live="polite" hidden></p></div>
+<div id="lector-marcas"></div><figure id="stage"><img id="page" alt="" draggable="false"><figcaption id="page-error" hidden>No se pudo cargar esta página. <button id="retry">Reintentar</button></figcaption></figure>
+<section id="parada" hidden aria-label="Parada de lectura"></section><section id="quiz" class="quiz" aria-label="Juego de comprensión" hidden>
+  <div class="quiz-status"><span id="quiz-position"></span><progress id="quiz-progress" aria-label="Progreso del juego"></progress></div>
+  <h2 id="quiz-title" tabindex="-1"></h2>
+  <div id="quiz-answers" class="quiz-answers"></div>
+  <p id="quiz-feedback" role="status" hidden></p>
+  <button id="quiz-next" type="button" hidden>Siguiente pregunta</button>
+  <details id="quiz-reference" hidden><summary>Consultar la ficha original</summary><img id="quiz-sheet" alt="Ficha original de comprensión"></details>
+</section>
+<section id="sequence" class="quiz sequence" aria-labelledby="sequence-title" hidden>
+  <h2 id="sequence-title" tabindex="-1">Une cada imagen con su momento</h2>
+  <p>Toca una palabra y después la tarjeta que le corresponde.</p>
+  <div id="sequence-board">
+    <div id="sequence-moments" class="sequence-column" role="group" aria-label="Momentos de la lectura"></div>
+    <svg id="sequence-links" aria-hidden="true"></svg>
+    <div id="sequence-scenes" class="sequence-column" role="group" aria-label="Imágenes de la lectura"></div>
+  </div>
+  <dialog id="sequence-preview" aria-labelledby="sequence-preview-title">
+    <form method="dialog">
+      <strong id="sequence-preview-title"></strong>
+      <button type="button" id="sequence-enlarge" class="secondary" aria-pressed="false">Más grande</button>
+      <button>Cerrar</button>
+    </form>
+    <div><img id="sequence-preview-image" alt=""></div>
+  </dialog>
+  <div class="sequence-footer">
+    <p id="sequence-feedback" role="status"></p>
+    <div class="sequence-actions">
+      <button id="sequence-check" type="button">Comprobar</button>
+      <button id="sequence-reset" class="secondary" type="button">Volver a jugar</button>
+    </div>
+  </div>
+</section>
+<nav id="page-controls" class="controls" aria-label="Pasar páginas"><button id="prev">Anterior</button><label class="position"><span class="sr-only">Ir a una página</span><select id="number"></select></label><button id="next">Siguiente</button></nav>
+<progress id="progress" aria-label="Progreso del libro"></progress><div id="end" hidden>¡Has llegado al final! <a href="#">Volver a la biblioteca</a></div>
+</section>
+</main><footer class="wrap">CEIP Camino Largo · El Zurrón de las Letras<br>Cartilla del Grupo de trabajo «El Zurrón de las Letras» · Consejería de Educación del Gobierno de Canarias, 2025.</footer>
+</body></html>
